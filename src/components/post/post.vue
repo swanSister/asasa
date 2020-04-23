@@ -1,21 +1,21 @@
 
 <template>
-  <div class="board">
-    <div class="board-body">
+  <div class="post">
+    <div class="post-body" @click="$router.push('postDetail')">
       <div class="left">
-        <div class="tag"><span>{{boardData.tag}}</span></div>
-        <div class="title">{{boardData.title}}</div>
-        <div class="content">{{boardData.text}}</div>
-        <div class="content">{{boardData.text}}</div>
+        <div class="tag"><span>{{postData.tag}}</span></div>
+        <div class="title">{{postData.title}}</div>
+        <div class="content">{{postData.text}}</div>
+        <div class="content">{{postData.text}}</div>
       </div>
-      <div class="right" v-if="boardData.thumbnail">
-        <img class="thumbnail" :src="boardData.thumbnail">
+      <div class="right" v-if="postData.thumbnail">
+        <img class="thumbnail" :src="postData.thumbnail">
       </div>
     </div>
-    <div class="board-footer">
+    <div class="post-footer">
       <div class="left"> 
         <div><!-- view-->
-          <span></span>{{boardData.view}}
+          <span></span>{{postData.view}}
         </div>
         <div><!-- like-->
           <span></span>좋아요
@@ -25,7 +25,7 @@
         </div>
       </div>
       <div class="right">
-        <div>{{boardData.time}}</div>
+        <div>{{postData.time}}</div>
         <div><!-- bookmark-->
           <span></span>
         </div>
@@ -36,9 +36,9 @@
 
 <script>
 export default {
-  name: 'board',
+  name: 'post',
   props: {
-    boardData:{},
+    postData:{},
 
   },
   data: function () {
@@ -47,14 +47,14 @@ export default {
     }
   },
   mounted: function () {
-    console.log(this.boardData)
+    console.log(this.postData)
   }
 }
 
 </script>
 
 <style scoped>
-  .board{
+  .post{
     border-top:1px solid #ddd;
     background:white;
     display:flex;
@@ -63,54 +63,54 @@ export default {
     margin-bottom:2vh;
     color:#aaa;
   }
-  .board *{
+  .post *{
     display:flex;
     text-align:left;
   }
-  .board-body{
+  .post-body{
     padding:1vh 2vh;
     align-items:center;
   }
-  .board-body > .left{
+  .post-body > .left{
     display:flex;
     justify-content:flex-start;
     flex-direction:column;
     margin-right:2vh;
   }
-  .board-body > .right{
+  .post-body > .right{
     justify-content:flex-end;
   }
-  .board-body > .right img{
+  .post-body > .right img{
     width:6vh;
     height:6vh;
   }
-  .board-body .tag span{
+  .post-body .tag span{
     background:#ddd;
     border-radius:2vh;
     font-size:1vh;
     padding:.5vh 2vh;
     margin:1vh 0 .5vh 0;
   }
-  .board-body .title{
+  .post-body .title{
     margin-top:2vh;
     margin-bottom:1vh;
     font-size:2.5vh;
     color:#000;
   }
-  .board-body .text{
+  .post-body .text{
     margin-bottom:2vh;
   }
 
-  .board-footer{
+  .post-footer{
     padding:1vh 2vh;
     border-top:1px solid #ddd;
     border-bottom:1px solid #ddd;
   }
-  .board-footer > .left{
+  .post-footer > .left{
     width:60%;
     justify-content:flex-start;
   }
-  .board-footer > .right{
+  .post-footer > .right{
     width:40%;
     justify-content:flex-end;
   }

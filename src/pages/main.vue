@@ -1,11 +1,10 @@
 <template>
   <div>
-    
-     <vuescroll class="board-content">
+     <vuescroll class="main-content">
        
       <Header></Header>
-      <BoardHeader></BoardHeader>
-      <BoardList></BoardList>
+      <PostHeader></PostHeader>
+      <PostList></PostList>
      </vuescroll>
   </div>
 </template>
@@ -13,13 +12,13 @@
 <script>
 import vuescroll from 'vuescroll';
 import Header from '@/components/header'
-import BoardHeader from '@/components/board/board_header.vue'
-import BoardList from '@/components/board/board_list.vue'
+import PostHeader from '@/components/post/post_header.vue'
+import PostList from '@/components/post/post_list.vue'
 export default {
   components:{
     Header,
-    BoardHeader,
-    BoardList,
+    PostHeader,
+    PostList,
     vuescroll,
   },
   props:{
@@ -38,7 +37,7 @@ export default {
 }
 </script>
 <style scoped>
-.board-content{
+.main-content{
   width:100%;
   height:100%;
   overflow-y:auto;

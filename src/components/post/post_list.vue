@@ -1,27 +1,27 @@
 
 <template>
-  <div class="board-list">
+  <div class="post-list">
     <div class="sorting">
-      <div>최신순 <span>아래화살표</span></div>
+      <div>최신순 <span class="icon-angle-down"></span></div>
     </div>
 
-    <Board v-for="(board, index) in boardLists" v-bind:boardData="board" :key="index+'board'"></Board>
+    <Post v-for="(post, index) in postLists" v-bind:postData="post" :key="index+'post'"></Post>
   </div>
 </template>
 
 <script>
 
-import Board from '@/components/board/board.vue'
+import Post from '@/components/post/post.vue'
 
 export default {
   
   name: 'HelloWorld',
   components: {
-    Board
+    Post
   },
   data: function () {
     return {
-      boardLists:[
+      postLists:[
         {
           tag:"사회・투자",
           name:"강남 현대아파트・AIEM08",
@@ -56,7 +56,7 @@ export default {
 </script>
 
 <style scoped>
-  .board-list{
+  .post-list{
     margin-top:2vh;
     width:100%;
   }
@@ -65,8 +65,11 @@ export default {
     display:flex;
     justify-content:flex-end;
     background:white;
+    padding:1vh;
+    color:#aaa;
   }
-  .board-list{
+  
+  .post-list{
     margin-bottom:10vh;
   }
 </style>

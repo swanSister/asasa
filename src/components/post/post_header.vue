@@ -1,6 +1,6 @@
 
 <template>
-  <div class="board-header">
+  <div class="post-header">
     <vuescroll>
       <div class="x-scroller">
         <div class="plus-btn" >+</div>
@@ -16,7 +16,7 @@
 
 import vuescroll from 'vuescroll';
 export default {
-  name: 'boardHeader',
+  name: 'postHeader',
   components:{
     vuescroll,
   },
@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style scoped>
-  .board-header{
+  .post-header{
     margin-top:3vh;
     margin-left:5%;
     width:90%;
@@ -70,7 +70,7 @@ export default {
     margin-right:2vh;
     margin-bottom:1.5vh;
   }
-  .board-header .subject{
+  .post-header .subject{
     padding:1vh 2vh;
     background:gray;
     margin-right:2vh;
