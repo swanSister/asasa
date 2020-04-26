@@ -3,7 +3,7 @@
   <div class="post-header">
     <vuescroll>
       <div class="x-scroller">
-        <div class="plus-btn" >+</div>
+        <div class="flex none align-items-center plus-btn" ><span class="icon-plus"></span></div>
         <div class="subject" v-for="(subject, index) in subjects" :key="index + 'subject'">
           {{subject.name}}
         </div>

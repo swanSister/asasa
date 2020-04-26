@@ -31,7 +31,7 @@ export default {
 
 #loginBtn{
   margin-top:2vh;
-  background-color:#8d0101;
+  background-color:tomato;
   color:white;
   font-size: 4vh;
   padding:2vh;

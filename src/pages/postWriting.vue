@@ -1,15 +1,15 @@
 <template>
   <div>
-   <PostDetail></PostDetail>
+   <PostWriting></PostWriting>
   </div>
 </template>
 
 <script>
 
-import PostDetail from '@/components/post/post_detail.vue'
+import PostWriting from '@/components/post/post_writing.vue'
 export default {
   components:{
-    PostDetail,
+    PostWriting,
   },
   props:{
   

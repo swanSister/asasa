@@ -2,10 +2,10 @@
 <template>
   <div class="post-list">
     <div class="sorting">
-      <div>최신순 <span class="icon-angle-down"></span></div>
+      <div>최신순 <span class="icon-down-open"></span></div>
     </div>
 
-    <Post v-for="(post, index) in postLists" v-bind:postData="post" :key="index+'post'"></Post>
+    <Post @click="$router.push('postDetail')" v-for="(post, index) in postLists" v-bind:postData="post" :key="index+'post'"></Post>
   </div>
 </template>
 
@@ -28,6 +28,8 @@ export default {
           title:"김정은 위중 정보, 정확하지 않을 수도 있다",
           text:"미국 CNN 방송은 20일(현지시간) 김정은 북한 국무위원장 관련 추가 보도를 통해 김 위원장이 심혈관 수술 후 위중한 상황에 있다는 정보가 정확하지 않을 수 있다고 했다.",
           view:3,
+          like:4,
+          commentCount:10,
           time:'방금',
           thumbnail:'https://homepages.cae.wisc.edu/~ece533/images/airplane.png',
         },
@@ -37,6 +39,8 @@ export default {
           title:"김정은 위중 정보, 정확하지 않을 수도 있다",
           text:"미국 CNN 방송은 20일(현지시간) 김정은 북한 국무위원장 관련 추가 보도를 통해 김 위원장이 심혈관 수술 후 위중한 상황에 있다는 정보가 정확하지 않을 수 있다고 했다.",
           view:3,
+          like:4,
+          commentCount:10,
           time:'방금',
           thumbnail:'',
         },
@@ -46,6 +50,8 @@ export default {
           title:"김정은 위중 정보, 정확하지 않을 수도 있다",
           text:"미국 CNN 방송은 20일(현지시간) 김정은 북한 국무위원장 관련 추가 보도를 통해 김 위원장이 심혈관 수술 후 위중한 상황에 있다는 정보가 정확하지 않을 수 있다고 했다.",
           view:3,
+          like:4,
+          commentCount:10,
           time:'방금',
           thumbnail:'https://homepages.cae.wisc.edu/~ece533/images/airplane.png',
         },
@@ -68,7 +74,9 @@ export default {
     padding:1vh;
     color:#aaa;
   }
-  
+  .sorting > div{
+    font-size:2vh;
+  }
   .post-list{
     margin-bottom:10vh;
   }

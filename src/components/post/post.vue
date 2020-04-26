@@ -14,14 +14,14 @@
     </div>
     <div class="post-footer">
       <div class="left"> 
-        <div><!-- view-->
-          <span></span>{{postData.view}}
+        <div class="flex none align-items-center"><!-- view-->
+          <span class="icon-eye"></span>{{postData.view}}
         </div>
-        <div><!-- like-->
-          <span></span>좋아요
+        <div class="flex none align-items-center"><!-- like-->
+          <span class="icon-thumbs-up-1"></span>{{postData.like}}
         </div>
-        <div><!-- comment-->
-          <span></span>댓글
+        <div class="flex none align-items-center"><!-- comment-->
+          <span class="icon-comment"></span>{{postData.commentCount}}
         </div>
       </div>
       <div class="right">
@@ -109,6 +109,9 @@ export default {
   .post-footer > .left{
     width:60%;
     justify-content:flex-start;
+  }
+  .post-footer > .left > div{
+    margin-right:4vh;
   }
   .post-footer > .right{
     width:40%;

@@ -1,6 +1,5 @@
 <template>
   <div class="flex none header justify-content-center align-items-center" style="padding:2vw;">
-   <!-- <div @click="backHandler" class="flex none icon-left-small" style="width:10vw; color:white; font-size:4vh;"></div> -->
     <div class="flex auto justify-content-start">
       <div ref="xScroller" id="x-scroller" class="flex auto align-items-center justify-content-center">
         <span class="category flex none" v-for="(category, index) in categories" :key="'category'+index">

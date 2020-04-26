@@ -1,11 +1,11 @@
 <template>
   <div>
-     <vuescroll class="main-content">
-       
+    <vuescroll class="main-content">
       <Header></Header>
       <PostHeader></PostHeader>
       <PostList></PostList>
-     </vuescroll>
+      <Footer></Footer>
+    </vuescroll>
   </div>
 </template>
 
@@ -14,12 +14,14 @@ import vuescroll from 'vuescroll';
 import Header from '@/components/header'
 import PostHeader from '@/components/post/post_header.vue'
 import PostList from '@/components/post/post_list.vue'
+import Footer from '@/components/footer'
 export default {
   components:{
     Header,
     PostHeader,
     PostList,
     vuescroll,
+    Footer,
   },
   props:{
   
