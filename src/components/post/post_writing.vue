@@ -162,15 +162,17 @@ export default {
     color:tomato;
   }
   .body{
-    height:calc(100vh - 28vw);
     padding:2vw;
     padding-bottom:10vw;
+    height:calc(100vh - 40vw);
+
+    overflow:scroll;
   }
   .body textarea{
     font-size: 4vw;
     line-height:1.5;
     max-height: 100vw;
-    height:12vw;
+    min-height:12vw;
     overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
   }
   .body textarea:first-child{
@@ -182,11 +184,8 @@ export default {
     font-size: 4vw;
     text-align: left;
     padding-top: 4vw;
-    display: inline-block;
     white-space: pre-wrap;
-    height:calc(100% - 12vw);
-    overflow:scroll;
-    background:rgb(221, 220, 220);
+    min-height: 20vh;
   }
   [placeholder]:empty::before {
     content: attr(placeholder);
