@@ -63,7 +63,6 @@ export default {
 
 <style scoped>
   .post-list{
-    margin-top:2vh;
     width:100%;
   }
   .sorting{
@@ -71,13 +70,13 @@ export default {
     display:flex;
     justify-content:flex-end;
     background:white;
-    padding:1vh;
+    padding:1.5vw;
     color:#aaa;
   }
   .sorting > div{
-    font-size:2vh;
+    font-size:4vw;
   }
   .post-list{
-    margin-bottom:10vh;
+    margin-bottom:17vw;
   }
 </style>

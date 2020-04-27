@@ -52,27 +52,27 @@ export default {
 </script>
 <style scoped>
 .footer{
-  min-height:8vh;
-  max-height:8vh;
+  min-height:14vw;
+  max-height:14vw;
   position: fixed;
   bottom:0;
   left:0;
   border-top:1px solid #ddd;
   background:white;
   width:100%;
-  padding-right:2.5vh;
+  padding-right:4vw;
 }
 .footer .icon{
-  font-size:3vh;
+  font-size:6vw;
 }
 .footer .pencil .icon{
-  font-size:3vh;
+  font-size:5vw;
 }
 .footer .pencil{
-  max-width:6vh;
-  min-width:6vh;
-  max-height:6vh;
-  min-height:6vh;
+  max-width:9vw;
+  min-width:9vw;
+  max-height:9vw;
+  min-height:9vw;
   border-radius: 50%;
   background:tomato;
   color:white;

@@ -16,8 +16,8 @@
       </div>
 
       <div class="body flex auto column">
-        <textarea placeholder="제목을 입력해 주세요"></textarea>
-        <div class="input-content" ref="inputContent" contentEditable="true" placeholder="내용을 입력해 주세요">
+        <textarea @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
+        <div @click="onKeypress($event)" @keyup="onKeypress($event)"  class="input-content" ref="inputContent" contentEditable="true" placeholder="내용을 입력해 주세요">
           
         </div>
       </div>
@@ -25,7 +25,6 @@
       <div class="footer flex auto justify-content-start align-items-center;">
         <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
         <label for="file" class="icon icon-camera"></label>
-
      </div>
 
       <transition name="fade">
@@ -43,7 +42,6 @@
 </template>
 
 <script>
-
 import vuescroll from 'vuescroll';
 export default {
   name: 'postHeader',
@@ -53,6 +51,7 @@ export default {
   
   data: function () {
     return {
+      inputRange:null,
       title:'등록위치선택',
       isLocationListShow:false,
       locationList:[
@@ -77,27 +76,39 @@ export default {
     }
   },
   methods:{
+    autosize: function(e){
+      console.log(e)
+      var el = e.target;
+      setTimeout(function(){
+        el.style.cssText = 'height:auto; padding:0';
+        el.style.cssText = 'height:' + el.scrollHeight + 'px';
+      },0);
+    },
+    onKeypress: function(){
+      this.inputRange = window.getSelection().getRangeAt(0);
+    },
     onClickListItem:function(item){
       this.title = item.name
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
+      
       console.log(this.$refs.fileInput)
     },   
     previewFiles(event) {
-      let that = this;
+      let that = this
       var oFReader = new FileReader()
         oFReader.readAsDataURL(event.target.files[0])
-        
         oFReader.onload = function (oFREvent) {
-          let linebreak1 = document.createElement('br');
-          let linebreak2 = document.createElement('br');
           let img = document.createElement('img')
-          let inputContent = that.$refs.inputContent
           img.src = oFREvent.target.result
-          img.setAttribute('style','max-width:100vw')
-          inputContent.appendChild(img)
-          inputContent.appendChild(linebreak1)
-          inputContent.appendChild(linebreak2)
+          img.setAttribute('style','max-width:90vw; display:block;')
+          
+          that.inputRange.insertNode(img);
+
+          that.inputRange.collapse(false);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(that.inputRange);
+          
         };
     }
   }
@@ -110,10 +121,10 @@ export default {
     background:white;
   }
   .header{
-    height:8vh;
+    height:14vw;
     border-bottom:1px solid #ddd;
-    padding:0 2vh;
-    font-size: 2.5vh;
+    padding:0 4vw;
+    font-size: 4vw;
   }
   .header .cancel{
     color:#000;
@@ -122,18 +133,22 @@ export default {
     font-weight: bold;
   }
   .header .title .icon{
-    font-size:1.5vh;
-    margin-left:1vh;
+    font-size:1.5vw;
+    margin-left:1vw;
   }
   .header .add{
     color:tomato;
   }
   .body{
-    padding:2vh;
-    padding-bottom:10vh;
+    padding:2vw;
+    padding-bottom:10vw;
   }
   .body textarea{
-    font-size: 2vh;
+    font-size: 4vw;
+    line-height:1.5;
+    max-height: 100vw;
+    height:12vw;
+    overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
   }
   .body textarea:first-child{
     border:0;
@@ -144,14 +159,14 @@ export default {
     position:fixed;
     left:0;
     bottom:0;
-    height:6vh;
+    height:14vw;
     border-top:1px solid #ddd;
-    padding:0 2vh;
+    padding:0 4vw;
     background:white;
   }
   .footer .icon{
-    font-size:4vh;
-    
+    font-size:7vw;
+    margin-top:2vw;
   }
 
   .location-list{
@@ -165,28 +180,28 @@ export default {
   }
   .location-list .list{
     width:100vw;
-    max-height:50vh;
+    max-height:70vw;
     background:white;
     position: fixed;
     left:0;
     bottom:0;
     overflow:scroll;
-    padding:0 2vh;
+    padding:0 2vw;
   }
   .location-list .list .item{
     border-bottom:1px solid #ddd;
     padding:3vh 0;
   }
   .location-list .list .item .name{
-    font-size:3vh;
+    font-size:4vw;
     font-weight: bold;
     color:#000;
   }
   .location-list .list .item .desc{
-    font-size:2.5vh;
+    font-size:3vw;
     color:#aaa;
     font-weight: bold;
-    margin-top:1vh;
+    margin-top:1vw;
   }
 
   .fade-enter-active, .fade-leave-active {
@@ -201,15 +216,16 @@ export default {
   }
   div[contenteditable=true] {
     color : #8e8e8e;
-    font-size: 2vh;
+    font-size: 4vw;
     text-align: left;
-    padding-top: 2vh;
-    min-height:80vh;
-    
+    padding-top: 4vw;
+    min-height:80vw;
+    display: inline-block;
   }
   [placeholder]:empty::before {
       content: attr(placeholder);
       
   }
+  
 
 </style>

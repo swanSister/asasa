@@ -2,7 +2,7 @@
 <template>
   <div class="post-header">
     <vuescroll>
-      <div class="x-scroller">
+      <div class="x-scroller flex auto align-items-center">
         <div class="flex none align-items-center plus-btn" ><span class="icon-plus"></span></div>
         <div class="subject" v-for="(subject, index) in subjects" :key="index + 'subject'">
           {{subject.name}}
@@ -53,29 +53,31 @@ export default {
 
 <style scoped>
   .post-header{
-    margin-top:3vh;
+    margin-top:0;
     margin-left:5%;
     width:90%;
     overflow:hidden;
     align-items:center;
+    height:17vw;
   }
   .x-scroller{
     width:100vw;
+    height:17vw;
     display:flex;
     flex:auto;
   }
    .x-scroller > div{
     display:flex;
     flex:none;
-    margin-right:2vh;
-    margin-bottom:1.5vh;
+    margin-right:4vw;
+    margin-bottom:0;
   }
   .post-header .subject{
-    padding:1vh 2vh;
+    padding:2vw 4vw;
     background:gray;
-    margin-right:2vh;
+    margin-right:4vw;
     color:white;
-    border-radius:.5vh;
+    border-radius:1vw;
   }
   
 </style>

@@ -6,8 +6,8 @@
 
 <script>
 
-import Vue from 'vue';
-import vuescroll from 'vuescroll';
+import Vue from 'vue'
+import vuescroll from 'vuescroll'
 
 Vue.use(vuescroll, {
   ops: {

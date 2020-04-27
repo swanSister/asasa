@@ -40,19 +40,19 @@ export default {
 </script>
 <style scoped>
 .header{
-  min-height:8vh;
-  max-height:8vh;
+  min-height:14vw;
+  max-height:14vw;
   background:#333;
   color:white;
 }
 #x-scroller{
   overflow-x:scroll;
-  margin:0 2vh;
+  margin:0 4vw;
   flex-wrap: nowrap;
-  height:8vh;
+  height:14vw;
 }
 .category{
-  padding:0 2vh;
+  padding:0 4vw;
   flex-wrap: nowrap;
 }
 </style>

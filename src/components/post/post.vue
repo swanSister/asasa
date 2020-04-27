@@ -3,7 +3,7 @@
   <div class="post">
     <div class="post-body" @click="$router.push('postDetail')">
       <div class="left">
-        <div class="tag"><span>{{postData.tag}}</span></div>
+        <div class="tag flex none align-items-center"><span>{{postData.tag}}</span></div>
         <div class="title">{{postData.title}}</div>
         <div class="content">{{postData.text}}</div>
         <div class="content">{{postData.text}}</div>
@@ -59,8 +59,7 @@ export default {
     background:white;
     display:flex;
     flex-direction:column;
-    font-size:2vh;
-    margin-bottom:2vh;
+    margin-bottom:3vw;
     color:#aaa;
   }
   .post *{
@@ -68,41 +67,41 @@ export default {
     text-align:left;
   }
   .post-body{
-    padding:1vh 2vh;
+    padding:2vh 4vw;
     align-items:center;
   }
   .post-body > .left{
     display:flex;
     justify-content:flex-start;
     flex-direction:column;
-    margin-right:2vh;
+    margin-right:4vw;
   }
   .post-body > .right{
     justify-content:flex-end;
   }
   .post-body > .right img{
-    width:6vh;
-    height:6vh;
+    width:20vw;
+    height:20vw;
   }
   .post-body .tag span{
-    background:#ddd;
-    border-radius:2vh;
-    font-size:1vh;
-    padding:.5vh 2vh;
-    margin:1vh 0 .5vh 0;
+    background:#aaa;
+    color:white;
+    font-weight: bold;
+    border-radius:3vw;
+    font-size:3vw;
+    padding:.5vh 4vw;
   }
   .post-body .title{
-    margin-top:2vh;
-    margin-bottom:1vh;
-    font-size:2.5vh;
+    margin-top:4vw;
+    margin-bottom:2vw;
+    font-size:4.5vw;
     color:#000;
   }
   .post-body .text{
-    margin-bottom:2vh;
+    margin-bottom:3vw;
   }
-
   .post-footer{
-    padding:1vh 2vh;
+    padding:1.5vw 4vw;
     border-top:1px solid #ddd;
     border-bottom:1px solid #ddd;
   }
@@ -111,7 +110,7 @@ export default {
     justify-content:flex-start;
   }
   .post-footer > .left > div{
-    margin-right:4vh;
+    margin-right:6vw;
   }
   .post-footer > .right{
     width:40%;
