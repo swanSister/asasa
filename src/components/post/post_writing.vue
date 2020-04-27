@@ -17,7 +17,9 @@
 
       <div class="body flex auto column">
         <textarea @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <div @click="onKeypress($event)" @keyup="onKeypress($event)"  class="input-content" ref="inputContent" contentEditable="true" placeholder="내용을 입력해 주세요">
+        <div @click="onKeypress($event)" @keyup="onKeypress($event)"  
+        style="user-select: text; -webkit-user-select:text;"
+        class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
           
         </div>
       </div>
@@ -214,16 +216,15 @@ export default {
     max-width:100vw;
     object-fit: cover;
   }
-  div[contenteditable=true] {
+  div[contenteditable] {
     color : #8e8e8e;
     font-size: 4vw;
     text-align: left;
     padding-top: 4vw;
     min-height:80vw;
-    display: inline-block;
   }
   [placeholder]:empty::before {
-      content: attr(placeholder);
+    content: attr(placeholder);
       
   }
   

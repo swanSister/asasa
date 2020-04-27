@@ -50,7 +50,7 @@ body {
 .align-items-start{
     align-items: flex-start;
 }
-textarea:focus, input:focus, div[contenteditable=true]:focus{
+textarea:focus, input:focus, [contenteditable]:focus{
     outline: none;
 }
 
