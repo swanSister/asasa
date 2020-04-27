@@ -56,7 +56,7 @@ textarea:focus, input:focus, [contenteditable]:focus{
 
 input,
 textarea,
-[contenteditable] {
+div[contenteditable] {
     -webkit-user-select: text;
     user-select: text;
 }

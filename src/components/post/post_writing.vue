@@ -17,11 +17,11 @@
 
       <div class="body flex auto column">
         <textarea @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <p @click="onKeypress($event)" @keyup="onKeypress($event)"  
-        style="user-select: text; -webkit-user-select:text;"
+        <div @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
+       
         class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
           
-        </p>
+        </div>
       </div>
 
       <div class="footer flex auto justify-content-start align-items-center;">
@@ -86,7 +86,28 @@ export default {
         el.style.cssText = 'height:' + el.scrollHeight + 'px';
       },0);
     },
-    onKeypress: function(){
+    onKeydown: function(e){
+       if (e.keyCode === 13) {//엔터시 contenteditable 강제 줄바꿈
+          e.preventDefault(); //Prevent default browser behavior
+          if (window.getSelection) {
+            var selection = window.getSelection(),
+                range = selection.getRangeAt(0),
+                br = document.createElement("br"),
+                textNode = document.createTextNode("\u00a0");
+            range.deleteContents();
+            range.insertNode(br);
+            range.collapse(false);
+            range.insertNode(textNode);
+            range.selectNodeContents(textNode);
+
+            selection.removeAllRanges();
+            selection.addRange(range);
+            return false;
+        }
+       }
+      
+    },
+    onKeyup: function(){
       this.inputRange = window.getSelection().getRangeAt(0);
     },
     onClickListItem:function(item){
@@ -222,6 +243,7 @@ export default {
     text-align: left;
     padding-top: 4vw;
     min-height:80vw;
+    white-space: pre;
   }
   [placeholder]:empty::before {
     content: attr(placeholder);
