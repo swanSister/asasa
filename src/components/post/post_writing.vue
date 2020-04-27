@@ -1,7 +1,6 @@
 
 <template>
   <div class="post-writing">
-    <vuescroll>
       <div class="header flex align-items-center">
         <div class="cancel flex auto justify-content-start" @click="$router.go(-1)">
           취소
@@ -39,16 +38,14 @@
             </div>
         </div>
       </transition>
-    </vuescroll>
   </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
 export default {
   name: 'postHeader',
   components:{
-    vuescroll,
+    //vuescroll,
   },
   
   data: function () {
@@ -103,9 +100,8 @@ export default {
               range.deleteContents();
               selection.removeAllRanges();
               selection.addRange(range);
-              
-              
           }
+          
        }
       
     },
@@ -136,16 +132,7 @@ export default {
     }
   },
   mounted: function () {
-    let that = this
-  var _originalSize = window.innerWidth + window.innerHeight;
-  window.addEventListener('resize', function(){
-    if(window.innerWidth + window.innerHeight != _originalSize){
-      console.log("keyboard!!")
-      that.$refs.footer.setAttribute("style", "position:relative;")
-    }else{
-      that.$refs.footer.setAttribute("style", "position:fixed;")
-    }
-  })
+   
   }
 }
 </script>
@@ -175,6 +162,7 @@ export default {
     color:tomato;
   }
   .body{
+    height:calc(100vh - 28vw);
     padding:2vw;
     padding-bottom:10vw;
   }
