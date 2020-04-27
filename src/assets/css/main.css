@@ -53,17 +53,9 @@ textarea:focus, input:focus, div[contenteditable=true]:focus{
     outline: none;
 }
 
-* {
-    -webkit-user-select: none;
-    user-select: none;
-}
-
 input,
 textarea,
 [contenteditable] {
     -webkit-user-select: text;
     user-select: text;
-}
-*{
-    -webkit-user-modify:read-write;
 }
