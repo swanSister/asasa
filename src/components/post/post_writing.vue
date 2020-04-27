@@ -17,11 +17,11 @@
 
       <div class="body flex auto column">
         <textarea @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <div @click="onKeypress($event)" @keyup="onKeypress($event)"  
+        <p @click="onKeypress($event)" @keyup="onKeypress($event)"  
         style="user-select: text; -webkit-user-select:text;"
         class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
           
-        </div>
+        </p>
       </div>
 
       <div class="footer flex auto justify-content-start align-items-center;">
