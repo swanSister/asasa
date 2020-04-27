@@ -164,7 +164,7 @@ export default {
   .body{
     padding:2vw;
     padding-bottom:10vw;
-    height:calc(100vh - 40vw);
+    height:calc(calc(var(--vh, 1vh) * 100) - 28vw);
 
     overflow:scroll;
   }
