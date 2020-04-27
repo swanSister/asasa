@@ -179,9 +179,7 @@ export default {
   }
   .footer{
     width:100%;
-    position:fixed;
-    left:0;
-    bottom:0;
+    position:relative;
     height:14vw;
     border-top:1px solid #ddd;
     padding:0 4vw;
