@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="footer flex auto justify-content-start align-items-center;">
+      <div ref="footer" class="footer flex auto justify-content-start align-items-center;">
         <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
         <label for="file" class="icon icon-camera"></label>
      </div>
@@ -79,7 +79,6 @@ export default {
   },
   methods:{
     autosize: function(e){
-      console.log(e)
       var el = e.target;
       setTimeout(function(){
         el.style.cssText = 'height:auto; padding:0';
@@ -90,20 +89,23 @@ export default {
        if (e.keyCode === 13) {//엔터시 contenteditable 강제 줄바꿈
           e.preventDefault(); //Prevent default browser behavior
           if (window.getSelection) {
-            var selection = window.getSelection(),
-                range = selection.getRangeAt(0),
-                br = document.createElement("br"),
-                textNode = document.createTextNode("\u00a0");
-            range.deleteContents();
-            range.insertNode(br);
-            range.collapse(false);
-            range.insertNode(textNode);
-            range.selectNodeContents(textNode);
+              var selection = window.getSelection(),
+                  range = selection.getRangeAt(0),
+                  br = document.createElement("br"),
+                  textNode = document.createTextNode("\u00a0");
+              
+              range.insertNode(br);
+              range.collapse(false);
+              range.insertNode(textNode);
+              range.setStartAfter(br);
+              range.setEndAfter(br);
 
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return false;
-        }
+              range.deleteContents();
+              selection.removeAllRanges();
+              selection.addRange(range);
+              
+              
+          }
        }
       
     },
@@ -114,8 +116,6 @@ export default {
       this.title = item.name
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
-      
-      console.log(this.$refs.fileInput)
     },   
     previewFiles(event) {
       let that = this
@@ -124,7 +124,7 @@ export default {
         oFReader.onload = function (oFREvent) {
           let img = document.createElement('img')
           img.src = oFREvent.target.result
-          img.setAttribute('style','max-width:90vw; display:block;')
+          img.setAttribute('style','max-width:90vw; display:inline-block;')
           
           that.inputRange.insertNode(img);
 
@@ -134,6 +134,18 @@ export default {
           
         };
     }
+  },
+  mounted: function () {
+    let that = this
+  var _originalSize = window.innerWidth + window.innerHeight;
+  window.addEventListener('resize', function(){
+    if(window.innerWidth + window.innerHeight != _originalSize){
+      console.log("keyboard!!")
+      that.$refs.footer.setAttribute("style", "position:relative;")
+    }else{
+      that.$refs.footer.setAttribute("style", "position:fixed;")
+    }
+  })
   }
 }
 </script>
@@ -242,8 +254,8 @@ export default {
     font-size: 4vw;
     text-align: left;
     padding-top: 4vw;
-    min-height:80vw;
-    white-space: pre;
+    display: inline-block;
+    white-space: pre-wrap;
   }
   [placeholder]:empty::before {
     content: attr(placeholder);
