@@ -30,10 +30,10 @@ export default {
 <style scoped>
 
 #loginBtn{
-  margin-top:2vw;
+  margin-top:4vw;
   background-color:tomato;
   color:white;
-  font-size: 4vw;
-  padding:2vw;
+  font-size: 8vw;
+  padding:4vw;
 }
 </style>
