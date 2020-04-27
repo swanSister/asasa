@@ -177,6 +177,21 @@ export default {
     border:0;
     border-bottom:1px solid #ddd;
   }
+  div[contenteditable] {
+    color : #8e8e8e;
+    font-size: 4vw;
+    text-align: left;
+    padding-top: 4vw;
+    display: inline-block;
+    white-space: pre-wrap;
+    height:calc(100% - 12vw);
+    overflow:scroll;
+    background:rgb(221, 220, 220);
+  }
+  [placeholder]:empty::before {
+    content: attr(placeholder);
+      
+  }
   .footer{
     width:100%;
     position:relative;
@@ -235,18 +250,7 @@ export default {
     max-width:100vw;
     object-fit: cover;
   }
-  div[contenteditable] {
-    color : #8e8e8e;
-    font-size: 4vw;
-    text-align: left;
-    padding-top: 4vw;
-    display: inline-block;
-    white-space: pre-wrap;
-  }
-  [placeholder]:empty::before {
-    content: attr(placeholder);
-      
-  }
+
   
 
 </style>
