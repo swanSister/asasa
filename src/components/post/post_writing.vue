@@ -15,8 +15,8 @@
       </div>
 
       <div class="body flex auto column">
-        <textarea @focusout="updateVH" @focus="updateVH" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <div @focusout="updateVH" @focus="updateVH" @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
+        <textarea @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
+        <div @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
        
         class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
           
@@ -75,10 +75,7 @@ export default {
     }
   },
   methods:{
-    updateVH: function(){
-      // let vh = window.innerHeight * 0.01;
-      // document.documentElement.style.setProperty('--vh', `${vh}px`);
-    },
+  
     autosize: function(e){
       var el = e.target;
       setTimeout(function(){
@@ -168,7 +165,7 @@ export default {
   .body{
     padding:2vw;
     padding-bottom:10vw;
-    height:calc(100% - 28vw);
+    height:calc(calc(var(--vh, 1vh) * 100) - 28vw);
 
     overflow:scroll;
   }
