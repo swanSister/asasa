@@ -27,13 +27,13 @@ import "@/assets/css/fontello.css"
 export default {
   name: 'App',
   mounted:function(){
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    window.addEventListener('resize', () => {
-      console.log("resize")
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    });
+    // let vh = window.clientHeight * 0.01;
+    // document.documentElement.style.setProperty('--vh', `${vh}px`);
+    // window.addEventListener('resize', () => {
+    //   console.log("resize")
+    //   let vh = window.clientHeight * 0.01;
+    //   document.documentElement.style.setProperty('--vh', `${vh}px`);
+    // });
   }
 }
 
