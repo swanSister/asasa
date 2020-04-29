@@ -85,7 +85,7 @@ export default {
          },100);
       }
     },
-    onFoucsout: function(){
+    onFocusout: function(){
       if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
         setTimeout(function(){
           let vh = window.innerHeight * 0.01;
