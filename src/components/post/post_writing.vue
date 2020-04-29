@@ -15,8 +15,8 @@
       </div>
 
       <div class="body flex auto column">
-        <textarea @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <div @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
+        <textarea @focus="onFocus" @focusout="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
+        <div @focus="onFocus" @focusout="onFocusout" @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
        
         class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
           
@@ -50,6 +50,7 @@ export default {
   
   data: function () {
     return {
+      varUA:null,
       inputRange:null,
       title:'등록위치선택',
       isLocationListShow:false,
@@ -75,7 +76,21 @@ export default {
     }
   },
   methods:{
-  
+    onFocus: function(){
+      
+      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
+        setTimeout(function(){
+          let vh = window.innerHeight * 0.01 * 0.5;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+         },100);
+      }
+    },
+    onFoucsout: function(){
+      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      }
+    },
     autosize: function(e){
       var el = e.target;
       setTimeout(function(){
@@ -133,6 +148,7 @@ export default {
     }
   },
   mounted: function () {
+    this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
    
   }
 }
