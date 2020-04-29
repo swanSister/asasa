@@ -15,8 +15,8 @@
       </div>
 
       <div class="body flex auto column">
-        <textarea @focus="onFocus" @focusout="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <div @focus="onFocus" @focusout="onFocusout" @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
+        <textarea @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
+        <div @focus="onFocus" @blur="onFocusout" @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
        
         class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
           
