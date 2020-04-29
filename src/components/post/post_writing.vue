@@ -88,7 +88,7 @@ export default {
     onFoucsout: function(){
       if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
         setTimeout(function(){
-          let vh = window.innerHeight * 0.01 * 0.5;
+          let vh = window.innerHeight * 0.01;
           document.documentElement.style.setProperty('--vh', `${vh}px`);
          },100);
       }
