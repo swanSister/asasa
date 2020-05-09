@@ -1,31 +1,31 @@
 
 <template>
   <div class="post">
-    <div class="post-body" @click="$router.push('postDetail')">
+    <div class="post-body" @click="goDetail">
       <div class="left">
-        <div class="tag flex none align-items-center"><span>{{postData.tag}}</span></div>
-        <div class="title">{{postData.title}}</div>
-        <div class="content">{{postData.text}}</div>
-        <div class="content">{{postData.text}}</div>
+        <div class="tag flex none align-items-center"><span>{{postData.data.tag}}</span></div>
+        <div class="title">{{postData.data.title}}</div>
+        <div class="content">{{postData.data.text}}</div>
+        <div class="content">{{postData.data.text}}</div>
       </div>
-      <div class="right" v-if="postData.thumbnail">
-        <img class="thumbnail" :src="postData.thumbnail">
+      <div class="right" v-if="postData.data.thumbnail">
+        <img class="thumbnail" :src="postData.data.thumbnail">
       </div>
     </div>
     <div class="post-footer">
       <div class="left"> 
         <div class="flex none align-items-center"><!-- view-->
-          <span class="icon-eye"></span>{{postData.view}}
+          <span class="icon-eye"></span>{{postData.data.view}}
         </div>
         <div class="flex none align-items-center"><!-- like-->
-          <span class="icon-thumbs-up-1"></span>{{postData.like}}
+          <span class="icon-thumbs-up-1"></span>{{postData.data.like}}
         </div>
         <div class="flex none align-items-center"><!-- comment-->
-          <span class="icon-comment"></span>{{postData.commentCount}}
+          <span class="icon-comment"></span>{{postData.data.commentCount}}
         </div>
       </div>
       <div class="right">
-        <div>{{postData.time}}</div>
+        <div>{{postData.data.time}}</div>
         <div><!-- bookmark-->
           <span></span>
         </div>
@@ -46,8 +46,17 @@ export default {
       
     }
   },
-  mounted: function () {
-    console.log(this.postData)
+  methods:{
+    goDetail: function(){
+      this.$router.push({name: 'postDetail', params: { path: this.postData.path }})
+    },
+    async getMessageDetail(){
+      let messages = await this.$api.getByPath(`${this.postData.path}/messages`)
+      console.log(messages)
+    },
+  },
+  async mounted () {
+     this.getMessageDetail()
   }
 }
 

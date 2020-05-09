@@ -77,10 +77,9 @@ export default {
   },
   methods:{
     onFocus: function(){
-      
       if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
         setTimeout(function(){
-          let vh = window.innerHeight * 0.01 * 0.5;
+          let vh = window.innerHeight * 0.01 * 0.6;
           document.documentElement.style.setProperty('--vh', `${vh}px`);
          },100);
       }
@@ -136,16 +135,22 @@ export default {
       var oFReader = new FileReader()
         oFReader.readAsDataURL(event.target.files[0])
         oFReader.onload = function (oFREvent) {
-          let img = document.createElement('img')
+          let img = document.createElement('img'),
+          br = document.createElement("br")
+
           img.src = oFREvent.target.result
           img.setAttribute('style','max-width:90vw; display:inline-block;')
           
           that.inputRange.insertNode(img);
 
           that.inputRange.collapse(false);
+          that.inputRange.insertNode(br);
+          that.inputRange.setStartAfter(br);
+          that.inputRange.setEndAfter(br);
+
           window.getSelection().removeAllRanges();
           window.getSelection().addRange(that.inputRange);
-          
+          this.onFocusout();
         };
     }
   },

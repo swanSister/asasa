@@ -46,7 +46,7 @@ export default {
 
   },
   mounted(){
-    console.log("mounted header")
+   
   }
 }
 </script>

@@ -2,8 +2,10 @@
   <div class="flex none header justify-content-center align-items-center" style="padding:2vw;">
     <div class="flex auto justify-content-start">
       <div ref="xScroller" id="x-scroller" class="flex auto align-items-center justify-content-center">
-        <span class="category flex none" v-for="(category, index) in categories" :key="'category'+index">
-          {{category.name}}
+        <span @click="onClickHeader(item, index)" class="category flex none" 
+        v-for="(item, index) in headerData" :key="'headerDatas'+index"
+        :class="{'current':index==current}">
+          {{item.data.name}}
         </span>
       </div>
     </div>
@@ -13,13 +15,11 @@
 <script>
 export default {
   props:{
- 
+    headerData:Array,
   },
   data () {
     return {
-      categories:[
-        {name:'토픽'}
-      ]
+      current:0,
     }
   },
   methods:{
@@ -30,11 +30,15 @@ export default {
       }else{
          this.$router.push('main')
       }
+    },
+    onClickHeader(item, index){
+      this.current = index
+      this.$emit('onclick',item)
     }
-
   },
   mounted(){
-    console.log("mounted header")
+    console.log("aaa")
+    console.log(this.headerData)
   }
 }
 </script>
@@ -55,4 +59,19 @@ export default {
   padding:0 4vw;
   flex-wrap: nowrap;
 }
+.category.current{
+  position:relative;
+}
+.category.current:after{
+  position:absolute;
+  left:calc(50% - .5vw);
+  width:1vw;
+  height:1vw;
+  border-radius: 50%;
+  background:white;
+  
+  top:100%;
+  content:"";
+}
+
 </style>

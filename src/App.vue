@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { polyfill } from 'es6-promise'
+polyfill()
 
 import Vue from 'vue'
 import vuescroll from 'vuescroll'
@@ -47,7 +49,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
   margin-top: 60px;
 }
 </style>
