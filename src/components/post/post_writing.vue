@@ -14,12 +14,14 @@
         </div>
       </div>
 
-      <div class="body flex auto column">
-        <textarea @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <div @focus="onFocus" @blur="onFocusout" @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
-       
-        class="input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
-          
+      <div ref="body" class="body">
+        <textarea class="flex auto" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
+        <textarea @focus="onFocus" @blur="onFocusout" @click="onKeyup($event)" @keydown="autosize" 
+        class="input-content flex none" ref="inputContent" placeholder="내용을 입력해 주세요">
+        </textarea>
+        <div class="img-list" v-for="(item, index) in imgInputList" :key="'imgInputList'+index">
+          <img :src="item.src"/>
+          <input placeholder="이미지에 대한 설명을 입력해주세요.(선택)"/>
         </div>
       </div>
 
@@ -47,9 +49,11 @@ export default {
   components:{
     //vuescroll,
   },
+
   
   data: function () {
     return {
+      imgInputList:[],
       varUA:null,
       inputRange:null,
       title:'등록위치선택',
@@ -94,10 +98,10 @@ export default {
     },
     autosize: function(e){
       var el = e.target;
-      setTimeout(function(){
-        el.style.cssText = 'height:auto; padding:0';
-        el.style.cssText = 'height:' + el.scrollHeight + 'px';
-      },0);
+      el.style.cssText = 'height:auto; padding:0';
+
+      el.style.cssText = 'height:' + (el.scrollHeight + 30) + 'px';
+      
     },
     onKeydown: function(e){
        if (e.keyCode === 13) {//엔터시 contenteditable 강제 줄바꿈
@@ -118,12 +122,10 @@ export default {
               selection.removeAllRanges();
               selection.addRange(range);
           }
-          
        }
-      
     },
     onKeyup: function(){
-      this.inputRange = window.getSelection().getRangeAt(0);
+      //this.inputRange = window.getSelection().getRangeAt(0);
     },
     onClickListItem:function(item){
       this.title = item.name
@@ -135,22 +137,24 @@ export default {
       var oFReader = new FileReader()
         oFReader.readAsDataURL(event.target.files[0])
         oFReader.onload = function (oFREvent) {
-          let img = document.createElement('img'),
-          br = document.createElement("br")
+          let imgInputData = {src:oFREvent.target.result, desdc:''}
+          that.imgInputList.push(imgInputData)
+          // let img = document.createElement('img'),
+          // br = document.createElement("br")
 
-          img.src = oFREvent.target.result
-          img.setAttribute('style','max-width:90vw; display:inline-block;')
+          // img.src = oFREvent.target.result
+          // img.setAttribute('style','max-width:90vw; display:block;')
           
-          that.inputRange.insertNode(img);
+          // that.inputRange.insertNode(img);
 
-          that.inputRange.collapse(false);
-          that.inputRange.insertNode(br);
-          that.inputRange.setStartAfter(br);
-          that.inputRange.setEndAfter(br);
+          // that.inputRange.collapse(false);
+          // that.inputRange.insertNode(br);
+          // that.inputRange.setStartAfter(br);
+          // that.inputRange.setEndAfter(br);
 
-          window.getSelection().removeAllRanges();
-          window.getSelection().addRange(that.inputRange);
-          this.onFocusout();
+          // window.getSelection().removeAllRanges();
+          // window.getSelection().addRange(that.inputRange);
+          // that.onFocusout();
         };
     }
   },
@@ -189,10 +193,10 @@ export default {
     padding:2vw;
     padding-bottom:10vw;
     height:calc(calc(var(--vh, 1vh) * 100) - 28vw);
-
     overflow:scroll;
   }
   .body textarea{
+    width:100%;
     font-size: 4vw;
     line-height:1.5;
     max-height: 100vw;
@@ -200,8 +204,12 @@ export default {
     overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
   }
   .body textarea:first-child{
+
     border:0;
     border-bottom:1px solid #ddd;
+  }
+  .body textarea:nth-child(2){
+    overflow: auto;
   }
   div[contenteditable] {
     color : #8e8e8e;
@@ -262,18 +270,22 @@ export default {
     font-weight: bold;
     margin-top:1vw;
   }
-
+  .img-list img{
+    width:100%;
+  }
+  .img-list input{
+    width:100%;
+    font-size: 4vw;
+    padding:2vw 0;
+    border:0;
+    border-bottom:1px solid #ddd;
+  }
   .fade-enter-active, .fade-leave-active {
       transition: opacity .5s;
   }
   .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
       opacity: 0;
   }
-  .input-content img{
-    max-width:100vw;
-    object-fit: cover;
-  }
-
   
 
 </style>

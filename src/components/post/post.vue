@@ -2,7 +2,7 @@
 <template>
   <div class="post">
     <div class="post-body" @click="goDetail">
-      <div class="left">
+      <div class="flex auto left">
         <div class="tag flex none align-items-center"><span>{{postData.data.tag}}</span></div>
         <div class="title">{{postData.data.title}}</div>
         <div class="content">{{postData.data.text}}</div>

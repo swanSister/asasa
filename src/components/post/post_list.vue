@@ -13,7 +13,6 @@
 import Post from '@/components/post/post.vue'
 
 export default {
-  
   name: 'HelloWorld',
   components: {
     Post
