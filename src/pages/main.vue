@@ -46,7 +46,7 @@ export default {
       let messages = await this.$api.getByPath(`${path}/messages`)
       
       this.postList = messages.data.data
-     
+      console.log(this.postList)
       //post 등록 샘플  
       // let messages = await this.$api.postByPath(`${this.headerData[0].path}/messages`, {
       //     tag:"사회・투자",

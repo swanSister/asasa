@@ -9,19 +9,19 @@
           {{title}}
           <span class="icon icon-down-open"></span>
         </div>
-        <div class="add flex auto justify-content-end" @click="$router.go(-1)">
+        <div class="add flex auto justify-content-end" @click="writePost">
           등록
         </div>
       </div>
 
       <div ref="body" class="body">
         <textarea class="flex auto" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <textarea @focus="onFocus" @blur="onFocusout" @click="onKeyup($event)" @keydown="autosize" 
+        <textarea @focus="onFocus" @blur="onFocusout" @keydown="autosize" 
         class="input-content flex none" ref="inputContent" placeholder="내용을 입력해 주세요">
         </textarea>
         <div class="img-list" v-for="(item, index) in imgInputList" :key="'imgInputList'+index">
           <img :src="item.src"/>
-          <input placeholder="이미지에 대한 설명을 입력해주세요.(선택)"/>
+          <input maxlength="30" placeholder="이미지에 대한 설명을 입력해주세요.(선택)"/>
         </div>
       </div>
 
@@ -99,68 +99,68 @@ export default {
     autosize: function(e){
       var el = e.target;
       el.style.cssText = 'height:auto; padding:0';
-
-      el.style.cssText = 'height:' + (el.scrollHeight + 30) + 'px';
-      
-    },
-    onKeydown: function(e){
-       if (e.keyCode === 13) {//엔터시 contenteditable 강제 줄바꿈
-          e.preventDefault(); //Prevent default browser behavior
-          if (window.getSelection) {
-              var selection = window.getSelection(),
-                  range = selection.getRangeAt(0),
-                  br = document.createElement("br"),
-                  textNode = document.createTextNode("\u00a0");
-              
-              range.insertNode(br);
-              range.collapse(false);
-              range.insertNode(textNode);
-              range.setStartAfter(br);
-              range.setEndAfter(br);
-
-              range.deleteContents();
-              selection.removeAllRanges();
-              selection.addRange(range);
-          }
-       }
-    },
-    onKeyup: function(){
-      //this.inputRange = window.getSelection().getRangeAt(0);
+      el.style.cssText = 'height:' + (el.scrollHeight) + 'px';
     },
     onClickListItem:function(item){
       this.title = item.name
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
     },   
-    previewFiles(event) {
+    resizeImage(image) {
+        let canvas = document.createElement("canvas"),
+        max_size = 1000,
+        // 최대 기준을 1280으로 잡음.
+        width = image.width,
+        height = image.height;
+        if (width > height) {
+          if (width > max_size) {
+            height *= max_size / width;
+            width = max_size;
+          }
+        } else {
+          if (height > max_size) {
+            width *= max_size / height;
+            height = max_size;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        return dataUrl
+    },
+    async previewFiles(event) {
       let that = this
       var oFReader = new FileReader()
         oFReader.readAsDataURL(event.target.files[0])
         oFReader.onload = function (oFREvent) {
-          let imgInputData = {src:oFREvent.target.result, desdc:''}
-          that.imgInputList.push(imgInputData)
-          // let img = document.createElement('img'),
-          // br = document.createElement("br")
-
-          // img.src = oFREvent.target.result
-          // img.setAttribute('style','max-width:90vw; display:block;')
-          
-          // that.inputRange.insertNode(img);
-
-          // that.inputRange.collapse(false);
-          // that.inputRange.insertNode(br);
-          // that.inputRange.setStartAfter(br);
-          // that.inputRange.setEndAfter(br);
-
-          // window.getSelection().removeAllRanges();
-          // window.getSelection().addRange(that.inputRange);
-          // that.onFocusout();
+           let image = new Image()
+              image.src= oFREvent.target.result
+              image.onload = function(){
+                let src = that.resizeImage(image)
+                console.log(oFREvent.target.result.length, src.length)
+                let imgInputData = {src:src, desdc:''}
+                that.imgInputList.push(imgInputData)
+              }
         };
+    },
+    async writePost(){
+
+      let imgList = []
+      for(let i = 0; i<this.imgInputList.length; i++){
+        let key = `img_${i}`
+        imgList.push({[key]:this.imgInputList[i].src})
+      }
+
+      console.log(imgList)
+      let res = await this.$api.postByPath(`upload/images`,imgList)
+      console.log(res)
+      //this.$router.go(-1)
     }
   },
   mounted: function () {
+
     this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
-   
   }
 }
 </script>

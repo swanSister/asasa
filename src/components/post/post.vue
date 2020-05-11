@@ -50,13 +50,9 @@ export default {
     goDetail: function(){
       this.$router.push({name: 'postDetail', params: { path: this.postData.path }})
     },
-    async getMessageDetail(){
-      let messages = await this.$api.getByPath(`${this.postData.path}/messages`)
-      console.log(messages)
-    },
   },
-  async mounted () {
-     this.getMessageDetail()
+  mounted () {
+     
   }
 }
 

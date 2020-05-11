@@ -151,9 +151,13 @@ export default {
       this.commentImgs.splice(index,1);
     },
     async getMessageDetail(){
-      let messages = await this.$api.getByPath(`${this.$route.params.path}`)
-      this.postData = messages.data.data
-      console.log(this.postData)
+      if(this.$route.params.path){
+        let messages = await this.$api.getByPath(`${this.$route.params.path}`)
+        this.postData = messages.data.data
+        console.log(this.postData)
+      }else{
+        this.$router.go(-1)
+      }
     },
   },
   async mounted () {
