@@ -45,7 +45,7 @@
 
         <div class="footer flex column align-items-center">
           <div ref="commentImg" class="flex justify-content-start comment-img">
-            <div v-for="(item, index) in commentImgs" :key="'commentImga'+index" >
+            <div v-for="(item, index) in imgInputList" :key="'commentImga'+index" >
                 <div class="flex align-items-center justify-content-center close-btn" @click="removeCommentImg(index)">
                   <span class="icon-cancel"></span>
                 </div>
@@ -57,10 +57,9 @@
                 <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
                 <label for="file" class="icon icon-camera"></label>
             </div>
-            <div @focus="onFocus" @blur="onFocusout" @click="onKeyup($event)" @keyup="onKeyup($event)" @keydown="onKeydown($event)"  
-                class="flex align-items-center input-content" ref="inputContent" contentEditable placeholder="내용을 입력해 주세요">
-            </div>
-            <div class="flex align-items-center upload">등록</div>
+            <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
+            </textarea>
+            <div @click="addComment" class="flex align-items-center upload">등록</div>
           </div>
         </div>
       </div>
@@ -73,80 +72,83 @@ export default {
   name: 'postHeader',
 
   components:{
+    
   },
   
   data: function () {
     return {
+      varUA:null,
       isAlarm:false,
       isBookmark:false,
       postData:{},
       inputRange:null,
-      commentImgs:[],
-
+      imgInputList:[],
+      commentText:'',
     }
   },
   methods: {
-    onFocus: function(){
-      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
-        setTimeout(function(){
-          let vh = window.innerHeight * 0.01 * 0.6;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-         },100);
-      }
+    async addComment(){
+        console.log(this.postData)
+       let imgList = {}
+       for(let i = 0; i<this.imgInputList.length; i++){
+          let key = `img_${i}`
+          console.log(key)
+          imgList[key] = this.imgInputList[i].src
+        }
+        console.log("imglist:",imgList)
+        let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
+        // let imgRes = {
+        //     "message": "OK",
+        //     "data": "images/GivWoVTeScuw2YKf775c",
+        //     "createdAt": "2020-05-09T13:17:56.140Z",
+        //     "updatedAt": "2020-05-09T13:17:56.140Z"
+        //   }
+          
+        let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
+          imgList:`ref ${imgRes.data}`,
+          text:this.commentText,
+          reComment:[],
+        })
+        console.log(writingRes)
     },
-    onFocusout: function(){
-      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
-        setTimeout(function(){
-          let vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-         },100);
-      }
-    },
-    onKeydown: function(e){
-       if (e.keyCode === 13) {//엔터시 contenteditable 강제 줄바꿈
-          e.preventDefault(); //Prevent default browser behavior
-          if (window.getSelection) {
-              var selection = window.getSelection(),
-                  range = selection.getRangeAt(0),
-                  br = document.createElement("br"),
-                  textNode = document.createTextNode("\u00a0");
-              
-              range.insertNode(br);
-              range.collapse(false);
-              range.insertNode(textNode);
-              range.setStartAfter(br);
-              range.setEndAfter(br);
-
-              range.deleteContents();
-              selection.removeAllRanges();
-              selection.addRange(range);
+   resizeImage(image) {
+        let canvas = document.createElement("canvas"),
+        max_size = 1000,
+        // 최대 기준을 1280으로 잡음.
+        width = image.width,
+        height = image.height;
+        if (width > height) {
+          if (width > max_size) {
+            height *= max_size / width;
+            width = max_size;
           }
-       }
+        } else {
+          if (height > max_size) {
+            width *= max_size / height;
+            height = max_size;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        return dataUrl
     },
-    previewFiles(event) {
+    async previewFiles(event) {
       let that = this
       var oFReader = new FileReader()
         oFReader.readAsDataURL(event.target.files[0])
         oFReader.onload = function (oFREvent) {
-          let img = document.createElement('img'),
-          br = document.createElement("br")
-          
-          that.commentImgs.push({src:oFREvent.target.result})
-          
-          that.$refs.commentImg.append(img);
-
-          that.inputRange.collapse(false);
-          that.inputRange.insertNode(br);
-          that.inputRange.setStartAfter(br);
-          that.inputRange.setEndAfter(br);
-
-          window.getSelection().removeAllRanges();
-          window.getSelection().addRange(that.inputRange);
-          this.onFocusout();
+           let image = new Image()
+              image.src= oFREvent.target.result
+              image.onload = function(){
+                let src = that.resizeImage(image)
+                console.log(oFREvent.target.result.length, src.length)
+                let imgInputData = {src:src}
+                that.imgInputList.push(imgInputData)
+                console.log(that.imgInputList)
+              }
         };
-    },
-    onKeyup: function(){
-      this.inputRange = window.getSelection().getRangeAt(0);
     },
     removeCommentImg: function(index){
       this.commentImgs.splice(index,1);
@@ -163,6 +165,7 @@ export default {
   },
   async mounted () {
     this.getMessageDetail()
+    this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
   }
 }
 </script>
@@ -258,6 +261,7 @@ export default {
     height:auto;
     width:80vw;
     margin-left:4vw;
+    font-size: 4vw;
   }
   .footer .comment-img{
     padding:0 2vw;

@@ -15,8 +15,8 @@
       </div>
 
       <div ref="body" class="body">
-        <textarea class="flex auto" v-model="subject" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <textarea class="input-content flex none" v-model="content" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="내용을 입력해 주세요"></textarea>
+        <textarea class="flex auto" v-model="subject" placeholder="제목을 입력해 주세요"></textarea>
+        <textarea class="input-content flex none" v-model="content" placeholder="내용을 입력해 주세요"></textarea>
         <div class="img-list" v-for="(item, index) in imgInputList" :key="'imgInputList'+index">
           <img :src="item.src"/>
           <input v-model="item.desc" maxlength="30" placeholder="이미지에 대한 설명을 입력해주세요.(선택)"/>
@@ -67,27 +67,7 @@ export default {
       let res = await this.$api.getPosts()
       this.postList = res.data.data
     },
-    onFocus: function(){
-      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
-        setTimeout(function(){
-          let vh = window.innerHeight * 0.01 * 0.6;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-         },100);
-      }
-    },
-    onFocusout: function(){
-      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
-        setTimeout(function(){
-          let vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-         },100);
-      }
-    },
-    autosize: function(e){
-      var el = e.target;
-      el.style.cssText = 'height:auto; padding:0';
-      el.style.cssText = 'height:' + (el.scrollHeight) + 'px';
-    },
+
     onClickListItem:function(item){
       this.postList.map(item => item.data.isSelected = false)
       this.title = item.data.name
@@ -218,7 +198,7 @@ export default {
   }
   .body textarea:first-child{
 
-    border:0;
+   
     border-bottom:1px solid #ddd;
   }
   .body textarea:nth-child(2){

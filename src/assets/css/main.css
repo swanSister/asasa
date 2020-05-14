@@ -59,4 +59,5 @@ textarea,
 div[contenteditable] {
     -webkit-user-select: text;
     user-select: text;
+    border:0;
 }
