@@ -144,8 +144,8 @@ export default {
         }
 
         console.log(imgList)
-        let imageRes = await this.$api.uploadImages(`upload/images`,imgList)
-        console.log(imageRes)
+        let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
+        console.log(imgRes)
         // let imgRes = {
         //     "message": "OK",
         //     "data": "images/GivWoVTeScuw2YKf775c",
