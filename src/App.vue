@@ -63,28 +63,24 @@ export default {
     },
   },
   mounted:function(){
-    
+
     let that = this
     $( document ).ready(function() {
       that.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
 
-      $("div").on("click", function(){
-        console.log("click div")
-      })
       $("input[type=text], textarea").on("focus",that.onFocus)
       $("input[type=text], textarea").on("blur",that.onBlur)
-      //$("textarea").keypress(that.autosize)
-      $(document).on("keypress", "textarea", that.autosize);
+      $(document).on("keypress", "textarea", that.autosize)
 
       let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
 
       window.addEventListener('resize', () => {
         console.log("resize")
-        let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-      });
-    });
+        let vh = window.innerHeight * 0.01
+        document.documentElement.style.setProperty('--vh', `${vh}px`)
+      })
+    })
 
     
   }

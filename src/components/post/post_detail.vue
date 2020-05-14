@@ -43,6 +43,18 @@
           </div>
         </div>
 
+        <div class="comment-list" v-if="commentList.data">
+          <div class="comment" v-for="(item, index) in commentList.data" :key="'commentList'+index" >
+            <div class="name">name</div>
+            <div class="text">{{item.data.text}}</div>
+            <div class="">
+
+
+            </div>
+          </div>
+
+        </div>
+
         <div class="footer flex column align-items-center">
           <div ref="commentImg" class="flex justify-content-start comment-img">
             <div v-for="(item, index) in imgInputList" :key="'commentImga'+index" >
@@ -83,6 +95,7 @@ export default {
       postData:{},
       inputRange:null,
       imgInputList:[],
+      commentList:[],
       commentText:'',
     }
   },
@@ -117,7 +130,7 @@ export default {
         let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
           imgList:`ref ${imgRes.data}`,
           text:this.commentText,
-          reComment:[],
+          like:5
         })
         console.log(writingRes)
     },
@@ -166,8 +179,10 @@ export default {
     async getMessageDetail(){
       if(this.$route.params.path){
         let messages = await this.$api.getByPath(`${this.$route.params.path}`)
+        let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)
         this.postData = messages.data
-        console.log(this.postData)
+        this.commentList = comments.data
+        console.log("comments",comments)
       }else{
         this.$router.go(-1)
       }
@@ -186,7 +201,7 @@ export default {
     background:white;
     font-size:4vw;
     text-align: left;
-    margin-bottom:12vw;
+    margin-bottom:16vw;
   }
   .header{
     padding:1vw 0;
@@ -307,5 +322,12 @@ export default {
   .img-desc{
     border-bottom:1px solid #ddd;
     line-height:8vw;
+  }
+  .comment-list{
+    width:100%;
+    background:rgb(238, 238, 238);
+  }
+  .comment-list .text{
+    color:#000;
   }
 </style>

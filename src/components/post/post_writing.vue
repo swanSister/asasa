@@ -155,12 +155,17 @@ export default {
           title:this.subject,
           text:this.content,
         })
-        console.log(writingRes)
+        
+        if(writingRes.data.message =="OK"){
+          this.$router.go(-1)
+        }else{
+          console.error(writingRes)
+        }
+      
       }else{
         alert("게시글 등록위치를 선택해 주세요.")
       }
-     
-      //this.$router.go(-1)
+      
     }
   },
   async mounted () {

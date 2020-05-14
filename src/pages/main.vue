@@ -2,7 +2,7 @@
   <div>
     <vuescroll class="main-content">
       <Header @onclick="onClickHeader" :headerData="headerData"></Header>
-      <PostHeader></PostHeader>
+      <!-- <PostHeader></PostHeader> -->
       <PostList :postList="postList"></PostList>
       <Footer></Footer>
     </vuescroll>
@@ -12,13 +12,13 @@
 <script>
 import vuescroll from 'vuescroll';
 import Header from '@/components/header'
-import PostHeader from '@/components/post/post_header.vue'
+//import PostHeader from '@/components/post/post_header.vue'
 import PostList from '@/components/post/post_list.vue'
 import Footer from '@/components/footer'
 export default {
   components:{
     Header,
-    PostHeader,
+    //PostHeader,
     PostList,
     vuescroll,
     Footer,
