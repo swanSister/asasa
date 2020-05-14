@@ -63,6 +63,18 @@ export default {
     }
   },
   methods:{
+
+    dataUriToBlob(dataURI){
+        var byteString = atob(dataURI.split(',')[1]);
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        var blob = new Blob([ab], {type: mimeString});
+        return blob;
+    },
      async getPosts(){
       let res = await this.$api.getPosts()
       this.postList = res.data.data
@@ -119,8 +131,8 @@ export default {
         let imgList = [], imgDescList = []
         for(let i = 0; i<this.imgInputList.length; i++){
           let key = `img_${i}`
-          imgList.push({[key]:this.imgInputList[i].src})
-          imgDescList.push(this.imgInputList[i].desc)
+          console.log(key)
+          imgList[key] = this.dataUriToBlob(this.imgInputList[i].src)
         }
 
         console.log(imgList)
