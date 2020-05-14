@@ -26,9 +26,24 @@ export default {
     console.log("post API : ",path,"data:",param)
     return axios.post(`${API_URL}/${path}`,param,{
       headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
         Authorization: ''
       }
     })
   },
+  uploadImages: function(path, imgList){
+    console.log('uploadImages')
+    let formData = new FormData()
+    for(let key in imgList){
+      console.log(key)
+      formData.append(key, imgList[key])
+    }
+    return axios.post(`${API_URL}/${path}`,formData,{
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        Authorization: ''
+      }
+    })
+  }
 }
 </script>

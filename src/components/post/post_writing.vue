@@ -15,13 +15,11 @@
       </div>
 
       <div ref="body" class="body">
-        <textarea class="flex auto" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
-        <textarea @focus="onFocus" @blur="onFocusout" @keydown="autosize" 
-        class="input-content flex none" ref="inputContent" placeholder="내용을 입력해 주세요">
-        </textarea>
+        <textarea class="flex auto" v-model="subject" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="제목을 입력해 주세요"></textarea>
+        <textarea class="input-content flex none" v-model="content" @focus="onFocus" @blur="onFocusout" @keydown="autosize" placeholder="내용을 입력해 주세요"></textarea>
         <div class="img-list" v-for="(item, index) in imgInputList" :key="'imgInputList'+index">
           <img :src="item.src"/>
-          <input maxlength="30" placeholder="이미지에 대한 설명을 입력해주세요.(선택)"/>
+          <input v-model="item.desc" maxlength="30" placeholder="이미지에 대한 설명을 입력해주세요.(선택)"/>
         </div>
       </div>
 
@@ -33,8 +31,8 @@
       <transition name="fade">
         <div v-if="isLocationListShow" @click.self="isLocationListShow=false" class="location-list">
             <div class="list">
-              <div @click="onClickListItem(item)" class="item" v-for="(item, index) in locationList" :key="index+'-itemList'">
-                <div class="name">{{item.name}}</div>
+              <div @click="onClickListItem(item)" class="item" v-for="(item, index) in postList" :key="index+'-itemList'">
+                <div class="name">{{item.data.name}}</div>
                 <div class="desc">{{item.desc}}</div>
               </div>
             </div>
@@ -53,33 +51,22 @@ export default {
   
   data: function () {
     return {
+      postList:[],
       imgInputList:[],
       varUA:null,
       inputRange:null,
       title:'등록위치선택',
       isLocationListShow:false,
-      locationList:[
-        {
-          name:"헬리오시티",
-          desc:"우리 아파트 사람만 볼 수 있습니다"
-        },
-        {
-          name:"송파구 가락동",
-          desc:"우리 동네 사람만 볼 수 있습니다"
-        },
-        {
-          name:"토픽",
-          desc:"아사사 사람들 모두가 볼 수 있습니다"
-        },
-        {
-          name:"스크롤 테스트",
-          desc:"아사사 사람들 모두가 볼 수 있습니다"
-        }
-      ],
-      imgList:[]
+      imgList:[],
+      subject:'',
+      content:'',
     }
   },
   methods:{
+     async getPosts(){
+      let res = await this.$api.getPosts()
+      this.postList = res.data.data
+    },
     onFocus: function(){
       if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
         setTimeout(function(){
@@ -102,7 +89,9 @@ export default {
       el.style.cssText = 'height:' + (el.scrollHeight) + 'px';
     },
     onClickListItem:function(item){
-      this.title = item.name
+      this.postList.map(item => item.data.isSelected = false)
+      this.title = item.data.name
+      item.data.isSelected = true
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
     },   
@@ -139,27 +128,51 @@ export default {
               image.onload = function(){
                 let src = that.resizeImage(image)
                 console.log(oFREvent.target.result.length, src.length)
-                let imgInputData = {src:src, desdc:''}
+                let imgInputData = {src:src, desc:''}
                 that.imgInputList.push(imgInputData)
               }
         };
     },
     async writePost(){
+      let found = this.postList.find(item => item.data.isSelected == true)
+      if(found){
+        let imgList = [], imgDescList = []
+        for(let i = 0; i<this.imgInputList.length; i++){
+          let key = `img_${i}`
+          imgList.push({[key]:this.imgInputList[i].src})
+          imgDescList.push(this.imgInputList[i].desc)
+        }
 
-      let imgList = []
-      for(let i = 0; i<this.imgInputList.length; i++){
-        let key = `img_${i}`
-        imgList.push({[key]:this.imgInputList[i].src})
+        console.log(imgList)
+        let imageRes = await this.$api.uploadImages(`upload/images`,imgList)
+        console.log(imageRes)
+        // let imgRes = {
+        //     "message": "OK",
+        //     "data": "images/GivWoVTeScuw2YKf775c",
+        //     "createdAt": "2020-05-09T13:17:56.140Z",
+        //     "updatedAt": "2020-05-09T13:17:56.140Z"
+        //   }
+        
+        let writingRes = await this.$api.postByPath(`${found.path}/messages`, {
+          imgList:`ref ${imgRes.data}`,
+          imgDescList:imgDescList,
+          like:0,
+          view:0,
+          name:'test user',
+          tag:'사회, 투자',
+          title:this.subject,
+          text:this.content,
+        })
+        console.log(writingRes)
+      }else{
+        alert("게시글 등록위치를 선택해 주세요.")
       }
-
-      console.log(imgList)
-      let res = await this.$api.postByPath(`upload/images`,imgList)
-      console.log(res)
+     
       //this.$router.go(-1)
     }
   },
-  mounted: function () {
-
+  async mounted () {
+    this.getPosts()
     this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
   }
 }

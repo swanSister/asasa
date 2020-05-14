@@ -8,8 +8,8 @@
         <div class="content">{{postData.data.text}}</div>
         <div class="content">{{postData.data.text}}</div>
       </div>
-      <div class="right" v-if="postData.data.thumbnail">
-        <img class="thumbnail" :src="postData.data.thumbnail">
+      <div class="right" v-if="postData.data.imgList && postData.data.imgList['img_0']">
+        <img class="thumbnail" :src="postData.data.imgList['img_0']">
       </div>
     </div>
     <div class="post-footer">
@@ -52,7 +52,7 @@ export default {
     },
   },
   mounted () {
-     
+     console.log("###postData", this.postData)
   }
 }
 

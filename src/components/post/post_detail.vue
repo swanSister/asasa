@@ -1,7 +1,7 @@
 
 <template>
   <div>
-      <div class="post-detail">
+      <div class="post-detail" v-if="postData.data">
         <div class="flex align-items-center header">
           <div class="flex auto justify-content-start">
             <span @click="$router.go('-1')" class="icon-left-open"></span>
@@ -13,20 +13,21 @@
           </div>
         </div>
         <div class="body">
-          <div class="title">{{postData.title}}</div>
+          <div class="title">{{postData.data.title}}</div>
           <div class="info">
-            <div class="name">{{postData.name}}</div>
-            <div class="time">{{postData.time}}</div>
+            <div class="name">{{postData.data.name}}</div>
+            <div class="time">{{postData.updatedAt}}</div>
           </div>
-          <div class="content">내용
-              ssssvsvsvvs
-              <div class="img-containner">
-                <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                <img src="https://homepages.cae.wisc.edu/~ece533/images/airplane.png">
-              </div>
-              <div class="img-containner">
-                <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                <img src="https://homepages.cae.wisc.edu/~ece533/images/airplane.png">
+          <div class="content">
+              {{postData.data.text}}
+              <div class="img-containner" v-for="(item, index) in Object.keys(postData.data.imgList)" :key="'imageList'+index">
+                <div v-if="postData.data.imgList[item]">
+                  <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
+                  <img :src="postData.data.imgList[item]">
+                  <div class="img-desc" v-if="postData.data.imgDescList[index]">
+                    {{postData.data.imgDescList[index]}}
+                  </div>
+                </div>
               </div>
           </div>
         </div>
@@ -35,7 +36,7 @@
             <span class="icon-thumbs-up-1"></span>좋아요
           </div>
           <div class="flex none justify-content-center align-items-center border-right"><!-- comment-->
-            <span class="icon-comment"></span>{{postData.commentCount}}
+            <span class="icon-comment"></span>{{postData.data.commentCount}}
           </div>
           <div class="flex none justify-content-center align-items-center"><!-- comment-->
             <span class="icon-share-1"></span>공유하기
@@ -153,7 +154,7 @@ export default {
     async getMessageDetail(){
       if(this.$route.params.path){
         let messages = await this.$api.getByPath(`${this.$route.params.path}`)
-        this.postData = messages.data.data
+        this.postData = messages.data
         console.log(this.postData)
       }else{
         this.$router.go(-1)
@@ -185,6 +186,9 @@ export default {
   }
   .icon-bell-alt, .icon-bookmark{
     color:tomato;
+  }
+  .body{
+
   }
   .body .title{
    font-size:7vw;
@@ -285,5 +289,9 @@ export default {
   .footer .upload{
     width:10vw;
     color:tomato;
+  }
+  .img-desc{
+    border-bottom:1px solid #ddd;
+    line-height:8vw;
   }
 </style>
