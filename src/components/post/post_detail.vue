@@ -45,11 +45,13 @@
 
         <div class="comment-list" v-if="commentList.data">
           <div class="comment" v-for="(item, index) in commentList.data" :key="'commentList'+index" >
-            <div class="name">name</div>
+            <div class="name flex align-items-center">{{item.data.nickname}}
+              <div class="circle"></div>
+              <span>{{item.data.apt}}</span>
+            </div>
             <div class="text">{{item.data.text}}</div>
-            <div class="">
-
-
+            <div class="time">
+              {{item.updatedAt}}
             </div>
           </div>
 
@@ -120,19 +122,22 @@ export default {
         }
         console.log("imglist:",imgList)
         let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
-        // let imgRes = {
-        //     "message": "OK",
-        //     "data": "images/GivWoVTeScuw2YKf775c",
-        //     "createdAt": "2020-05-09T13:17:56.140Z",
-        //     "updatedAt": "2020-05-09T13:17:56.140Z"
-        //   }
           
         let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
           imgList:`ref ${imgRes.data}`,
           text:this.commentText,
-          like:5
+          like:5,
+          nickname:'nickname',
+          apt:'강남아파트',
         })
-        console.log(writingRes)
+        if(writingRes.data.message == "OK"){
+          alert("댓글을 등록했습니다.")
+          this.getCommentList()
+        }else{
+          console.error(writingRes)
+          alert("댓글을 등록 실패")
+        }
+        
     },
    resizeImage(image) {
         let canvas = document.createElement("canvas"),
@@ -176,13 +181,20 @@ export default {
     removeCommentImg: function(index){
       this.commentImgs.splice(index,1);
     },
+    async getPostDetail(){
+      let messages = await this.$api.getByPath(`${this.$route.params.path}`)
+      this.postData = messages.data
+    },
+    async getCommentList(){
+      let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)
+      this.commentList = comments.data
+      console.log("comments",comments)
+    },
     async getMessageDetail(){
       if(this.$route.params.path){
-        let messages = await this.$api.getByPath(`${this.$route.params.path}`)
-        let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)
-        this.postData = messages.data
-        this.commentList = comments.data
-        console.log("comments",comments)
+        this.getPostDetail()
+        this.getCommentList()
+        
       }else{
         this.$router.go(-1)
       }
@@ -324,10 +336,35 @@ export default {
     line-height:8vw;
   }
   .comment-list{
-    width:100%;
-    background:rgb(238, 238, 238);
+    width:100vw;
+    margin-left:-4vw;
+    border-top:1px solid #ddd;
   }
-  .comment-list .text{
-    color:#000;
+  .comment{
+    width:100vw;
+    padding:2vw 2vw 0 2vw;
+    border-bottom:1px solid #ddd;
   }
+  .comment div{
+    margin-bottom:2vw;
+  }
+  .comment .text{
+    font-size:3vw;
+  }
+  .comment .name, .comment .time{
+    color:#aaa;
+    font-size:2vw;
+  }
+  .comment .name .circle{
+    display:inline-block;
+    width:.5vw;
+    height:.5vw;
+    background:#aaa;
+    border-radius:50%;
+    margin:0 1vw;
+  }
+  .comment .name span{
+    color:rgb(3,1,41);
+  }
+  
 </style>

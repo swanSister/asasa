@@ -1,10 +1,10 @@
 <template>
-  <div> 
-    <div>
-     
+  <div class="login">
+    <div class="header">로고</div>
+    <div class="body">
+      <input id="addressInput" placeholder="살고계신 아파트 이름을 검색해 주세요." @click="getAddress"/>
+      <div id="loginBtn" @click="$router.push('main')">인증</div>
     </div>
-    <div></div>
-    <div id="loginBtn" @click="$router.push('main')">Login</div>
   </div>
 </template>
 
@@ -21,19 +21,43 @@ export default {
     }
   },
   methods:{
+    async getAddress(){
+      await this.$api.getAddress()
+    },
   },
   mounted(){
-      console.log("login main")
+      console.log("login main param : ", this.$router.params)
   }
 }
 </script>
 <style scoped>
-
+.login{
+  background:white;
+}
+.header{
+  width:80vw;
+  color:tomato;
+  font-weight:bold;
+  font-size:20vw;
+  margin:10vw;
+}
+.body{
+  padding:10vw;
+}
+#addressInput{
+  padding:0 4vw;
+  font-size:4vw;
+  height:12vw;
+  width:100%;
+  background:#f5f5f5;
+  color:#aaa;
+}
 #loginBtn{
   margin-top:4vw;
   background-color:tomato;
   color:white;
-  font-size: 8vw;
-  padding:4vw;
+  font-size: 4vw;
+  height:12vw;
+  line-height:12vw;
 }
 </style>
