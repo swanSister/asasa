@@ -11,7 +11,7 @@ export default {
   },
 
   getAddress:function(){
-    let returnUrl=encodeURI('http://localhost:8080/#/')  
+    let returnUrl=encodeURI('http://localhost:8080')  
     return axios.get(`${ADDRESS_URL}?confmKey=devU01TX0FVVEgyMDIwMDUxODE5NDIyMTEwOTc3MDA=&returnUrl=${returnUrl}&resultType=4`)
  
   },
