@@ -9,11 +9,21 @@ export default {
   install(Vue, options){
     ctx.store = options.store
   },
-
+  //asasa key  : devU01TX0FVVEgyMDIwMDUxOTIxNTQwODEwOTc3NDQ=
+  //local key : 
   getAddress:function(){
     let returnUrl=encodeURI('https://asasakorea.com/#/')  
-    return axios.get(`${ADDRESS_URL}?confmKey=devU01TX0FVVEgyMDIwMDUxODE5NDIyMTEwOTc3MDA=&returnUrl=${returnUrl}&resultType=4`)
- 
+    let param = {
+      'confmKey':'devU01TX0FVVEgyMDIwMDUxOTIxNTQwODEwOTc3NDQ=',
+      'returnUrl': returnUrl,
+      'resultType': '4'
+    }
+    return axios.post(`${ADDRESS_URL}`,param,{
+      headers: {
+        Authorization: '',
+        'Access-Control-Allow-Origin': '*'
+      }
+    })
   },
 
   getPosts:function(){
