@@ -6,6 +6,7 @@
       <div id="loginBtn" @click="$router.push('main')">인증</div>
       <div>행정구역코드: {{bcode}}</div>
     </div>
+    <div v-if="isAddressPopup" id="addressSearch" ></div>
   </div>
 </template>
 
@@ -20,10 +21,12 @@ export default {
     return {
       address:'',
       bcode:'',
+      isAddressPopup:false,
     }
   },
   methods:{
     async getAddress(){
+      this.isAddressPopup = true
       let recaptchaScript = document.createElement('script')
       recaptchaScript.setAttribute('src', 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js')
       document.head.appendChild(recaptchaScript)
@@ -34,14 +37,18 @@ export default {
       interval = setInterval(function(){
         if(!global.daum.Postcode) return
         new global.daum.Postcode({
+            width:"100%",
+            height:"100%",
             oncomplete: function(data) {
               console.log(data)
               that.address = data.buildingName
               that.bcode = data.bcode
+              that.isAddressPopup = false
+              
                 // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분입니다.
                 // 예제를 참고하여 다양한 활용법을 확인해 보세요.
             }
-        }).open();
+        }).embed(document.getElementById("addressSearch"));
         clearInterval(interval)
       },50)
     },
@@ -71,7 +78,6 @@ export default {
   height:12vw;
   width:100%;
   background:#f5f5f5;
-  color:black;
 }
 #loginBtn{
   margin-top:4vw;
@@ -81,4 +87,13 @@ export default {
   height:12vw;
   line-height:12vw;
 }
+#addressSearch{
+  width:100vw;
+  height:100vh;
+  position:fixed;
+  left:0;
+  top:0;
+  background:black;
+}
+
 </style>

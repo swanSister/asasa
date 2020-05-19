@@ -1,8 +1,7 @@
 <template>
   
-  <div>
+  <div id="addressSearch">
    
- 
   </div>
 </template>
 
@@ -16,45 +15,35 @@ export default {
   },
   data () {
     return {
-    
+      
     }
   },
   methods:{
    
   },
   mounted(){
+     let recaptchaScript = document.createElement('script')
+      recaptchaScript.setAttribute('src', 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js')
+      document.head.appendChild(recaptchaScript)
+      let that = this
+      let interval = null
+      interval = setInterval(function(){
+        if(!global.daum.Postcode) return
+        new global.daum.Postcode({
+            oncomplete: function(data) {
+              that.$eventBus.$emit("addressResult", data)
+            }
+        }).embed(document.getElementById("addressSearch"));
+        clearInterval(interval)
+      },50)
     
   }
 }
 </script>
 <style scoped>
-.login{
-  background:white;
-}
-.header{
-  width:80vw;
-  color:tomato;
-  font-weight:bold;
-  font-size:20vw;
-  margin:10vw;
-}
-.body{
-  padding:10vw;
-}
-#addressInput{
-  padding:0 4vw;
-  font-size:4vw;
-  height:12vw;
-  width:100%;
-  background:#f5f5f5;
-  color:#aaa;
-}
-#loginBtn{
-  margin-top:4vw;
-  background-color:tomato;
-  color:white;
-  font-size: 4vw;
-  height:12vw;
-  line-height:12vw;
+
+#__daum__layer_1{
+  width:100vw !important;
+  height: 100vh !important;
 }
 </style>
