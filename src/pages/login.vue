@@ -78,6 +78,7 @@ export default {
   height:12vw;
   width:100%;
   background:#f5f5f5;
+  color:black;
 }
 #loginBtn{
   margin-top:4vw;
@@ -93,7 +94,6 @@ export default {
   position:fixed;
   left:0;
   top:0;
-  background:black;
 }
 
 </style>
