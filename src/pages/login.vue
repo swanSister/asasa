@@ -22,7 +22,9 @@ export default {
   },
   methods:{
     async getAddress(){
-      await this.$api.getAddress()
+      let res = await this.$api.getAddress()
+      var wnd = window.open("about:blank", "", "_blank");
+      wnd.document.write(res.data);
     },
   },
   mounted(){

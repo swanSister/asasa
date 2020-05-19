@@ -3,25 +3,22 @@
 import axios from 'axios'
 let ctx = {}
 const API_URL = "https://api.asasakorea.com"
-const ADDRESS_URL = "https://www.juso.go.kr/addrlink/addrMobileLinkUrl.do"
-//const ADDRESS_PC_URL = "http://www.juso.go.kr/addrlink/addrLinkUrl.do"
+const ADDRESS_URL = "https://asasakorea.com/address"
 export default {
   install(Vue, options){
     ctx.store = options.store
   },
-  //asasa key  : devU01TX0FVVEgyMDIwMDUxOTIxNTQwODEwOTc3NDQ=
-  //local key : 
+
   getAddress:function(){
-    let returnUrl=encodeURI('https://asasakorea.com/#/')  
+    let returnUrl=encodeURI('https://asasakorea.com')  
     let param = {
-      'confmKey':'devU01TX0FVVEgyMDIwMDUxOTIxNTQwODEwOTc3NDQ=',
-      'returnUrl': returnUrl,
-      'resultType': '4'
+      confmKey:'devU01TX0FVVEgyMDIwMDUxOTIzMTUzODEwOTc3NDg=',
+      returnUrl: returnUrl,
+      resultType: '4'
     }
     return axios.post(`${ADDRESS_URL}`,param,{
       headers: {
-        Authorization: '',
-        'Access-Control-Allow-Origin': '*'
+        Authorization: ''
       }
     })
   },
