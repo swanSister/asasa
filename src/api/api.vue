@@ -3,7 +3,7 @@
 import axios from 'axios'
 let ctx = {}
 const API_URL = "https://api.asasakorea.com"
-const ADDRESS_URL = "http://www.juso.go.kr/addrlink/addrMobileLinkUrl.do"
+const ADDRESS_URL = "https://www.juso.go.kr/addrlink/addrMobileLinkUrl.do"
 //const ADDRESS_PC_URL = "http://www.juso.go.kr/addrlink/addrLinkUrl.do"
 export default {
   install(Vue, options){
@@ -11,7 +11,7 @@ export default {
   },
 
   getAddress:function(){
-    let returnUrl=encodeURI('http://localhost:8080')  
+    let returnUrl=encodeURI('https://asasakorea.com/#/')  
     return axios.get(`${ADDRESS_URL}?confmKey=devU01TX0FVVEgyMDIwMDUxODE5NDIyMTEwOTc3MDA=&returnUrl=${returnUrl}&resultType=4`)
  
   },

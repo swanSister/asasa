@@ -1,4 +1,3 @@
-
 <template>
   <div class="post">
     <div class="post-body" @click="goDetail">
