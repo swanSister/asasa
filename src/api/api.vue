@@ -3,17 +3,16 @@
 import axios from 'axios'
 let ctx = {}
 const API_URL = "https://api.asasakorea.com"
-const ADDRESS_URL = "https://asasakorea.com/address"
+const ADDRESS_URL = "http://localhost:3001/address"
 export default {
   install(Vue, options){
     ctx.store = options.store
   },
 
   getAddress:function(){
-    let returnUrl=encodeURI('https://asasakorea.com')  
     let param = {
       confmKey:'devU01TX0FVVEgyMDIwMDUxOTIzMTUzODEwOTc3NDg=',
-      returnUrl: returnUrl,
+      returnUrl: 'http://localhost:3001',
       resultType: '4'
     }
     return axios.post(`${ADDRESS_URL}`,param,{
