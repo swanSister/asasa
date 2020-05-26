@@ -32,9 +32,11 @@ export default {
       }
     })
   },
-  getByPath: function(path){
+  getByPath: function(path, offset, limit){
+    offset = 0
+    limit = 10
     console.log("##get API : ",path)
-     return axios.get(`${API_URL}/${path}`)
+     return axios.get(`${API_URL}/${path}?offset=${offset}&limit=${limit}`)
   },
   postByPath: function(path, param){
     console.log("post API : ",path,"data:",param)

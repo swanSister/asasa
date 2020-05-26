@@ -63,7 +63,7 @@ export default {
     background:white;
     display:flex;
     flex-direction:column;
-    margin-bottom:3vw;
+    margin-bottom:2vw;
     color:#aaa;
   }
   .post *{

@@ -43,7 +43,10 @@
           </div>
         </div>
 
-        <div class="comment-list" v-if="commentList.data">
+       
+      </div>
+
+       <div class="comment-list" v-if="commentList.data">
           <div class="comment" v-for="(item, index) in commentList.data" :key="'commentList'+index" >
             <div class="name flex align-items-center">{{item.data.nickname}}
               <div class="circle"></div>
@@ -76,7 +79,6 @@
             <div @click="addComment" class="flex align-items-center upload">등록</div>
           </div>
         </div>
-      </div>
   </div>
 </template>
 
@@ -209,11 +211,12 @@ export default {
 
 <style scoped>
   .post-detail{
+    width:100vw;
     padding:2vw 4vw;
     background:white;
     font-size:4vw;
     text-align: left;
-    margin-bottom:16vw;
+    margin-bottom:2vw;
   }
   .header{
     padding:1vw 0;
@@ -280,7 +283,7 @@ export default {
     left:0;
     width:100%;
     background:white;
-    padding:2vw;
+    padding:0 2vw;
   }
   .footer .icon{
     font-size:6vw;
@@ -301,9 +304,8 @@ export default {
     font-size: 4vw;
   }
   .footer .comment-img{
-    padding:0 2vw;
+    padding:2vw 2vw 0 2vw;
     width:100%;
-    margin-bottom:2vw;
     flex-wrap: wrap;
   }
   .comment-img > div{
@@ -337,7 +339,9 @@ export default {
   }
   .comment-list{
     width:100vw;
-    margin-left:-4vw;
+    background:white;
+    border-top:1px solid #ddd;
+    margin-bottom:16vw;
     border-top:1px solid #ddd;
   }
   .comment{
@@ -345,13 +349,13 @@ export default {
     padding:2vw 2vw 0 2vw;
     border-bottom:1px solid #ddd;
   }
-  .comment div{
-    margin-bottom:2vw;
-  }
   .comment .text{
+    min-height:4vw;
     font-size:3vw;
+    margin:2vw 0;
   }
   .comment .name, .comment .time{
+    min-height:4vw;
     color:#aaa;
     font-size:2vw;
   }
