@@ -5,7 +5,7 @@
         <span @click="onClickHeader(item, index)" class="category flex none" 
         v-for="(item, index) in headerData" :key="'headerDatas'+index"
         :class="{'current':index==current}">
-          {{item.data.name}}
+          {{item.name}}
         </span>
       </div>
     </div>

@@ -2,7 +2,7 @@
 <script>
 import axios from 'axios'
 let ctx = {}
-const API_URL = "https://api.asasakorea.com"
+const API_URL = "https://api.asasakorea.com/rest"
 const ADDRESS_URL = "http://localhost:3001/address"
 export default {
   install(Vue, options){
@@ -32,7 +32,12 @@ export default {
       }
     })
   },
-  getByPath: function(path, offset, limit){
+  getByPathWhere: function(path, where){
+    console.log("##get API : ",path)
+     return axios.get(`${API_URL}/${path}?${where}`)
+  },
+  getByPath: function(path, offset, limit, depth){
+    
     offset = 0
     limit = 10
     console.log("##get API : ",path)

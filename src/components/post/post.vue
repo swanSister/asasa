@@ -2,29 +2,31 @@
   <div class="post">
     <div class="post-body" @click="goDetail">
       <div class="flex auto left">
-        <div class="tag flex none align-items-center"><span>{{postData.data.tag}}</span></div>
-        <div class="title">{{postData.data.title}}</div>
-        <div class="content">{{postData.data.text}}</div>
-        <div class="content">{{postData.data.text}}</div>
+        <div class="tag flex none align-items-center"><span>{{postData.fields.tag}}</span></div>
+        <div class="title">{{postData.fields.title}}</div>
+        <div class="content">
+          {{postData.fields.text.length > 90 ?postData.fields.text.slice(0,90)+"..." :postData.fields.text}}
+        </div>
+        <div class="name">{{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span></div>
       </div>
-      <div class="right" v-if="postData.data.imgList && postData.data.imgList['img_0']">
-        <img class="thumbnail" :src="postData.data.imgList['img_0']">
+      <div class="right" v-if="postData.fields.imgList && postData.fields.imgList['img_0']">
+        <img class="thumbnail" :src="postData.fields.imgList['img_0']">
       </div>
     </div>
     <div class="post-footer">
       <div class="left"> 
         <div class="flex none align-items-center"><!-- view-->
-          <span class="icon-eye"></span>{{postData.data.view}}
+          <span class="icon-eye"></span>{{postData.fields.view}}
         </div>
         <div class="flex none align-items-center"><!-- like-->
-          <span class="icon-thumbs-up-1"></span>{{postData.data.like}}
+          <span class="icon-thumbs-up-1"></span>{{postData.fields.like}}
         </div>
         <div class="flex none align-items-center"><!-- comment-->
-          <span class="icon-comment"></span>{{postData.data.commentCount}}
+          <span class="icon-comment"></span>{{postData.fields.commentCount}}
         </div>
       </div>
       <div class="right">
-        <div>{{postData.data.time}}</div>
+        <div>{{postData.fields.time}}</div>
         <div><!-- bookmark-->
           <span></span>
         </div>
@@ -51,7 +53,7 @@ export default {
     },
   },
   mounted () {
-     console.log("###postData", this.postData)
+    //  console.log("###postData", this.postData)
   }
 }
 
@@ -103,6 +105,16 @@ export default {
   }
   .post-body .text{
     margin-bottom:3vw;
+  }
+  .post-body .content{
+    margin-bottom:2vw;
+  }
+  .post-body .name{
+    font-size:3.5vw;
+  }
+  .post-body .name span{
+    margin-left:2vw;
+    color:tomato;
   }
   .post-footer{
     padding:1.5vw 4vw;

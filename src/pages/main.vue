@@ -34,19 +34,19 @@ export default {
   },
   methods:{
     async onClickHeader(item){
-      console.log(item)
       this.getMessages(item.path)
     },
     async getPosts(){
       let posts = await this.$api.getPosts()
-      this.headerData = posts.data.data
+      this.headerData = this.$store.state.me.topics
       this.getMessages(this.headerData[0].path)
     },
     async getMessages(path){
       let messages = await this.$api.getByPath(`${path}/messages`)
-      
-      this.postList = messages.data.data
-      console.log(this.postList)
+      console.log("massages:",messages)
+      this.postList = messages.data.documents
+      console.log(path)
+      console.log("postlist",this.postList)
       //post 등록 샘플  
       // let messages = await this.$api.postByPath(`${this.headerData[0].path}/messages`, {
       //     tag:"사회・투자",
@@ -62,6 +62,7 @@ export default {
     }
   },
   async mounted(){
+    console.log(this.$store.state.me)
     this.getPosts()
   }
 }

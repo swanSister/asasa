@@ -1,7 +1,7 @@
 
 <template>
   <div>
-      <div class="post-detail" v-if="postData.data">
+      <div class="post-detail" v-if="postData.fields">
         <div class="flex align-items-center header">
           <div class="flex auto justify-content-start">
             <span @click="$router.go('-1')" class="icon-left-open"></span>
@@ -13,19 +13,21 @@
           </div>
         </div>
         <div class="body">
-          <div class="title">{{postData.data.title}}</div>
+          <div class="title">{{postData.fields.title}}</div>
           <div class="info">
-            <div class="name">{{postData.data.name}}</div>
+            <div class="name">
+              {{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span>
+              </div>
             <div class="time">{{postData.updatedAt}}</div>
           </div>
           <div class="content">
-              {{postData.data.text}}
-              <div class="img-containner" v-for="(item, index) in Object.keys(postData.data.imgList)" :key="'imageList'+index">
-                <div v-if="postData.data.imgList[item]">
+              <pre>{{postData.fields.text}}</pre>
+              <div class="img-containner" v-for="(item, index) in Object.keys(postData.fields.imgList)" :key="'imageList'+index">
+                <div v-if="postData.fields.imgList[item]">
                   <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                  <img :src="postData.data.imgList[item]">
-                  <div class="img-desc" v-if="postData.data.imgDescList[index]">
-                    {{postData.data.imgDescList[index]}}
+                  <img :src="postData.fields.imgList[item]">
+                  <div class="img-desc" v-if="postData.fields.imgDescList[index]">
+                    {{postData.fields.imgDescList[index]}}
                   </div>
                 </div>
               </div>
@@ -36,7 +38,7 @@
             <span class="icon-thumbs-up-1"></span>좋아요
           </div>
           <div class="flex none justify-content-center align-items-center border-right"><!-- comment-->
-            <span class="icon-comment"></span>{{postData.data.commentCount}}
+            <span class="icon-comment"></span>{{postData.fields.commentCount}}
           </div>
           <div class="flex none justify-content-center align-items-center"><!-- comment-->
             <span class="icon-share-1"></span>공유하기
@@ -46,13 +48,12 @@
        
       </div>
 
-       <div class="comment-list" v-if="commentList.data">
-          <div class="comment" v-for="(item, index) in commentList.data" :key="'commentList'+index" >
-            <div class="name flex align-items-center">{{item.data.nickname}}
-              <div class="circle"></div>
-              <span>{{item.data.apt}}</span>
+       <div class="comment-list" v-if="commentList.length">
+          <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
+            <div class="name flex align-items-center">
+              {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
             </div>
-            <div class="text">{{item.data.text}}</div>
+            <div class="text">{{item.fields.text}}</div>
             <div class="time">
               {{item.updatedAt}}
             </div>
@@ -61,7 +62,9 @@
         </div>
 
         <div class="footer flex column align-items-center">
-          <div ref="commentImg" class="flex justify-content-start comment-img">
+          <div ref="commentImg" class="flex justify-content-start comment-img" :style="{
+            borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
+          }">
             <div v-for="(item, index) in imgInputList" :key="'commentImga'+index" >
                 <div class="flex align-items-center justify-content-center close-btn" @click="removeCommentImg(index)">
                   <span class="icon-cancel"></span>
@@ -115,8 +118,8 @@ export default {
         var blob = new Blob([ab], {type: mimeString});
         return blob;
     },
-    async addComment(){
-       let imgList = {}
+    async uploadCommentImg(){
+      let imgList = {}
        for(let i = 0; i<this.imgInputList.length; i++){
           let key = `img_${i}`
           console.log(key)
@@ -124,15 +127,36 @@ export default {
         }
         console.log("imglist:",imgList)
         let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
-          
-        let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
-          imgList:`ref ${imgRes.data}`,
+        return imgRes
+    },
+    async uploadCommentTxt(imgRes){
+
+      let findUser = await this.$api.getByPathWhere(`users`,`userId=${this.$store.state.me.userId}`)
+      if(!findUser.data.documents.length){
+         alert("user data error! 재로그인 ")
+         this.$router.push('login')
+         return
+       }
+
+      let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
+          imgList:imgRes ? `ref ${imgRes.data}` : '',
           text:this.commentText,
           like:5,
-          nickname:'nickname',
-          apt:'강남아파트',
+          userId:this.$store.state.me.userId,
+          buildingName:this.$store.state.me.addressData.buildingName,
+          writer:'ref '+findUser.data.documents[0].path
         })
-        if(writingRes.data.message == "OK"){
+        return writingRes
+    },
+
+    async addComment(){
+      let imgRes
+        if(this.imgInputList.length){
+          imgRes = this.uploadCommentImg
+        }
+
+        let writingRes = await this.uploadCommentTxt(imgRes)
+        if(writingRes.data.code == 201){
           alert("댓글을 등록했습니다.")
           this.getCommentList()
         }else{
@@ -185,12 +209,13 @@ export default {
     },
     async getPostDetail(){
       let messages = await this.$api.getByPath(`${this.$route.params.path}`)
+      console.log("psot detail:",messages)
       this.postData = messages.data
     },
     async getCommentList(){
       let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)
-      this.commentList = comments.data
-      console.log("comments",comments)
+      this.commentList = comments.data.documents
+      console.log("comments",this.commentList)
     },
     async getMessageDetail(){
       if(this.$route.params.path){
@@ -234,7 +259,7 @@ export default {
 
   }
   .body .title{
-   font-size:7vw;
+   font-size:6vw;
    font-weight: bold;
    margin:4vw 0;
   }
@@ -244,6 +269,9 @@ export default {
     margin-bottom:6vw;
   }
   .body .info .name{
+   
+  }
+  .body .info .name span{
    color:tomato;
   }
   .body .content{
@@ -253,6 +281,7 @@ export default {
   }
   .body .content img{
     max-width: 100%;
+    width:100%;
   }
   .img-containner{
     position:relative;
@@ -293,7 +322,7 @@ export default {
   }
   .footer .comment-input{
     width:100%;
-    border-top: 1px solid #ddd;
+    
     padding-top:2vw;
   }
   .footer .input-content{
@@ -307,6 +336,7 @@ export default {
     padding:2vw 2vw 0 2vw;
     width:100%;
     flex-wrap: wrap;
+    
   }
   .comment-img > div{
     display:inline-block;
@@ -346,29 +376,25 @@ export default {
   }
   .comment{
     width:100vw;
-    padding:2vw 2vw 0 2vw;
+    padding:2vw;
     border-bottom:1px solid #ddd;
+    text-align: left;
   }
   .comment .text{
     min-height:4vw;
     font-size:3vw;
-    margin:2vw 0;
+    margin:1vw 0;
   }
   .comment .name, .comment .time{
-    min-height:4vw;
+    font-size:3vw;
     color:#aaa;
-    font-size:2vw;
   }
-  .comment .name .circle{
-    display:inline-block;
-    width:.5vw;
-    height:.5vw;
-    background:#aaa;
-    border-radius:50%;
-    margin:0 1vw;
+  .comment .name{
+   
   }
   .comment .name span{
-    color:rgb(3,1,41);
+    margin-left:2vw;
+    color:tomato;
   }
   
 </style>

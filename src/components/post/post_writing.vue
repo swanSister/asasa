@@ -32,8 +32,7 @@
         <div v-if="isLocationListShow" @click.self="isLocationListShow=false" class="location-list">
             <div class="list">
               <div @click="onClickListItem(item)" class="item" v-for="(item, index) in postList" :key="index+'-itemList'">
-                <div class="name">{{item.data.name}}</div>
-                <div class="desc">{{item.desc}}</div>
+                <div class="name">{{item.name}}</div>
               </div>
             </div>
         </div>
@@ -75,15 +74,11 @@ export default {
         var blob = new Blob([ab], {type: mimeString});
         return blob;
     },
-     async getPosts(){
-      let res = await this.$api.getPosts()
-      this.postList = res.data.data
-    },
 
     onClickListItem:function(item){
-      this.postList.map(item => item.data.isSelected = false)
-      this.title = item.data.name
-      item.data.isSelected = true
+      this.postList.map(item => item.isSelected = false)
+      this.title = item.name
+      item.isSelected = true
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
     },   
@@ -125,51 +120,55 @@ export default {
               }
         };
     },
+
     async writePost(){
-      let found = this.postList.find(item => item.data.isSelected == true)
+      let found = this.postList.find(item => item.isSelected == true)
+      console.log(found)
       if(found){
         let imgList = [], imgDescList = []
         for(let i = 0; i<this.imgInputList.length; i++){
           let key = `img_${i}`
-          console.log(key)
           imgList[key] = this.dataUriToBlob(this.imgInputList[i].src)
         }
-
-        console.log(imgList)
-        let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
-        console.log(imgRes)
-        // let imgRes = {
-        //     "message": "OK",
-        //     "data": "images/GivWoVTeScuw2YKf775c",
-        //     "createdAt": "2020-05-09T13:17:56.140Z",
-        //     "updatedAt": "2020-05-09T13:17:56.140Z"
-        //   }
-        
-        let writingRes = await this.$api.postByPath(`${found.path}/messages`, {
-          imgList:`ref ${imgRes.data}`,
+        console.log("imgInputList:",this.imgInputList)
+        console.log("imgList:",imgList)
+        let imgRes
+        if(Object.keys(imgList).length){
+          imgRes = await this.$api.uploadImages(`upload/images`,imgList)
+          
+        }
+       let findUser = await this.$api.getByPathWhere(`users`,`userId=${this.$store.state.me.userId}`)
+       if(!findUser.data.documents.length){
+         alert("user data error! 재로그인 ")
+         this.$router.push('login')
+         return
+       }
+       let writingRes = await this.$api.postByPath(`${found.path}/messages`, {
+          imgList:imgRes ? `ref ${imgRes.data}` : '',
           imgDescList:imgDescList,
           like:0,
           view:0,
-          name:'test user',
-          tag:'사회, 투자',
+          userId:this.$store.state.me.userId,
+          buildingName:this.$store.state.me.addressData.buildingName,
+          writer:'ref '+findUser.data.documents[0].path,
+          tag:'XXXX',
           title:this.subject,
           text:this.content,
         })
-        
-        if(writingRes.data.message =="OK"){
+
+        if(writingRes.data.code == 201){
           this.$router.go(-1)
         }else{
           console.error(writingRes)
         }
-      
       }else{
         alert("게시글 등록위치를 선택해 주세요.")
       }
-      
     }
   },
   async mounted () {
-    this.getPosts()
+    let topics = JSON.parse(JSON.stringify(this.$store.state.me.topics))
+    this.postList = topics
     this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
   }
 }
@@ -209,17 +208,19 @@ export default {
     width:100%;
     font-size: 4vw;
     line-height:1.5;
-    max-height: 100vw;
     min-height:12vw;
     overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
   }
   .body textarea:first-child{
-
-   
+    max-height:14vw;
     border-bottom:1px solid #ddd;
   }
   .body textarea:nth-child(2){
     overflow: auto;
+    height:auto;
+    resize:none;
+    
+    max-height:130vw;
   }
   div[contenteditable] {
     color : #8e8e8e;

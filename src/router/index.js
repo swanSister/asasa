@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Main from '@/pages/main'
 import Login from '@/pages/login'
+import Auth from '@/pages/auth'
 import PostDetail from '@/pages/postDetail'
-import postWriting from '@/pages/postWriting'
-import address from '@/pages/address'
+import PostWriting from '@/pages/postWriting'
 Vue.use(Router)
 
 export default new Router({
@@ -28,12 +28,12 @@ export default new Router({
     {
       path: '/postWriting',
       name: 'postWriting',
-      component: postWriting
+      component: PostWriting
     },
     {
-      path: '/address',
-      name: 'address',
-      component: address
+      path: '/auth',
+      name: 'auth',
+      component: Auth
     }
   ]
 })
