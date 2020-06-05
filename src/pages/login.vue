@@ -46,6 +46,7 @@ export default {
           parent1: parent1 ? parent1 : '',
           parent2:parent2 ? parent2 : '',
         })
+        console.log(postMessage)
         let reMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
         path = reMessage.data.documents[0].path
       }else{

@@ -37,7 +37,7 @@ export default {
       this.getMessages(item.path)
     },
     async getPosts(){
-      let posts = await this.$api.getPosts()
+     
       this.headerData = this.$store.state.me.topics
       this.getMessages(this.headerData[0].path)
     },

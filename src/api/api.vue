@@ -36,7 +36,7 @@ export default {
     console.log("##get API : ",path)
      return axios.get(`${API_URL}/${path}?${where}`)
   },
-  getByPath: function(path, offset, limit, depth){
+  getByPath: function(path, offset, limit){
     
     offset = 0
     limit = 10
