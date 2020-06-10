@@ -156,6 +156,7 @@ export default {
         }
 
         let writingRes = await this.uploadCommentTxt(imgRes)
+        console.log("writingRes",writingRes)
         if(writingRes.data.code == 201){
           alert("댓글을 등록했습니다.")
           this.getCommentList()

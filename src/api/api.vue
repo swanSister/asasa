@@ -47,8 +47,7 @@ export default {
     console.log("post API : ",path,"data:",param)
     return axios.post(`${API_URL}/${path}`,param,{
       headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        Authorization: ''
+         accept: 'application/json',
       }
     })
   },
