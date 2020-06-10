@@ -27,6 +27,7 @@
                   <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
                   <img :src="postData.fields.imgList[item]">
                   <div class="img-desc" v-if="postData.fields.imgDescList[index]">
+                    
                     {{postData.fields.imgDescList[index]}}
                   </div>
                 </div>
@@ -52,6 +53,11 @@
           <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
             <div class="name flex align-items-center">
               {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
+            </div>
+            <div class="comment-img-list flex">
+              <div v-for="(src,index) in Object.values(item.fields.imgList)" :key="'comment-img'+index">
+                <img v-if="src" :src="src"/>
+              </div>
             </div>
             <div class="text">{{item.fields.text}}</div>
             <div class="time">
@@ -139,7 +145,7 @@ export default {
        }
 
       let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
-          imgList:imgRes ? `ref ${imgRes.data}` : '',
+          imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
           text:this.commentText,
           like:5,
           userId:this.$store.state.me.userId,
@@ -152,8 +158,9 @@ export default {
     async addComment(){
       let imgRes
         if(this.imgInputList.length){
-          imgRes = this.uploadCommentImg
+          imgRes = await this.uploadCommentImg()
         }
+        console.log('imgRes',imgRes)
 
         let writingRes = await this.uploadCommentTxt(imgRes)
         console.log("writingRes",writingRes)
@@ -398,5 +405,16 @@ export default {
     margin-left:2vw;
     color:tomato;
   }
-  
+  .comment-img-list{
+    flex-wrap: wrap;
+  }
+  .comment-img-list img{
+    width:18vw;
+    height:18vw;
+    object-fit: cover;
+    margin-right: 1vw;
+  }
+  .comment-img-list div:last-child img{
+    margin-right:0;
+  }
 </style>

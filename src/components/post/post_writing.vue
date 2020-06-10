@@ -144,7 +144,7 @@ export default {
          return
        }
        let writingRes = await this.$api.postByPath(`${found.path}/messages`, {
-          imgList:imgRes ? `ref ${imgRes.data}` : '',
+          imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
           imgDescList:imgDescList,
           like:0,
           view:0,
