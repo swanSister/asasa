@@ -374,6 +374,7 @@ export default {
     border-top:1px solid #ddd;
     margin-bottom:16vw;
     border-top:1px solid #ddd;
+    
   }
   .comment{
     width:100vw;

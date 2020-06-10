@@ -8,7 +8,7 @@
           <div class="section">
             <div class="flex none justify-content-center align-items-center main-text">
               <div class="left">닉네임</div>
-              <div class="right"> {{$store.state.me.userId}}</div>
+              <div class="right"> {{userId}}</div>
             </div>
             <div class="sub-text">랜덤 닉네임 입니다.</div>
           </div>
@@ -48,6 +48,8 @@
             <div class="sub-text">1) 신분증 상의 주소</div>
             <div class="sub-text">2) 우현물, 택배 등의 주소</div>
             <div class="sub-text">3) 기타 입주를 증명할 수 있는 내용이 담긴 사진</div>
+
+            <div class="sub-text red">※ 주소를 인증하지 않으면 이용이 제한됩니다.</div>
           </div>
         </div>
         <div id="authBtn" @click="createUser">시작하기</div>
@@ -100,7 +102,7 @@ export default {
     $('#authImageLabel').click()
   },
   async createUser(){
-      this.userId = this.generateUID()
+      
       console.log(this.userId)
       
       console.log(this.address)
@@ -175,7 +177,7 @@ export default {
         })
         console.log(postMessage)
         let reMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
-        path = reMessage.data.documents[0].path
+        path = reMessage.headers.location
       }else{
         path = getMessage.data.documents[0].path
       }
@@ -248,7 +250,7 @@ export default {
     
   },
   mounted(){
-    console.log(this.$store.state.me.addressData)
+    this.userId = this.generateUID()
   }
 }
 </script>
@@ -286,6 +288,7 @@ export default {
     font-size: 3vw;
     color:#aaa;
   }
+  
   .auth .user-info .left{
     min-width:20%;
     max-width:20%;
@@ -330,6 +333,10 @@ export default {
     font-size: 3vw;
     color:black;
   }
+   .auth-content .sub-text.red {
+     color:tomato; 
+     margin-top:2vw;
+   }
   #authBtn{
     margin:0 auto;
     margin-top:4vw;

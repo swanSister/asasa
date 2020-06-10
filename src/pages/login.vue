@@ -62,21 +62,6 @@ export default {
   },
   async mounted(){
     console.log(this.$store.state.me)
-      // if(this.$store.state.me.userId){
-      //   let findUser = await this.$api.getByPathWhere(`users`,`userId=${this.$store.state.me.userId}`)
-      //   //서버 user data 동기화
-      //   if(findUser.data.documents.length){
-      //     this.$store.commit('me',findUser.data.documents[0].fields)
-      //   }else{//local data 초기화
-      //     this.$store.commit('me',{})
-      //   }
-      //   if(!this.$store.state.me.isAuth){
-      //     this.$router.push('auth')
-      //   }else{
-      //     this.$router.push('main')
-      //   }
-      // }
-      
   }
 }
 </script>

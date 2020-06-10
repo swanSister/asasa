@@ -2,50 +2,24 @@
 <script>
 import axios from 'axios'
 let ctx = {}
-const API_URL = "https://api.asasakorea.com/rest"
-const ADDRESS_URL = "http://localhost:3001/address"
+const API_URL = "https://api.asasakorea.com"
 export default {
   install(Vue, options){
     ctx.store = options.store
   },
-
-  getAddress:function(){
-    let param = {
-      confmKey:'devU01TX0FVVEgyMDIwMDUxOTIzMTUzODEwOTc3NDg=',
-      returnUrl: 'http://localhost:3001',
-      resultType: '4'
-    }
-    return axios.post(`${ADDRESS_URL}`,param,{
-      headers: {
-        Authorization: ''
-      }
-    })
-  },
-
-  getPosts:function(){
-    return axios.get(`${API_URL}/posts`)
-  },
-  createPost:function(param){
-    return axios.post(`${API_URL}/posts`,param,{
-      headers: {
-        Authorization: ''
-      }
-    })
-  },
   getByPathWhere: function(path, where){
     console.log("##get API : ",path)
-     return axios.get(`${API_URL}/${path}?${where}`)
+     return axios.get(`${API_URL}/rest/${path}?${where}`)
   },
   getByPath: function(path, offset, limit){
-    
     offset = 0
     limit = 10
     console.log("##get API : ",path)
-     return axios.get(`${API_URL}/${path}?offset=${offset}&limit=${limit}`)
+     return axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}`)
   },
   postByPath: function(path, param){
     console.log("post API : ",path,"data:",param)
-    return axios.post(`${API_URL}/${path}`,param,{
+    return axios.post(`${API_URL}/rest/${path}`,param,{
       headers: {
          accept: 'application/json',
       }

@@ -168,7 +168,8 @@ export default {
   },
   async mounted () {
     let topics = JSON.parse(JSON.stringify(this.$store.state.me.topics))
-    this.postList = topics
+    
+    this.postList = this.$store.state.me.isAuth ? topics : [topics[0]]
     this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
   }
 }
