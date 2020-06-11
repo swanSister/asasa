@@ -98,114 +98,130 @@ export default {
     }
   },
   methods:{
-  imageClick(){
-    $('#authImageLabel').click()
-  },
-  async createUser(){
-      
-      console.log(this.userId)
-      
-      console.log(this.address)
-      let bcode = this.bcode
-      let sido_code = parseInt(bcode.substring(0,2),10)
-      let sigungu_code = parseInt(bcode.substring(0,5),10)
-      let b_code = parseInt(bcode.substring(0,8),10)
+    dataUriToBlob(dataURI){
+      var byteString = atob(dataURI.split(',')[1]);
+      var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+      var ab = new ArrayBuffer(byteString.length);
+      var ia = new Uint8Array(ab);
+      for (var i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+      }
+      var blob = new Blob([ab], {type: mimeString});
+      return blob;
+    },
+    async uploadAuthImg(){
+      let imgRes = await this.$api.uploadImages(`upload/images`,{
+        "img_0" : this.dataUriToBlob(this.authImageSrc)
+      })
+      return imgRes
+    },
+    imageClick(){
+      $('#authImageLabel').click()
+    },
+    async createUser(){
+        
+        let bcode = this.bcode
+        let sido_code = parseInt(bcode.substring(0,2),10)
+        let sigungu_code = parseInt(bcode.substring(0,5),10)
+        let b_code = parseInt(bcode.substring(0,8),10)
 
-      //create 시군구, 읍면동 토픽 생성 및 id 가져오기
-      let path1 = await this.getPostIdById(sido_code, this.address.sido, 1)
-      let path2 = await this.getPostIdById(sigungu_code, this.address.sigungu, 2, this.address.sido)
-      let path3 = await this.getPostIdById(b_code, this.address.bname, 3, this.address.sido, this.address.sigungu)
-      
-      let houseType = this.houseType.find(item=>item.isSelect==true)
-      let me = {
-        userId: this.userId,
-        addressData:this.address,
-        buildingName:this.buildingName,
-        houseType:houseType,
-        topics:[
-          {
-            name:'토픽',
-            code:'00',
-            path:'posts/topic'
-          },
-          {
-          name:this.address.sido,
-          code:sido_code,
-          path:path1
-          },
-          {
-          name:this.address.sigungu,
-          code:sigungu_code,
-          path:path2
-          },
-          {
-          name:this.address.bname,
-          code:b_code,
-          path:path3
-          }],
-        isAuth: false,
-      }
-      let messages = await this.$api.postByPath(`users`,me)
-      console.log("messages: ", messages)
-      if(messages.data.code == 201){
-        this.$store.commit('me',me)
-        console.log('me:',this.$store.state.me)
-        this.$router.push('main')
-      }else{
-        alert("ERROR code : " + messages.data.code)
-      }
-    },
-    generateUID() {
-    // I generate the UID from two parts here 
-    // to ensure the random number provide enough bits.
-    var firstPart = (Math.random() * 46656) | 0;
-    var secondPart = (Math.random() * 46656) | 0;
-    firstPart = ("000" + firstPart.toString(36)).slice(-3);
-    secondPart = ("000" + secondPart.toString(36)).slice(-3);
-    return firstPart + secondPart;
-    },
-    async getPostIdById(code, name, type, parent1, parent2){//type 1 : 시도 , 2: 군구, 3:동읍면리
-      let getMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
-      let path
-      if(!getMessage.data.documents.length){
-        let postMessage = await this.$api.postByPath(`posts?`,{
-          code: code,
-          name: name,
-          type: type,
-          parent1: parent1 ? parent1 : '',
-          parent2:parent2 ? parent2 : '',
-        })
-        console.log(postMessage)
-        let reMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
-        path = reMessage.headers.location
-      }else{
-        path = getMessage.data.documents[0].path
-      }
-        return path
-    },
-  resizeImage(image) {
-      let canvas = document.createElement("canvas"),
-      max_size = 1000,
-      // 최대 기준을 1280으로 잡음.
-      width = image.width,
-      height = image.height;
-      if (width > height) {
-        if (width > max_size) {
-          height *= max_size / width;
-          width = max_size;
+        //create 시군구, 읍면동 토픽 생성 및 id 가져오기
+        let path1 = await this.getPostIdById(sido_code, this.address.sido, 1)
+        let path2 = await this.getPostIdById(sigungu_code, this.address.sigungu, 2, this.address.sido)
+        let path3 = await this.getPostIdById(b_code, this.address.bname, 3, this.address.sido, this.address.sigungu)
+        let imgRes = this.authImageSrc ? (await this.uploadAuthImg()).headers.location : ''
+       
+        let houseType = this.houseType.find(item=>item.isSelect==true)
+        let me = {
+          userId: this.userId,
+          addressData:this.address,
+          buildingName:this.buildingName,
+          houseType:houseType,
+          topics:[
+            {
+              name:'토픽',
+              code:'00',
+              path:'posts/topic'
+            },
+            {
+            name:this.address.sido,
+            code:sido_code,
+            path:path1
+            },
+            {
+            name:this.address.sigungu,
+            code:sigungu_code,
+            path:path2
+            },
+            {
+            name:this.address.bname,
+            code:b_code,
+            path:path3
+            }],
+          isAuth: false,
+          authImgSrc: `ref ${imgRes}`
         }
-      } else {
-        if (height > max_size) {
-          width *= max_size / height;
-          height = max_size;
+        let messages = await this.$api.postByPath(`users`,me)
+        console.log("messages: ", messages)
+        if(messages.data.code == 201){
+          this.$store.commit('me',me)
+          console.log('me:',this.$store.state.me)
+          this.$router.push('main')
+        }else{
+          alert("ERROR code : " + messages.data.code)
         }
-      }
-      canvas.width = width;
-      canvas.height = height;
-      canvas.getContext("2d").drawImage(image, 0, 0, width, height);
-      const dataUrl = canvas.toDataURL("image/jpeg");
-      return dataUrl
-  },
+      },
+      generateUID() {
+      // I generate the UID from two parts here 
+      // to ensure the random number provide enough bits.
+      var firstPart = (Math.random() * 46656) | 0;
+      var secondPart = (Math.random() * 46656) | 0;
+      firstPart = ("000" + firstPart.toString(36)).slice(-3);
+      secondPart = ("000" + secondPart.toString(36)).slice(-3);
+      return firstPart + secondPart;
+      },
+      async getPostIdById(code, name, type, parent1, parent2){//type 1 : 시도 , 2: 군구, 3:동읍면리
+        let getMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
+        let path
+        if(!getMessage.data.documents.length){
+          let postMessage = await this.$api.postByPath(`posts?`,{
+            code: code,
+            name: name,
+            type: type,
+            parent1: parent1 ? parent1 : '',
+            parent2:parent2 ? parent2 : '',
+          })
+          console.log(postMessage)
+          let reMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
+          path = reMessage.headers.location
+        }else{
+          path = getMessage.data.documents[0].path
+        }
+          return path
+      },
+    resizeImage(image) {
+        let canvas = document.createElement("canvas"),
+        max_size = 1000,
+        // 최대 기준을 1280으로 잡음.
+        width = image.width,
+        height = image.height;
+        if (width > height) {
+          if (width > max_size) {
+            height *= max_size / width;
+            width = max_size;
+          }
+        } else {
+          if (height > max_size) {
+            width *= max_size / height;
+            height = max_size;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg");
+        return dataUrl
+    },
    async previewFiles(event) {
       let that = this
       var oFReader = new FileReader()

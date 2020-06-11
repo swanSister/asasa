@@ -25,7 +25,6 @@ export default {
     }
   },
   methods:{
-    
     async goAuth(){
       this.$router.push('auth')
     },

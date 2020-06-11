@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <script>
+      let apiUrl = "https://api.asasakorea.com/rest"
+      function getUncertifiedUsers(){
+        var dataString = "flag=fetchmediaaudio&id="+id;
+
+        $.ajax
+        ({
+          type: "POST",
+          url: apiUrl+'/users?isAuth=false',
+          data: dataString,
+          success: function(html)
+          {
+            alert(html);
+          }
+        });
+      }
+     
+    </script>
+  </body>
+  
+</html>
