@@ -59,6 +59,10 @@ export default {
       this.$router.push('login')
     }else{
       await this.$updateUserInfo()
+      if(!this.$store.state.me.userId){
+        this.$router.push('login')
+        return
+      }
       this.getPosts()
     }
   }
