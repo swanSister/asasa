@@ -22,12 +22,11 @@
           </div>
           <div class="content">
               <pre>{{postData.fields.text}}</pre>
-              <div class="img-containner" v-for="(item, index) in Object.keys(postData.fields.imgList)" :key="'imageList'+index">
-                <div v-if="postData.fields.imgList[item]">
+              <div class="img-containner" v-for="(item, index) in postData.fields.imgList" :key="'imageList'+index">
+                <div v-if="item">
                   <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                  <img :src="postData.fields.imgList[item]">
+                  <img :src="item">
                   <div class="img-desc" v-if="postData.fields.imgDescList[index]">
-                    
                     {{postData.fields.imgDescList[index]}}
                   </div>
                 </div>
@@ -156,6 +155,7 @@ export default {
     },
 
     async addComment(){
+      this.$eventBus.$emit("showLoading")
       let imgRes
         if(this.imgInputList.length){
           imgRes = await this.uploadCommentImg()
@@ -164,6 +164,8 @@ export default {
 
         let writingRes = await this.uploadCommentTxt(imgRes)
         console.log("writingRes",writingRes)
+        
+        this.$eventBus.$emit("hideLoading")
         if(writingRes.data.code == 201){
           alert("댓글을 등록했습니다.")
           this.getCommentList()
@@ -173,29 +175,6 @@ export default {
         }
         
     },
-   resizeImage(image) {
-        let canvas = document.createElement("canvas"),
-        max_size = 1000,
-        // 최대 기준을 1280으로 잡음.
-        width = image.width,
-        height = image.height;
-        if (width > height) {
-          if (width > max_size) {
-            height *= max_size / width;
-            width = max_size;
-          }
-        } else {
-          if (height > max_size) {
-            width *= max_size / height;
-            height = max_size;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL("image/jpeg");
-        return dataUrl
-    },
     async previewFiles(event) {
       let that = this
       var oFReader = new FileReader()
@@ -204,7 +183,7 @@ export default {
            let image = new Image()
               image.src= oFREvent.target.result
               image.onload = function(){
-                let src = that.resizeImage(image)
+                let src = that.$resizeImage(image)
                 console.log(oFREvent.target.result.length, src.length)
                 let imgInputData = {src:src}
                 that.imgInputList.push(imgInputData)
@@ -219,6 +198,11 @@ export default {
       let messages = await this.$api.getByPath(`${this.$route.params.path}`)
       console.log("psot detail:",messages)
       this.postData = messages.data
+      let imgArr = []
+      for(let i=0; i<5; i++){
+          imgArr.push(this.postData.fields.imgList['img_'+i])
+      }
+      this.postData.fields.imgList = imgArr
     },
     async getCommentList(){
       let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)
@@ -373,7 +357,8 @@ export default {
   }
   .img-desc{
     border-bottom:1px solid #ddd;
-    line-height:8vw;
+    margin-bottom:4vw;
+    color:#aaa;
   }
   .comment-list{
     width:100vw;

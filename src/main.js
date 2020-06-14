@@ -4,7 +4,10 @@ import router from './router'
 import api from './api/api'
 import store from './store'
 import eventBus from './eventBus'
+import global from './global'
 
+
+Vue.use(global)
 Vue.config.productionTip = false
 Vue.prototype.$eventBus = eventBus
 Vue.prototype.$api = api

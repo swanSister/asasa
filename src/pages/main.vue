@@ -34,6 +34,7 @@ export default {
   },
   methods:{
     async onClickHeader(item){
+      console.log(item)
       this.getMessages(item.path)
     },
     async getPosts(){
@@ -43,6 +44,7 @@ export default {
       }else{
         this.headerData = [this.$store.state.me.topics[0]]
       }
+      console.log(this.headerData)
       this.getMessages(this.headerData[0].path)
     },
     async getMessages(path){
@@ -55,7 +57,9 @@ export default {
   },
   async mounted(){
     console.log(this.$store.state.me)
+    await this.$updateUserInfo()
     this.getPosts()
+    
   }
 }
 </script>

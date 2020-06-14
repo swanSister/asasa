@@ -82,29 +82,7 @@ export default {
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
     },   
-    resizeImage(image) {
-        let canvas = document.createElement("canvas"),
-        max_size = 1000,
-        // 최대 기준을 1280으로 잡음.
-        width = image.width,
-        height = image.height;
-        if (width > height) {
-          if (width > max_size) {
-            height *= max_size / width;
-            width = max_size;
-          }
-        } else {
-          if (height > max_size) {
-            width *= max_size / height;
-            height = max_size;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL("image/jpeg");
-        return dataUrl
-    },
+   
     async previewFiles(event) {
       let that = this
       var oFReader = new FileReader()
@@ -113,7 +91,7 @@ export default {
            let image = new Image()
               image.src= oFREvent.target.result
               image.onload = function(){
-                let src = that.resizeImage(image)
+                let src = that.$resizeImage(image)
                 console.log(oFREvent.target.result.length, src.length)
                 let imgInputData = {src:src, desc:''}
                 that.imgInputList.push(imgInputData)
@@ -122,13 +100,16 @@ export default {
     },
 
     async writePost(){
+      
       let found = this.postList.find(item => item.isSelected == true)
       console.log(found)
       if(found){
+        this.$eventBus.$emit("showLoading")
         let imgList = [], imgDescList = []
         for(let i = 0; i<this.imgInputList.length; i++){
           let key = `img_${i}`
           imgList[key] = this.dataUriToBlob(this.imgInputList[i].src)
+          imgDescList.push(this.imgInputList[i].desc)
         }
         console.log("imgInputList:",this.imgInputList)
         console.log("imgList:",imgList)
@@ -155,6 +136,8 @@ export default {
           title:this.subject,
           text:this.content,
         })
+
+        this.$eventBus.$emit("hideLoading")
 
         if(writingRes.data.code == 201){
           this.$router.go(-1)

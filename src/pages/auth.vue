@@ -119,7 +119,7 @@ export default {
       $('#authImageLabel').click()
     },
     async createUser(){
-        
+        this.$eventBus.$emit("showLoading")
         let bcode = this.bcode
         let sido_code = parseInt(bcode.substring(0,2),10)
         let sigungu_code = parseInt(bcode.substring(0,5),10)
@@ -130,7 +130,7 @@ export default {
         let path2 = await this.getPostIdById(sigungu_code, this.address.sigungu, 2, this.address.sido)
         let path3 = await this.getPostIdById(b_code, this.address.bname, 3, this.address.sido, this.address.sigungu)
         let imgRes = this.authImageSrc ? (await this.uploadAuthImg()).headers.location : ''
-       
+        console.log(path1, path2, path3)
         let houseType = this.houseType.find(item=>item.isSelect==true)
         let me = {
           userId: this.userId,
@@ -163,6 +163,7 @@ export default {
         }
         let messages = await this.$api.postByPath(`users`,me)
         console.log("messages: ", messages)
+        this.$eventBus.$emit("hideLoading")
         if(messages.data.code == 201){
           this.$store.commit('me',me)
           console.log('me:',this.$store.state.me)
@@ -170,6 +171,7 @@ export default {
         }else{
           alert("ERROR code : " + messages.data.code)
         }
+        
       },
       generateUID() {
       // I generate the UID from two parts here 
@@ -182,7 +184,7 @@ export default {
       },
       async getPostIdById(code, name, type, parent1, parent2){//type 1 : 시도 , 2: 군구, 3:동읍면리
         let getMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
-        let path
+        let path = ''
         if(!getMessage.data.documents.length){
           let postMessage = await this.$api.postByPath(`posts?`,{
             code: code,
@@ -191,37 +193,14 @@ export default {
             parent1: parent1 ? parent1 : '',
             parent2:parent2 ? parent2 : '',
           })
-          console.log(postMessage)
-          let reMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
-          path = reMessage.headers.location
+          
+          path = postMessage.headers.location
         }else{
           path = getMessage.data.documents[0].path
         }
+        console.log("####path", path)
           return path
       },
-    resizeImage(image) {
-        let canvas = document.createElement("canvas"),
-        max_size = 1000,
-        // 최대 기준을 1280으로 잡음.
-        width = image.width,
-        height = image.height;
-        if (width > height) {
-          if (width > max_size) {
-            height *= max_size / width;
-            width = max_size;
-          }
-        } else {
-          if (height > max_size) {
-            width *= max_size / height;
-            height = max_size;
-          }
-        }
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext("2d").drawImage(image, 0, 0, width, height);
-        const dataUrl = canvas.toDataURL("image/jpeg");
-        return dataUrl
-    },
    async previewFiles(event) {
       let that = this
       var oFReader = new FileReader()
@@ -232,7 +211,7 @@ export default {
           let image = new Image()
             image.src= oFREvent.target.result
             image.onload = function(){
-              let src = that.resizeImage(image)
+              let src = that.$resizeImage(image)
               that.authImageSrc = src
             }
       };
@@ -263,7 +242,6 @@ export default {
         clearInterval(interval)
       },50)
     },
-    
   },
   mounted(){
     this.userId = this.generateUID()

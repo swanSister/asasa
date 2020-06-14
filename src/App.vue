@@ -1,6 +1,7 @@
 <template>
   <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:rgb(240,240,240);">
     <router-view style="height:100%; width:100%;"/>
+    <loading v-if="isLoadingShow"/>
   </div>
 </template>
 
@@ -31,15 +32,27 @@ Vue.prototype.$vuescrollConfig = {
 
 import "@/assets/css/main.css"
 import "@/assets/css/fontello.css"
-
+import Loading from "@/components/loading"
 export default {
   name: 'App',
    data: function () {
     return {
       varUA:null,
+       isLoadingShow:false,
     }
   },
+  components:{
+    Loading,
+  },
   methods:{
+    onShowLoading(){
+      console.log("####onShowLoading")
+      this.isLoadingShow = true
+    },
+    onHideLoading(){
+      console.log("####onHideLoading")
+      this.isLoadingShow = false
+    },
     onFocus: function(){
       if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
         setTimeout(function(){
@@ -66,6 +79,8 @@ export default {
     },
   },
   mounted:function(){
+    this.$eventBus.$on("showLoading", this.onShowLoading)
+    this.$eventBus.$on("hideLoading", this.onHideLoading)
     let that = this
     $( document ).ready(function() {
       that.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
