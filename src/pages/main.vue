@@ -49,10 +49,8 @@ export default {
     },
     async getMessages(path){
       let messages = await this.$api.getByPath(`${path}/messages`)
-      
       this.postList = messages.data.documents
       console.log("postlist",this.postList)
-     
     }
   },
   async mounted(){
@@ -63,7 +61,6 @@ export default {
       await this.$updateUserInfo()
       this.getPosts()
     }
-    
   }
 }
 </script>

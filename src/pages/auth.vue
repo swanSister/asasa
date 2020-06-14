@@ -119,6 +119,10 @@ export default {
       $('#authImageLabel').click()
     },
     async createUser(){
+        if(!this.address.address){
+          alert("주소를 입력해 주세요.")
+          return
+        }
         this.$eventBus.$emit("showLoading")
         let bcode = this.bcode
         let sido_code = parseInt(bcode.substring(0,2),10)
@@ -159,7 +163,7 @@ export default {
             path:path3
             }],
           isAuth: false,
-          authImgSrc: `ref ${imgRes}`
+          authImgSrc: imgRes ? `ref ${imgRes}` : ''
         }
         let messages = await this.$api.postByPath(`users`,me)
         console.log("messages: ", messages)

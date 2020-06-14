@@ -63,9 +63,7 @@
               {{item.updatedAt}}
             </div>
           </div>
-
         </div>
-
         <div class="footer flex column align-items-center">
           <div ref="commentImg" class="flex justify-content-start comment-img" :style="{
             borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
@@ -192,7 +190,7 @@ export default {
         };
     },
     removeCommentImg: function(index){
-      this.commentImgs.splice(index,1);
+      this.imgInputList.splice(index,1);
     },
     async getPostDetail(){
       let messages = await this.$api.getByPath(`${this.$route.params.path}`)
