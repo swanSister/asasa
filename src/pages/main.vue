@@ -57,8 +57,12 @@ export default {
   },
   async mounted(){
     console.log(this.$store.state.me)
-    await this.$updateUserInfo()
-    this.getPosts()
+    if(!this.$store.state.me.userId){
+      this.$router.push('login')
+    }else{
+      await this.$updateUserInfo()
+      this.getPosts()
+    }
     
   }
 }

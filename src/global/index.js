@@ -26,15 +26,15 @@ const global = {
       const dataUrl = canvas.toDataURL("image/jpeg");
       return dataUrl
     }
-    Vue.prototype.$updateUserInfo = async function() {
+    Vue.prototype.$updateUserInfo = async function(){
       let me = Vue.prototype.$store.state.me
       if(me.userId){
         let findUser = await Vue.prototype.$api.getByPathWhere(`users`,`userId=${me.userId}`)
         if(!findUser.data.documents.length){
             alert("재로그인")
-            Vue.prototype.$router.push('login')
+            Vue.prototype.$store.commit('me',{})
          }else{
-          Vue.prototype.$store.commit('me',findUser.data.documents[0].fields)
+            Vue.prototype.$store.commit('me',findUser.data.documents[0].fields)
          }
       }
     }

@@ -193,7 +193,6 @@ export default {
             parent1: parent1 ? parent1 : '',
             parent2:parent2 ? parent2 : '',
           })
-          
           path = postMessage.headers.location
         }else{
           path = getMessage.data.documents[0].path
