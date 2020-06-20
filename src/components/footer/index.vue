@@ -77,7 +77,6 @@ export default {
          this.$router.push('main')
       }
     }
-
   },
   mounted(){
       this.footerIcon[this.footerIndex].isSelect = true

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Main from '@/pages/main'
 import Login from '@/pages/login'
 import Auth from '@/pages/auth'
+import ReAuth from '@/pages/reAuth'
 import PostWriting from '@/pages/postWriting'
 import PostDetail from '@/pages/postDetail'
 import Search from '@/pages/search'
@@ -43,6 +44,11 @@ export default new Router({
       path: '/auth',
       name: 'auth',
       component: Auth
+    },
+    {
+      path: '/reAuth',
+      name: 'reAuth',
+      component: ReAuth
     },
     {
       path: '/search',

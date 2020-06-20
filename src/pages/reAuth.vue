@@ -8,7 +8,7 @@
           <div class="section">
             <div class="flex none justify-content-center align-items-center main-text">
               <div class="left">닉네임</div>
-              <input class="right" v-model="userId" @keydown="onKeyPress"/>
+              <input readonly class="right" v-model="userId"/>
             </div>
             <div class="sub-text">{{idSubTxt}}</div>
           </div>
@@ -52,7 +52,7 @@
             <div class="sub-text red">※ 주소를 인증하지 않으면 이용이 제한됩니다.</div>
           </div>
         </div>
-        <div id="authBtn" @click="createUser">시작하기</div>
+        <div id="authBtn" @click="patchUser">시작하기</div>
       </div>
       <div v-if="isAddressPopup" id="addressSearch" ></div>
      
@@ -74,13 +74,14 @@ export default {
   },
   data () {
     return {
+      isReAuth:'false',
       authImageSrc:'',
       address:'',
       buildingName:'',
       bcode:'',
       isAddressPopup:false,
       userId:'',
-      idSubTxt:'랜덤 ID 입니다.',
+      idSubTxt:'',
       houseType:[{
         name:'아파트',
         type:1,
@@ -95,24 +96,11 @@ export default {
         name:'주택',
         type:3,
         isSelect:false,
-      }]
+      }],
+      userPath:'',
     }
   },
   methods:{
-    async onKeyPress(){
-      
-      if(this.userId.length < 4){
-        this.idSubTxt = "4자 이상 입력해 주세요."
-      }else{
-        let messages = await this.$api.getByPathWhere(`users`,`userId=${this.userId}`)
-        if(messages.data.documents.length){
-          this.idSubTxt = "해당 ID가 존재합니다."
-        }else{
-          this.idSubTxt = "사용가능한 ID 입니다."
-        }
-        console.log(messages)
-      }
-    },
     dataUriToBlob(dataURI){
       var byteString = atob(dataURI.split(',')[1]);
       var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
@@ -133,11 +121,7 @@ export default {
     imageClick(){
       $('#authImageLabel').click()
     },
-    async createUser(){
-        if(this.userId.length < 4){
-          alert("ID를 4자 이상 입력해 주세요.")
-          return
-        }
+    async patchUser(){
 
         if(!this.address.address){
           alert("주소를 입력해 주세요.")
@@ -162,7 +146,6 @@ export default {
           addressData:this.address,
           buildingName:this.buildingName,
           houseType:houseType,
-          public: houseType.type == 1 ? true : false,
           topics:[
             {
               name:'토픽',
@@ -186,13 +169,12 @@ export default {
             }],
           isAuth: false,
           authImgSrc: imgRes ? `ref ${imgRes}` : '',
-          auth:null
+          auth:null,
         }
-        let messages = await this.$api.postByPath(`users`,me)
+        let messages = await this.$api.patchByPath(this.userPath,me)
         this.$eventBus.$emit("hideLoading")
-        if(messages.data.code == 201){
+        if(messages.data.code == 200){
           this.$store.commit('me',me)
-          console.log('me:',this.$store.state.me)
           this.$router.push('main')
         }else{
           alert("ERROR code : " + messages.data.code)
@@ -267,9 +249,16 @@ export default {
         clearInterval(interval)
       },50)
     },
+    async getuserPath()
+    {
+      let messages = await this.$api.getByPathWhere(`users`,`userId=${this.userId}`)
+      return messages.data.documents[0].path
+    }
   },
-  mounted(){
-    this.userId = this.generateUID()
+   async mounted(){
+    this.userId = this.$store.state.me.userId
+    this.userPath = await this.getuserPath()
+    console.log(this.userPath)
   }
 }
 </script>
