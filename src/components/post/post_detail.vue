@@ -22,7 +22,7 @@
           </div>
           <div class="content">
               <pre>{{postData.fields.text}}</pre>
-              <div class="img-containner" v-for="(item, index) in postData.fields.imgList" :key="'imageList'+index">
+              <div class="img-containner" v-for="(item, index) in postData.fields.imgList.files" :key="'imageList'+index">
                 <div v-if="item">
                   <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
                   <img :src="item">
@@ -54,7 +54,7 @@
               {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
             </div>
             <div class="comment-img-list flex">
-              <div v-for="(src,index) in Object.values(item.fields.imgList)" :key="'comment-img'+index">
+              <div v-for="(src,index) in item.fields.imgList.files" :key="'comment-img'+index">
                 <img v-if="src" :src="src"/>
               </div>
             </div>
@@ -122,13 +122,10 @@ export default {
         return blob;
     },
     async uploadCommentImg(){
-      let imgList = {}
-       for(let i = 0; i<this.imgInputList.length; i++){
-          let key = `img_${i}`
-          console.log(key)
-          imgList[key] = this.dataUriToBlob(this.imgInputList[i].src)
+       let imgList = []
+        for(let i = 0; i<this.imgInputList.length; i++){
+          imgList.push(this.dataUriToBlob(this.imgInputList[i].src))
         }
-        console.log("imglist:",imgList)
         let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
         return imgRes
     },
@@ -166,6 +163,7 @@ export default {
         this.$eventBus.$emit("hideLoading")
         if(writingRes.data.code == 201){
           alert("댓글을 등록했습니다.")
+          this.imgInputList = []
           this.getCommentList()
         }else{
           console.error(writingRes)
@@ -196,11 +194,6 @@ export default {
       let messages = await this.$api.getByPath(`${this.$route.params.path}`)
       console.log("psot detail:",messages)
       this.postData = messages.data
-      let imgArr = []
-      for(let i=0; i<5; i++){
-          imgArr.push(this.postData.fields.imgList['img_'+i])
-      }
-      this.postData.fields.imgList = imgArr
     },
     async getCommentList(){
       let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)

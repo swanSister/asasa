@@ -9,8 +9,8 @@
         </div>
         <div class="name">{{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span></div>
       </div>
-      <div class="right" v-if="postData.fields.imgList && postData.fields.imgList['img_0']">
-        <img class="thumbnail" :src="postData.fields.imgList['img_0']">
+      <div class="right" v-if="postData.fields.imgList.files && postData.fields.imgList.files.length>0">
+        <img class="thumbnail" :src="postData.fields.imgList.files[0]">
       </div>
     </div>
     <div class="post-footer">

@@ -34,14 +34,10 @@ export default {
   uploadImages: function(path, imgList){
     console.log('uploadImages')
     let formData = new FormData()
-    for(let key in imgList){
-      formData.append(key, imgList[key])
+    for(let i=0; i<imgList.length; i++){
+      formData.append('files', imgList[i])
     }
-    //debug code
-    for(let [name, value] of formData) {
-      console.log(`${name} = ${value}`); // key1=value1, then key2=value2
-    }
-
+    console.log('img form', formData)
     return axios.post(`${API_URL}/${path}`,formData,{
       headers: {
         'Access-Control-Allow-Headers': 'Content-Type',

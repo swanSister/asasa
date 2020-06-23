@@ -81,7 +81,7 @@ export default {
       item.isSelected = true
       this.isLocationListShow = false;
       this.$refs.fileInput.focus()
-    },   
+    },
    
     async previewFiles(event) {
       let that = this
@@ -107,17 +107,16 @@ export default {
         this.$eventBus.$emit("showLoading")
         let imgList = [], imgDescList = []
         for(let i = 0; i<this.imgInputList.length; i++){
-          let key = `img_${i}`
-          imgList[key] = this.dataUriToBlob(this.imgInputList[i].src)
+          imgList.push(this.dataUriToBlob(this.imgInputList[i].src))
           imgDescList.push(this.imgInputList[i].desc)
         }
         console.log("imgInputList:",this.imgInputList)
         console.log("imgList:",imgList)
         let imgRes
-        if(Object.keys(imgList).length){
+        if(imgList.length){
           imgRes = await this.$api.uploadImages(`upload/images`,imgList)
-          
         }
+        console.log("uploadres",imgRes)
        let findUser = await this.$api.getByPathWhere(`users`,`userId=${this.$store.state.me.userId}`)
        if(!findUser.data.documents.length){
          alert("user data error! 재로그인 ")

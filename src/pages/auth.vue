@@ -110,9 +110,9 @@ export default {
       return blob;
     },
     async uploadAuthImg(){
-      let imgRes = await this.$api.uploadImages(`upload/images`,{
-        "img_0" : this.dataUriToBlob(this.authImageSrc)
-      })
+      let imgRes = await this.$api.uploadImages(`upload/images`,
+       [this.dataUriToBlob(this.authImageSrc)]
+      )
       return imgRes
     },
     imageClick(){
