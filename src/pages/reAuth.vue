@@ -1,7 +1,12 @@
 <template>
     <div class="auth">
-      <div class="header">
-        인증
+      <div class="header flex align-items-center">
+        <div @click="$router.go(-1)" class="backButton" style="font-size:5vw; margin-left:2vw;">
+            <span class="icon-left-open"></span>
+        </div>
+        <div class="flex auto justify-content-center" style="margin-right:5vw">
+          재인증
+        </div>
       </div>
       <div class="body">
         <div class="user-info">
@@ -263,16 +268,16 @@ export default {
 }
 </script>
 <style scoped>
+  
   .auth{
     overflow:auto;
     padding-bottom:4vw;
     background:white;
   }
   .auth .header{
-    font-size:8vw;
-    padding:2vw;
+    font-size:6vw;
     font-weight:bold;
-    margin:2vw 0;
+    margin:4vw 0;
   }
   .auth .body{
     width:80%;

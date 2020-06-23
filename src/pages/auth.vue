@@ -280,10 +280,9 @@ export default {
     background:white;
   }
   .auth .header{
-    font-size:8vw;
-    padding:2vw;
+    font-size:6vw;
     font-weight:bold;
-    margin:2vw 0;
+    margin:4vw 0;
   }
   .auth .body{
     width:80%;

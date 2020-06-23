@@ -1,7 +1,14 @@
 <template>
   <div>
     <vuescroll class="user-content">
-      <div class="header align-items-center justify-content-start">마이페이지</div>
+      <div class="header flex align-items-center">
+        <div class="backButton" style="font-size:5vw; margin-left:2vw;">
+            <span @click="$router.go(-1)" class="icon-left-open"></span>
+        </div>
+        <div class="flex auto justify-content-center" style="margin-right:5vw">
+          마이페이지
+        </div>
+      </div>
       <div class="body">
         <div class="user-info">
           <div class="id">{{$store.state.me.userId}}</div>
@@ -18,9 +25,15 @@
               <div class="flex deny justify-content-center" @click="denyPopup(`거절사유: ${$store.state.me.auth.reason}`)">인증 거절</div>
             </div>
             <div class="flex column btn-content auto" v-else>
-              <div class="flex btn" >
-                <div :class="{'select':$store.state.me.isAuth}">인증</div>
-                <div :class="{'select':!$store.state.me.isAuth}">미인증</div>
+              <div class="flex btn first">
+                <div v-if="$store.state.me.isAuth" class="select">
+                  <span class="icon-ok" style="margin-right:2vw;"></span>
+                  인증
+                </div>
+                <div v-if="!$store.state.me.isAuth" >
+                   <span class="icon-cancel" style="margin-right:2vw;"></span>
+                   미인증
+                </div>
               </div>
               <div class="flex btn" v-if="$store.state.me.isAuth">
                 <div :class="{'select':$store.state.me.public}">공개</div>
@@ -79,9 +92,9 @@ export default {
   background:white;
 }
 .header{
-  min-height:14vw;
-  max-height:14vw;
-  line-height:14vw;
+  font-size:6vw;
+  font-weight: bold;
+  padding:4vw 0;
   background:#333;
   color:white;
 }
@@ -129,19 +142,26 @@ export default {
 .body .user-info .btn-content .btn{
   text-align:center;
 }
-.body .user-info .btn-content .btn:first-child{
+.body .user-info .btn-content .btn.first{
   margin-bottom:2vw;
-  opacity: .7;
 }
 .body .user-info .btn-content .btn div{
   font-size: 3.5vw;
   width:14vw;
   padding:2vw 0;
-  background:#555;
+  background:#707070;
+  font-weight: bold;
+}
+.body .user-info .btn-content .btn.first div{
+  width:28vw;
+  font-weight: bold;
+  padding:1vw 0;
+  font-size:4vw;
 }
 .body .user-info .btn-content .btn div.select{
   background:tomato;
 }
+
 .body .re-auth{
   border-bottom:1px solid #ddd;
   font-size: 4vw;
