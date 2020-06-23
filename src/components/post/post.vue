@@ -2,7 +2,7 @@
   <div class="post">
     <div class="post-body" @click="goDetail">
       <div class="flex auto left">
-        <div class="tag flex none align-items-center"><span>{{postData.fields.tag}}</span></div>
+        <!-- <div class="tag flex none align-items-center"><span>{{postData.fields.tag}}</span></div> -->
         <div class="title">{{postData.fields.title}}</div>
         <div class="content">
           {{postData.fields.text.length > 90 ?postData.fields.text.slice(0,90)+"..." :postData.fields.text}}
@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="post-footer">
-      <div class="left"> 
+      <div class="left">
         <div class="flex none align-items-center"><!-- view-->
           <span class="icon-eye"></span>{{postData.fields.view}}
         </div>

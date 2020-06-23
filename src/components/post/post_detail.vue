@@ -82,7 +82,7 @@
             </div>
             <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
             </textarea>
-            <div @click="addComment" class="flex align-items-center upload">등록</div>
+            <div @click="addComment" class="flex align-items-start upload">등록</div>
           </div>
         </div>
   </div>
@@ -150,6 +150,14 @@ export default {
     },
 
     async addComment(){
+      
+      if(!this.$store.state.me.isAuth){
+         alert('글쓰기는 인증 후 가능합니다.')
+         this.commentText = ''
+         this.imgInputList = []
+        return
+      }
+
       this.$eventBus.$emit("showLoading")
       let imgRes
         if(this.imgInputList.length){

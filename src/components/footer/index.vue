@@ -6,8 +6,7 @@
         'color' : item.isSelect ? '#000' : '#999'
       }"></div>
     </div>
-   
-    <div @click="$router.push('postWriting')" class="flex auto justify-content-center align-items-center pencil">
+    <div @click="goPostWriting" class="flex auto justify-content-center align-items-center pencil">
       <div class="icon icon-pencil"></div>
     </div>
   </div>
@@ -50,6 +49,9 @@ export default {
     }
   },
   methods:{
+    goPostWriting(){
+      this.$store.state.me.isAuth ? this.$router.push('postWriting') : alert('글쓰기는 인증 후 가능합니다.')
+    },
     onClickFooter(item, idx){
       if(idx == this.footerIndex) return
         if(idx == 0){
