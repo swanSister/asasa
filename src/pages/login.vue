@@ -35,7 +35,6 @@ export default {
       recaptchaScript.setAttribute('src', 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js')
       document.head.appendChild(recaptchaScript)
       
-      
       let that = this
       let interval = null
       interval = setInterval(function(){
@@ -60,10 +59,10 @@ export default {
     }
   },
   async mounted(){
-    let me = this.$store.state.me
-    if(me.userId){
-      this.$router.push('main')
-    }
+    //let me = this.$store.state.me
+    // if(me.userId){
+    //   this.$router.push('main')
+    // }
     console.log(this.$store.state.me)
   }
 }

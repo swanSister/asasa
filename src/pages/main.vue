@@ -4,7 +4,7 @@
       <Header @onclick="onClickHeader" :headerData="headerData"></Header>
       <!-- <PostHeader></PostHeader> -->
       <PostList :postList="postList"></PostList>
-      <Footer></Footer>
+      <Footer v-bind:footerIndex="0"></Footer>
     </vuescroll>
   </div>
 </template>

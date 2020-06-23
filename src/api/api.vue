@@ -44,6 +44,15 @@ export default {
         Authorization: ''
       }
     })
+  },
+  patchByPath: function(path, param){
+    console.log("post API : ",path,"data:",param)
+    return axios.patch(`${API_URL}/rest/${path}`,param,{
+      headers: {
+        'Access-Control-Allow-Headers': 'Content-Type',
+        Authorization: ''
+      }
+    })
   }
 }
 </script>

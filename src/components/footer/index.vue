@@ -1,21 +1,12 @@
 <template>
   <div class="flex auto footer justify-content-center align-items-center">
-    <div class="flex auto justify-content-center"> 
-      <div class="icon icon-home"></div>
+    
+    <div  @click="onClickFooter(item,index)" class="flex auto justify-content-center" v-for="(item, index) in footerIcon" :key="'footerIcon'+index"> 
+      <div class="icon" :class="item.class" :style="{
+        'color' : item.isSelect ? '#000' : '#999'
+      }"></div>
     </div>
-    <div class="flex auto justify-content-center">
-      <div class="icon icon-search"></div>
-    </div>
-    <div class="flex auto justify-content-center">
-      <div class="icon icon-chat-empty"></div>
-    </div>
-    <div class="flex auto justify-content-center">
-      <div class="icon icon-bell"></div>
-    </div>
-    <div class="flex auto justify-content-center">
-      <div class="icon icon-dot-3"></div>
-    </div>
-
+   
     <div @click="$router.push('postWriting')" class="flex auto justify-content-center align-items-center pencil">
       <div class="icon icon-pencil"></div>
     </div>
@@ -25,16 +16,59 @@
 <script>
 export default {
   props:{
- 
+    footerIndex:Number
   },
   data () {
     return {
-      categories:[
-        {name:'토픽'}
+      footerIcon:[
+        { 
+          class:"icon-home",
+          isSelect:false,
+          idx:0,//home
+        },
+        { 
+          class:"icon-search",
+          isSelect:false,
+          idx:1,//search
+        },
+        { 
+          class:"icon-chat-empty",
+          isSelect:false,
+          idx:2,//chat
+        },
+        { 
+          class:"icon-bell",
+          isSelect:false,
+          idx:3,//alarm
+        },
+        { 
+          class:"icon-dot-3",
+          isSelect:false,
+          idx:4,//user page
+        },
       ]
     }
   },
   methods:{
+    onClickFooter(item, idx){
+      if(idx == this.footerIndex) return
+        if(idx == 0){
+          this.$router.push('main')
+        }
+        if(idx == 1){
+          console.log(idx)
+          this.$router.push('search')
+        }
+        if(idx == 2){
+          this.$router.push('chat')
+        }
+        if(idx == 3){
+          this.$router.push('alarm')
+        }
+        if(idx == 4){
+          this.$router.push('user')
+        }
+    },
     backHandler(){
       console.log("history length : " + window.history.length)
       if(window.history.length>2){
@@ -43,10 +77,9 @@ export default {
          this.$router.push('main')
       }
     }
-
   },
   mounted(){
-   
+      this.footerIcon[this.footerIndex].isSelect = true
   }
 }
 </script>
