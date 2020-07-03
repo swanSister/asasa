@@ -174,9 +174,10 @@ export default {
             }],
           isAuth: false,
           authImgSrc: imgRes ? `ref ${imgRes}` : '',
-          auth:null,
+          auth:null
         }
         let messages = await this.$api.patchByPath(this.userPath,me)
+        me.path = messages.headers.location
         this.$eventBus.$emit("hideLoading")
         if(messages.data.code == 200){
           this.$store.commit('me',me)

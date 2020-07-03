@@ -55,20 +55,20 @@ export default {
     onClickFooter(item, idx){
       if(idx == this.footerIndex) return
         if(idx == 0){
-          this.$router.push('main')
+          this.$router.push('/main')
         }
         if(idx == 1){
           console.log(idx)
-          this.$router.push('search')
+          this.$router.push('/search')
         }
         if(idx == 2){
-          this.$router.push('chat')
+          this.$router.push('/chat')
         }
         if(idx == 3){
-          this.$router.push('alarm')
+          this.$router.push('/alarm')
         }
         if(idx == 4){
-          this.$router.push('user')
+          this.$router.push('/user')
         }
     },
     backHandler(){

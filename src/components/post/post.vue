@@ -16,19 +16,19 @@
     <div class="post-footer">
       <div class="left">
         <div class="flex none align-items-center"><!-- view-->
-          <span class="icon-eye"></span>{{postData.fields.view}}
+          <span class="icon icon-eye"></span>{{postData.fields.view}}
         </div>
-        <div class="flex none align-items-center"><!-- like-->
-          <span class="icon-thumbs-up-1"></span>{{postData.fields.like}}
+        <div :class="{'red':$store.state.me.like && $store.state.me.like[postData.path]}" class="flex none align-items-center" @click="setLike('counts/like')"><!-- like-->
+          <span class="icon icon-thumbs-up-alt"></span>{{postData.fields.like ? postData.fields.like : '좋아요'}}
         </div>
         <div class="flex none align-items-center"><!-- comment-->
-          <span class="icon-comment"></span>{{postData.fields.commentCount}}
+          <span class="icon icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
         </div>
       </div>
       <div class="right">
-        <div>{{postData.fields.time}}</div>
-        <div><!-- bookmark-->
-          <span></span>
+        <div></div>
+        <div :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" @click="setBookmark('counts/bookmark')"><!-- bookmark-->
+          <span class="icon-bookmark"></span>
         </div>
       </div>
     </div>
@@ -48,8 +48,19 @@ export default {
     }
   },
   methods:{
+    async setBookmark(path){
+      await this.$setCount(path,this.postData.path)
+    },
+    async setLike(path){
+      await this.$setCount(path,this.postData.path)
+      if(this.$store.state.me.like && this.$store.state.me.like[this.postData.path]){
+        this.postData.fields.like --
+      }else{
+        this.postData.fields.like ++
+      }
+    },
     goDetail: function(){
-      this.$router.push({name: 'postDetail', params: { path: this.postData.path }})
+      this.$router.push({name: 'postDetail', query: { path: this.postData.path }})
     },
   },
   mounted () {
@@ -125,11 +136,18 @@ export default {
     width:60%;
     justify-content:flex-start;
   }
+  .post-footer > .left .icon{
+    margin-right:1vw;
+  }
   .post-footer > .left > div{
     margin-right:6vw;
+    font-size:3vw;
   }
   .post-footer > .right{
     width:40%;
     justify-content:flex-end;
+  }
+  .post-footer > .left > div.red, .post-footer > .right .red{
+    color:tomato;
   }
 </style>

@@ -29,6 +29,18 @@ export default {
       console.error(e.message)
      
     }
+  },
+  postCount: function(path, param){
+    try{
+       console.log("post API : ",path,"data:",param)
+      return axios.post(`${API_URL}/${path}`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+    }catch(e){
+      console.error(e.message)
+    }
    
   },
   uploadImages: function(path, imgList){

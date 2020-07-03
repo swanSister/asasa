@@ -7,8 +7,8 @@
             <span @click="$router.go('-1')" class="icon-left-open"></span>
           </div>
           <div class="flex auto justify-content-end right-icons">
-            <span :class="{'icon-bell':!isAlarm, 'icon-bell-alt':isAlarm}" @click="isAlarm = !isAlarm"></span>
-            <span :class="{'icon-bookmark-empty':!isBookmark, 'icon-bookmark':isBookmark}" @click="isBookmark = !isBookmark"></span>
+            <span class="icon-bell-alt"></span>
+            <span :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" class="icon-bookmark" @click="setBookmark"></span>
             <span class="icon-dot-3"></span>
           </div>
         </div>
@@ -34,18 +34,17 @@
           </div>
         </div>
         <div class="button-content flex align-items-center">
-          <div class="flex none justify-content-center align-items-center border-right"><!-- like-->
-            <span class="icon-thumbs-up-1"></span>좋아요
+          <div :class="{'red':$store.state.me.like && $store.state.me.like[postData.path]}" @click="setLike" 
+          class="flex none justify-content-center align-items-center border-right"><!-- like-->
+            <span class="icon red icon-thumbs-up-alt"></span>{{postData.fields.like ? postData.fields.like : '좋아요'}}
           </div>
           <div class="flex none justify-content-center align-items-center border-right"><!-- comment-->
-            <span class="icon-comment"></span>{{postData.fields.commentCount}}
+            <span class="icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
           </div>
           <div class="flex none justify-content-center align-items-center"><!-- comment-->
             <span class="icon-share-1"></span>공유하기
           </div>
         </div>
-
-       
       </div>
 
        <div class="comment-list" v-if="commentList.length">
@@ -100,8 +99,6 @@ export default {
   data: function () {
     return {
       varUA:null,
-      isAlarm:false,
-      isBookmark:false,
       postData:{},
       inputRange:null,
       imgInputList:[],
@@ -110,6 +107,13 @@ export default {
     }
   },
   methods: {
+    async setBookmark(){
+      await this.$setCount('counts/bookmark',this.postData.path)
+    },
+    async setLike(){
+      await this.$setCount('counts/like',this.postData.path)
+      this.getPostDetail()
+    },
     dataUriToBlob(dataURI){
         var byteString = atob(dataURI.split(',')[1]);
         var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
@@ -129,25 +133,7 @@ export default {
         let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
         return imgRes
     },
-    async uploadCommentTxt(imgRes){
 
-      let findUser = await this.$api.getByPathWhere(`users`,`userId=${this.$store.state.me.userId}`)
-      if(!findUser.data.documents.length){
-         alert("user data error! 재로그인 ")
-         this.$router.push('login')
-         return
-       }
-
-      let writingRes = await this.$api.postByPath(`${this.$route.params.path}/comments`, {
-          imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
-          text:this.commentText,
-          like:5,
-          userId:this.$store.state.me.userId,
-          buildingName:this.$store.state.me.addressData.buildingName,
-          writer:'ref '+findUser.data.documents[0].path
-        })
-        return writingRes
-    },
 
     async addComment(){
       
@@ -160,23 +146,37 @@ export default {
 
       this.$eventBus.$emit("showLoading")
       let imgRes
-        if(this.imgInputList.length){
-          imgRes = await this.uploadCommentImg()
-        }
-        console.log('imgRes',imgRes)
 
-        let writingRes = await this.uploadCommentTxt(imgRes)
-        console.log("writingRes",writingRes)
-        
-        this.$eventBus.$emit("hideLoading")
-        if(writingRes.data.code == 201){
-          alert("댓글을 등록했습니다.")
-          this.imgInputList = []
-          this.getCommentList()
-        }else{
-          console.error(writingRes)
-          alert("댓글을 등록 실패")
-        }
+      if(this.imgInputList.length){
+        imgRes = await this.uploadCommentImg()
+      }
+      let writingRes = await this.$api.postByPath(`${this.$route.query.path}/comments`, {
+          imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
+          text:this.commentText,
+          userId:this.$store.state.me.userId,
+          buildingName:this.$store.state.me.public ?
+          (this.$store.state.me.houseType == 3 ? '주택' : (this.$store.state.me.addressData.buildingName)) : '비공개',
+          writer:'ref '+this.$store.state.me.path
+        })
+
+      let mineRes = await this.$api.postByPath(`${this.$store.state.me.path}/mine`, {
+        path: this.$route.query.path,
+        type: 2, //댓글
+        topic: this.postData.fields.topic,
+        title: this.commentText
+      })
+
+      this.$eventBus.$emit("hideLoading")
+      if(writingRes.data.code == 201 && mineRes.data.code == 201){
+        alert("댓글을 등록했습니다.")
+        this.imgInputList = []
+        this.commentText = ''
+        this.getCommentList()
+      }else{
+        console.error(writingRes)
+        console.error(mineRes)
+        alert("댓글을 등록 실패")
+      }
         
     },
     async previewFiles(event) {
@@ -188,10 +188,8 @@ export default {
               image.src= oFREvent.target.result
               image.onload = function(){
                 let src = that.$resizeImage(image)
-                console.log(oFREvent.target.result.length, src.length)
                 let imgInputData = {src:src}
                 that.imgInputList.push(imgInputData)
-                console.log(that.imgInputList)
               }
         };
     },
@@ -199,17 +197,17 @@ export default {
       this.imgInputList.splice(index,1);
     },
     async getPostDetail(){
-      let messages = await this.$api.getByPath(`${this.$route.params.path}`)
+      let messages = await this.$api.getByPath(`${this.$route.query.path}`)
       console.log("psot detail:",messages)
       this.postData = messages.data
     },
     async getCommentList(){
-      let comments = await this.$api.getByPath(`${this.$route.params.path}/comments`)
+      let comments = await this.$api.getByPath(`${this.$route.query.path}/comments`)
       this.commentList = comments.data.documents
-      console.log("comments",this.commentList)
+      //console.log("comments",this.commentList)
     },
     async getMessageDetail(){
-      if(this.$route.params.path){
+      if(this.$route.query.path){
         this.getPostDetail()
         this.getCommentList()
         
@@ -219,8 +217,19 @@ export default {
     },
   },
   async mounted () {
-    this.getMessageDetail()
-    this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
+   try{
+      if( !this.$store.state.me.view || (this.$store.state.me.view && !this.$store.state.me.view[this.$route.query.path])){
+        this.$setCount('counts/view',this.$route.query.path)
+      }else{
+        await this.$updateUserInfo()
+      }
+      this.getMessageDetail()
+      this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
+   }catch(e){
+     console.error(e.messages)
+     alert("error")
+     this.$router.push('login')
+   }
   }
 }
 </script>
@@ -237,13 +246,12 @@ export default {
   .header{
     padding:1vw 0;
   }
-  .header > div > span{
-    font-size:5vw;
-  }
   .right-icons span{
+    font-size:4vw;
+    color:#aaa;
     margin-right:2vw;
   }
-  .icon-bell-alt, .icon-bookmark{
+  .right-icons .red{
     color:tomato;
   }
   .body{
@@ -288,10 +296,17 @@ export default {
     font-size: 5vw;
   }
   .button-content{
-    margin:4vw 0;
+    margin:2vw 0;
   }
   .button-content > div{
+    font-size: 3.5vw;
     width:33%;
+  }
+  .button-content > div span{
+    margin-right:2vw;
+  }
+  .button-content > div.red{
+    color:tomato;
   }
   .button-content > div.border-right{
     border-right:1px solid #ddd;

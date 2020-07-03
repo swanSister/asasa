@@ -117,31 +117,32 @@ export default {
           imgRes = await this.$api.uploadImages(`upload/images`,imgList)
         }
         console.log("uploadres",imgRes)
-       let findUser = await this.$api.getByPathWhere(`users`,`userId=${this.$store.state.me.userId}`)
-       if(!findUser.data.documents.length){
-         alert("user data error! 재로그인 ")
-         this.$router.push('login')
-         return
-       }
+       
        let writingRes = await this.$api.postByPath(`${found.path}/messages`, {
+          topic: found,
           imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
           imgDescList:imgDescList,
-          like:0,
-          view:0,
           userId:this.$store.state.me.userId,
-          buildingName:this.$store.state.me.addressData.buildingName,
-          writer:'ref '+findUser.data.documents[0].path,
+          buildingName:this.$store.state.me.public ?
+          (this.$store.state.me.houseType == 3 ? '주택' : (this.$store.state.me.addressData.buildingName)) : '비공개',
+          writer:'ref '+this.$store.state.me.path,
           tag:'XXXX',
           title:this.subject,
           text:this.content,
         })
-
+        let mineRes = await this.$api.postByPath(`${this.$store.state.me.path}/mine`, {
+          path: writingRes.headers.location,
+          type: 1, //글쓰기
+          topic: found,
+          title: this.title
+        })
         this.$eventBus.$emit("hideLoading")
 
-        if(writingRes.data.code == 201){
+        if(writingRes.data.code == 201 && mineRes.data.code == 201){
           this.$router.go(-1)
         }else{
-          console.error(writingRes)
+          console.error("writingRes",writingRes)
+          console.error("mineRes",mineRes)
         }
       }else{
         alert("게시글 등록위치를 선택해 주세요.")
@@ -149,6 +150,7 @@ export default {
     }
   },
   async mounted () {
+    await this.$updateUserInfo()
     let topics = JSON.parse(JSON.stringify(this.$store.state.me.topics))
     
     this.postList = this.$store.state.me.isAuth ? topics : [topics[0]]

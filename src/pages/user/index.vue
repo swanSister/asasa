@@ -5,8 +5,11 @@
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.go(-1)" class="icon-left-open"></span>
         </div>
-        <div class="flex auto justify-content-center" style="margin-right:5vw">
+        <div class="flex auto justify-content-center">
           마이페이지
+        </div>
+        <div class="backButton" style="font-size:5vw; margin-right:2vw;">
+            <span @click="$store.commit('me',{}),$router.push('login')" class="icon-logout"></span>
         </div>
       </div>
       <div class="body">
@@ -20,7 +23,6 @@
                 <div class="type"> {{$store.state.me.houseType.name}}</div>
               </div>
             </div>
-            
             <div v-if="$store.state.me.auth &&!$store.state.me.auth.isAuthComplete">
               <div class="flex deny justify-content-center" @click="denyPopup(`거절사유: ${$store.state.me.auth.reason}`)">인증 거절</div>
             </div>
@@ -36,8 +38,8 @@
                 </div>
               </div>
               <div class="flex btn" v-if="$store.state.me.isAuth">
-                <div :class="{'select':$store.state.me.public}">공개</div>
-                <div :class="{'select':!$store.state.me.public}"> 비공개</div>
+                <div :class="{'select':$store.state.me.public}" @click="setPublic(true)">공개</div>
+                <div :class="{'select':!$store.state.me.public}" @click="setPublic(false)"> 비공개</div>
               </div>
             </div>
 
@@ -46,8 +48,17 @@
             재인증
           </div>
         </div>
+        <div class="user-post-list">
+          <div class="flex li" @click="$router.push({name: 'user/mine'})">
+            <div class="flex auto list-title">내가 작성한 글</div>
+            <span class="icon icon-right-open"> </span>
+          </div>
+          <div class="flex li" >
+            <div class="flex auto list-title" @click="$router.push({name: 'user/bookmark'})">북마크</div>
+            <span class="icon icon-right-open"> </span>
+          </div>
+        </div>
       </div>
-      
       <Footer v-bind:footerIndex="4"></Footer>
     </vuescroll>
   </div>
@@ -72,10 +83,17 @@ export default {
   methods:{
     denyPopup:function(txt){
       alert(txt)
+    },
+    async setPublic(isPublic){
+      await this.$api.patchByPath(this.$store.state.me.path,{
+        public:isPublic
+      })
+      await this.$updateUserInfo()
     }
   },
   async mounted(){
     await this.$updateUserInfo()
+    console.log(this.$store.state.me)
       if(!this.$store.state.me.userId){
         this.$router.push('login')
         return
@@ -89,14 +107,14 @@ export default {
   width:100%;
   height:100%;
   overflow-y:auto;
-  background:white;
+  background:rgb(240, 240, 240);
 }
 .header{
   font-size:6vw;
   font-weight: bold;
   padding:4vw 0;
-  background:#333;
-  color:white;
+  background:white;
+  color:#333;
 }
 .body .user-info{
   color:white;
@@ -169,5 +187,16 @@ export default {
   padding:0 1vw;
   display:inline-block;
   text-align: center;
+}
+.body .user-post-list .li {
+  font-size: 4vw;
+  padding:4vw;
+  margin-top:3vw;
+  background:white;
+  color:#555;
+  font-weight: bold;
+}
+.body .user-post-list .li .icon{
+  color:#ddd;
 }
 </style>

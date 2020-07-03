@@ -30,13 +30,28 @@ const global = {
       let me = Vue.prototype.$store.state.me
       if(me.userId){
         let findUser = await Vue.prototype.$api.getByPathWhere(`users`,`userId=${me.userId}`)
+        console.log("fu",findUser)
         if(!findUser.data.documents.length){
             alert("재로그인")
             Vue.prototype.$store.commit('me',{})
+            return null
          }else{
-            Vue.prototype.$store.commit('me',findUser.data.documents[0].fields)
+           let me = findUser.data.documents[0].fields
+           me.path = findUser.data.documents[0].path
+           console.log('me',me)
+            Vue.prototype.$store.commit('me',me)
+            return findUser.data.documents[0]
          }
+         
       }
+    }
+    Vue.prototype.$setCount = async function(path,docPath,){
+      let countRes = await this.$api.postCount(path,{
+        "doc": docPath,
+        "user": Vue.prototype.$store.state.me.path
+      })
+      Vue.prototype.$updateUserInfo()
+      return countRes
     }
   }
 }

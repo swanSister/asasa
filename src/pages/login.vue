@@ -59,10 +59,10 @@ export default {
     }
   },
   async mounted(){
-    //let me = this.$store.state.me
-    // if(me.userId){
-    //   this.$router.push('main')
-    // }
+    let me = this.$store.state.me
+    if(me.userId){
+      this.$router.push('main')
+    }
     console.log(this.$store.state.me)
   }
 }

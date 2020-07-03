@@ -9,7 +9,10 @@ import PostDetail from '@/pages/postDetail'
 import Search from '@/pages/search'
 import Chat from '@/pages/chat'
 import Alarm from '@/pages/alarm'
-import User from '@/pages/user'
+import User from '@/pages/user/index'
+import UserMine from '@/pages/user/mine'
+import UserBookmark from '@/pages/user/bookmark'
+
 Vue.use(Router)
 
 export default new Router({
@@ -69,6 +72,16 @@ export default new Router({
       path: '/user',
       name: 'user',
       component: User
+    },
+    {
+      path: '/user/mine',
+      name: 'user/mine',
+      component: UserMine
+    },
+    {
+      path: '/user/bookmark',
+      name: 'user/bookmark',
+      component: UserBookmark
     }
   ]
 })

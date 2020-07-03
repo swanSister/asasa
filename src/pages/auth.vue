@@ -189,6 +189,7 @@ export default {
           auth:null
         }
         let messages = await this.$api.postByPath(`users`,me)
+        me.path = messages.headers.location
         this.$eventBus.$emit("hideLoading")
         if(messages.data.code == 201){
           this.$store.commit('me',me)
@@ -212,7 +213,7 @@ export default {
         let getMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
         let path = ''
         if(!getMessage.data.documents.length){
-          let postMessage = await this.$api.postByPath(`posts?`,{
+          let postMessage = await this.$api.postByPath(`posts`,{
             code: code,
             name: name,
             type: type,
