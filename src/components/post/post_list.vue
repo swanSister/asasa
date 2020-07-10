@@ -55,7 +55,7 @@ export default {
   .post-list{
     width:100%;
   }
-  
+
   .sorting{
     width:100%;
     display:flex;
@@ -66,6 +66,5 @@ export default {
   }
   .sorting .icon{
     font-size: 3vw;
-    margin-right:1vw;
   }
 </style>
