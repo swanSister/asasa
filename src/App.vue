@@ -1,9 +1,9 @@
 <template>
   <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:rgb(240,240,240);">
     <keep-alive>
-        <router-view v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
+        <router-view style="height:100%; width:100%;" v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
     </keep-alive>
-    <router-view v-if="!$route.meta.keepAlive || $route.params.reload"></router-view>
+    <router-view style="height:100%; width:100%;" v-if="!$route.meta.keepAlive || $route.params.reload"></router-view>
     <loading v-if="isLoadingShow"/>
   </div>
 </template>
@@ -16,17 +16,29 @@ window.$ = $;
 
 
 import { polyfill } from 'es6-promise'
-polyfill()
 
 import Vue from 'vue'
 import vuescroll from 'vuescroll'
 
-Vue.use(vuescroll);
+Vue.use(vuescroll,{
+  mode: 'native',
+  pullRefresh: {
+      enable: true,
+      tips: {
+        deactive: 'Pull to Refresh',
+        active: 'Release to Refresh',
+        start: 'Refreshing...',
+        beforeDeactive: 'Refresh Successfully!'
+      }
+    },
+});
 Vue.prototype.$vuescrollConfig = {
   bar: {
     background: '#000'
-  }
+  },
 };
+
+polyfill()
 
 
 import "@/assets/css/main.css"

@@ -1,12 +1,28 @@
 <template>
   <div>
-    
       <Header @onclick="onClickHeader" :headerData="headerData"></Header>
       <!-- <PostHeader></PostHeader> -->
-    <vue-scroll class="main-content">
-      <PostList :postList="postList"></PostList>
+    <vue-scroll class="main-content" 
+        :ops = "ops"
+        @refresh-start="handleRS"
+        @load-before-deactivate="handleLBD"
+        @refresh-before-deactivate="handleRBD"
+        @load-start="handleLoadStart"
+      >
+      <div class="slot-load" slot="load-beforeDeactive"></div>
+      <div class="slot-load" slot="load-deactive"></div>
+      <div class="slot-load" slot="load-start"></div>
+      <div class="slot-load" slot="load-active"></div>
+      <div class="slot-refresh" slot="refresh-deactive"></div>
+      <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+      <div class="slot-refresh" slot="refresh-start"></div>
+      <div class="slot-refresh" slot="refresh-active"></div>
+        <div class="child">
+           <PostList :postList="postList"></PostList>
+        </div>
+     
+      </vue-scroll>
       <Footer v-bind:footerIndex="0"></Footer>
-    </vue-scroll>
   </div>
 </template>
 
@@ -29,27 +45,86 @@ export default {
     return {
       headerData:[],
       postList:[],
+      ops : {
+      vuescroll: {
+        mode: 'slide',
+        pullRefresh: {
+          enable: true,
+          tips:{
+            deactive: '',
+          active: '',
+          start: '',
+          beforeDeactive: ''
+          }
+        },
+        pushLoad: {
+          enable: true,
+          auto: true,
+          autoLoadDistance: 10,
+          tips:{
+            deactive: '',
+          active: '',
+          start: '',
+          beforeDeactive: ''
+          }
+        }
+      }
+    },
+    offset:0,
+    limit:2,
+    size:0,
+    currentPath:''
     }
   },
   methods:{
+    async handleRS(vsInstance, refreshDom, done) {
+      console.log("handleRS1")
+      let messages = await this.$api.getByPath(`${this.currentPath}/messages`,this.offset,this.limit)
+      console.log(messages)
+      let size = messages.data.size
+      console.log(size, this.size)
+      if(size > this.size){
+        console.log('size change')
+      }
+      
+      done();
+    },
+    async handleLoadStart(vm, dom, done) {
+      if(this.offset + this.limit <= this.size){
+        this.offset+=this.limit
+        await this.getMessages(this.currentPath,this.offset+1, this.limit)
+      }
+      done();
+    },
+    handleLBD(vm, loadDom, done) {
+      console.log("handleRS3")
+      done();
+    },
+    handleRBD(vm, loadDom, done) {
+      console.log("handleRS4")
+      done();
+    },
     async onClickHeader(item){
-      console.log(item)
-      this.getMessages(item.path)
+      this.postList = []
+      this.currentPath = item.path
+      this.offset = 0
+      this.getMessages(this.currentPath, this.offset, this.limit)
     },
     async getPosts(){
-      
       if(this.$store.state.me.isAuth){
         this.headerData = this.$store.state.me.topics
       }else{
         this.headerData = [this.$store.state.me.topics[0]]
       }
-      console.log(this.headerData)
-      this.getMessages(this.headerData[0].path)
+      this.currentPath = this.headerData[0].path
+      this.getMessages(this.currentPath, this.offset, this.limit)
     },
-    async getMessages(path){
-      let messages = await this.$api.getByPath(`${path}/messages`)
-      this.postList = messages.data.documents
-      console.log("postlist",this.postList)
+    async getMessages(path, offset, limit){
+      console.log(`${offset}~${limit}`)
+      let messages = await this.$api.getByPath(`${path}/messages`,offset,limit)
+      messages.data.documents.map(item => this.postList.push(item))
+      this.size = messages.data.size
+      console.log("postlist res ",messages)
     },
     async updateMain(){
       this.$forceUpdate();
@@ -76,7 +151,7 @@ export default {
 <style scoped>
 .main-content{
   width:100%;
-  height:100%;
+  height:calc(100% - 16vw) !important;
   overflow-y:auto;
 }
 </style>

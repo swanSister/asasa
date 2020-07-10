@@ -2,7 +2,11 @@
 <template>
   <div class="post-list">
     <div class="sorting">
-      <div>최신순 <span class="icon-down-open"></span></div>
+      <select>
+        <option>최신순</option>
+        <option>조회수</option>
+        <option>좋아요</option>
+    </select>
     </div>
     <Post @click="$router.push('postDetail')" v-for="(post, index) in postList" :postData="post" :key="index+'post'"></Post>
   </div>
@@ -42,8 +46,5 @@ export default {
   }
   .sorting > div{
     font-size:4vw;
-  }
-  .post-list{
-    margin-bottom:17vw;
   }
 </style>
