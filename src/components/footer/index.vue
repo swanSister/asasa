@@ -55,7 +55,7 @@ export default {
     onClickFooter(item, idx){
       if(idx == this.footerIndex) return
         if(idx == 0){
-          this.$router.push('/main')
+          this.$router.push({name:'main', params:{reload:true}})
         }
         if(idx == 1){
           console.log(idx)

@@ -18,7 +18,7 @@
             <div class="name">
               {{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span>
               </div>
-            <div class="time">{{postData.updatedAt}}</div>
+            <div class="time">{{$getTime(postData.createdAt)}}</div>
           </div>
           <div class="content">
               <pre>{{postData.fields.text}}</pre>
@@ -59,7 +59,7 @@
             </div>
             <div class="text">{{item.fields.text}}</div>
             <div class="time">
-              {{item.updatedAt}}
+              {{$getTime(item.createdAt)}}
             </div>
           </div>
         </div>
@@ -218,6 +218,7 @@ export default {
   },
   async mounted () {
    try{
+      window.sessionStorage.setItem('postDetail','true')
       if( !this.$store.state.me.view || (this.$store.state.me.view && !this.$store.state.me.view[this.$route.query.path])){
         this.$setCount('counts/view',this.$route.query.path)
       }else{

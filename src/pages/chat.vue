@@ -1,18 +1,18 @@
 <template>
   <div>
-    <vuescroll class="user-content">
+    <vue-scroll class="user-content">
       CHAT
       <Footer v-bind:footerIndex="2"></Footer>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
+
 import Footer from '@/components/footer'
 export default {
   components:{
-    vuescroll,
+    
     Footer,
   },
   props:{

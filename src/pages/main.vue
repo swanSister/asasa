@@ -1,16 +1,16 @@
 <template>
   <div>
-    <vuescroll class="main-content">
+    
       <Header @onclick="onClickHeader" :headerData="headerData"></Header>
       <!-- <PostHeader></PostHeader> -->
+    <vue-scroll class="main-content">
       <PostList :postList="postList"></PostList>
       <Footer v-bind:footerIndex="0"></Footer>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
 import Header from '@/components/header'
 //import PostHeader from '@/components/post/post_header.vue'
 import PostList from '@/components/post/post_list.vue'
@@ -20,7 +20,6 @@ export default {
     Header,
     //PostHeader,
     PostList,
-    vuescroll,
     Footer,
   },
   props:{
@@ -51,9 +50,14 @@ export default {
       let messages = await this.$api.getByPath(`${path}/messages`)
       this.postList = messages.data.documents
       console.log("postlist",this.postList)
+    },
+    async updateMain(){
+      this.$forceUpdate();
     }
   },
+  
   async mounted(){
+    console.log("###########")
     console.log(this.$store.state.me)
     if(!this.$store.state.me.userId){
       this.$router.push('login')
@@ -65,6 +69,7 @@ export default {
       }
       this.getPosts()
     }
+    this.$eventBus.$on("updateMain",this.updateMain)
   }
 }
 </script>

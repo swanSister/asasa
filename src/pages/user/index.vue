@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vuescroll class="user-content">
+    <vue-scroll class="user-content">
       <div class="header flex align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.go(-1)" class="icon-left-open"></span>
@@ -60,15 +60,15 @@
         </div>
       </div>
       <Footer v-bind:footerIndex="4"></Footer>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 <script>
-import vuescroll from 'vuescroll';
+
 import Footer from '@/components/footer'
 export default {
   components:{
-    vuescroll,
+    
     Footer,
   },
   props:{

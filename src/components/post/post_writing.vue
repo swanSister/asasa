@@ -44,7 +44,7 @@
 export default {
   name: 'postHeader',
   components:{
-    //vuescroll,
+    
   },
 
   

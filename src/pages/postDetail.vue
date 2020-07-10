@@ -1,18 +1,18 @@
 <template>
   <div>
-    <vuescroll>
+    <vue-scroll>
       <PostDetail></PostDetail>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
+
 import PostDetail from '@/components/post/post_detail.vue'
 export default {
   components:{
     PostDetail,
-    vuescroll,
+    
   },
   props:{
   

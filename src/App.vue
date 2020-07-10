@@ -1,6 +1,9 @@
 <template>
   <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:rgb(240,240,240);">
-    <router-view style="height:100%; width:100%;"/>
+    <keep-alive>
+        <router-view v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive || $route.params.reload"></router-view>
     <loading v-if="isLoadingShow"/>
   </div>
 </template>
@@ -18,11 +21,7 @@ polyfill()
 import Vue from 'vue'
 import vuescroll from 'vuescroll'
 
-Vue.use(vuescroll, {
-  ops: {
-    // The global config
-  }
-});
+Vue.use(vuescroll);
 Vue.prototype.$vuescrollConfig = {
   bar: {
     background: '#000'

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vuescroll class="user-post-list">
+    <vue-scroll class="user-post-list">
       <div class="header flex align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.go(-1)" class="icon-left-open"></span>
@@ -26,21 +26,21 @@
             <div class="sub">{{item.fields.type == 1 ? 
               `${item.fields.topic.name} 채널에 게시글을 등록하였습니다.` : 
               `${item.fields.topic.name} 채널의 게시글에 댓글을 등록하였습니다.`}}</div>
-            <div class="time">{{item.createdAt}}</div>
+            <div class="time">{{$getTime(item.createdAt)}}</div>
           </div>
         </div>
       </div>
       <Footer v-bind:footerIndex="4"></Footer>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
+
 import Footer from '@/components/footer'
 export default {
   components:{
-    vuescroll,
+    
     Footer,
   },
   props:{
@@ -129,20 +129,5 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/*
-<div class="post-list">
-        <div class="li flex" v-for="(item, index) in postList" :key="index+'postlist'"> 
-          <div class="icon">
-            <span class="icon-doc-text"></span>
-          </div>
-          <div class="content flex column align-items-start">
-            <div class="title">{{item.fields.title}}</div>
-            <div class="sub">{{item.fields.type == 1 ? 
-              `회원님이 ${item.fields.topic.name} 채널에 게시글을 등록하였습니다.` : 
-              `회원님이 댓글을 등록하였습니다.`}}</div>
-            <div class="time">{{item.createdAt}}</div>
-          </div>
-        </div>
-      </div>
-      */
+
 </style>

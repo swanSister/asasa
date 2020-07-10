@@ -26,7 +26,7 @@
         </div>
       </div>
       <div class="right">
-        <div></div>
+        <div>{{$getTime(postData.createdAt)}}</div>
         <div :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" @click="setBookmark('counts/bookmark')"><!-- bookmark-->
           <span class="icon-bookmark"></span>
         </div>

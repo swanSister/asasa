@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vuescroll class="user-bookmark">
+    <vue-scroll class="user-bookmark">
       <div class="header flex align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.go(-1)" class="icon-left-open"></span>
@@ -11,18 +11,18 @@
       </div>
       <PostList :postList="postList"></PostList>
       <Footer v-bind:footerIndex="4"></Footer>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
-import vuescroll from 'vuescroll';
+
 import PostList from '@/components/post/post_list.vue'
 import Footer from '@/components/footer'
 export default {
   components:{
     PostList,
-    vuescroll,
+    
     Footer,
   },
   props:{

@@ -51,7 +51,7 @@
           </div>
           <div>
             <div class="sub-text">1) 신분증 상의 주소</div>
-            <div class="sub-text">2) 우현물, 택배 등의 주소</div>
+            <div class="sub-text">2) 우퍈물, 택배 등의 주소</div>
             <div class="sub-text">3) 기타 입주를 증명할 수 있는 내용이 담긴 사진</div>
 
             <div class="sub-text red">※ 주소를 인증하지 않으면 이용이 제한됩니다.</div>

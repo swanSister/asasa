@@ -1,24 +1,22 @@
 
 <template>
   <div class="post-header">
-    <vuescroll>
+    <vue-scroll>
       <div class="x-scroller flex auto align-items-center">
         <div class="flex none align-items-center plus-btn" ><span class="icon-plus"></span></div>
         <div class="subject" v-for="(subject, index) in subjects" :key="index + 'subject'">
           {{subject.name}}
         </div>
       </div>
-    </vuescroll>
+    </vue-scroll>
   </div>
 </template>
 
 <script>
 
-import vuescroll from 'vuescroll';
 export default {
   name: 'postHeader',
   components:{
-    vuescroll,
   },
   
   data: function () {
