@@ -25,9 +25,9 @@
           <span class="icon icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
         </div>
       </div>
-      <div class="right">
-        <div>{{$getTime(postData.createdAt)}}</div>
-        <div :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" @click="setBookmark('counts/bookmark')"><!-- bookmark-->
+      <div class="right flex align-items-center">
+        <div class="time">{{$getTime(postData.fields.createdAt._seconds)}}</div>
+        <div class="bookmark" :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" @click="setBookmark('counts/bookmark')"><!-- bookmark-->
           <span class="icon-bookmark"></span>
         </div>
       </div>
@@ -146,6 +146,10 @@ export default {
   .post-footer > .right{
     width:40%;
     justify-content:flex-end;
+  }
+  .post-footer > .right .time{
+    margin-right:4vw;
+    font-size: 3.5vw;
   }
   .post-footer > .left > div.red, .post-footer > .right .red{
     color:tomato;

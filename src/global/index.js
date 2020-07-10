@@ -55,15 +55,16 @@ const global = {
     }
     
     Vue.prototype.$getTime = function(timestamp){//n분 전, n 시간 전, n 일 전
-      let moment = Vue.prototype.$moment
       let now = new Date().getTime()
-      let diff = now - moment(timestamp).valueOf()
+      let diff = now - (timestamp*1000)
       let second = 1000
       let minute = second * 60
       let hour = minute * 60
       let day = hour * 24
       let week = day * 7
+      let month = day * 31//오차 있음
       let res = ''
+      
       if(diff < minute){
         res =  parseInt(diff/second) + '초 전'
       }else if(diff < hour){
@@ -72,8 +73,10 @@ const global = {
         res = parseInt(diff/hour) + '시간 전'
       }else if(diff < week){
         res = parseInt(diff/day) + '일 전'
-      }else{
+      }else if(diff < month){
         res = parseInt(diff/week) + '주 전'
+      }else{
+        res = parseInt(diff/month) + '달 전'
       }
       return res
     }

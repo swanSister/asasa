@@ -1,6 +1,5 @@
 <template>
   <div>
-    <vue-scroll class="user-bookmark">
       <div class="header flex align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.go(-1)" class="icon-left-open"></span>
@@ -9,9 +8,10 @@
           북마크
         </div>
       </div>
-      <PostList :postList="postList"></PostList>
-      <Footer v-bind:footerIndex="4"></Footer>
-    </vue-scroll>
+      <vue-scroll class="user-bookmark">
+        <PostList @sort="onSort" class="post-list" :postList="postList"></PostList>
+      </vue-scroll>
+    <Footer v-bind:footerIndex="4"></Footer>
   </div>
 </template>
 
@@ -35,6 +35,24 @@ export default {
     }
   },
   methods:{
+     onSort(sort){
+      //sort 1: 최신순, 2: 추천순, 3:조회순
+      if(sort==1){
+         this.postList = this.postList.sort(function(a, b){
+          return a.fields.createdAt._seconds > b.fields.createdAt._seconds ? -1 : a.fields.createdAt._seconds <= b.fields.createdAt._seconds ? 1 : 0;
+        })
+      }else if(sort==2){
+         this.postList = this.postList.sort(function(a, b){
+          return a.fields.like > b.fields.like ? -1 : a.fields.like <= b.fields.like ? 1 : 0;
+        })
+      }else if(sort==3){
+         this.postList = this.postList.sort(function(a, b){
+          return a.fields.view > b.fields.view ? -1 : a.fields.view <= b.fields.view? 1 : 0;
+        })
+      }
+    
+     console.log(this.postList)
+    },
     async onClickHeader(item){
       console.log(item)
       this.getMessages(item.path)
@@ -55,11 +73,10 @@ export default {
         fields:bookmark[key]
         })
         }
-        else{
-          console.error("bookmark data type : " + typeof(bookmark[key]))
-          console.error(bookmark[key])
-        }
       }
+      this.postList = this.postList.sort(function(a, b){
+        return a.fields.createdAt._seconds > b.fields.createdAt._seconds ? -1 : a.fields.createdAt._seconds <= b.fields.createdAt._seconds ? 1 : 0;
+      })
     }
     console.log(this.$store.state.me.bookmark)
   }
@@ -68,7 +85,7 @@ export default {
 <style scoped>
 .user-bookmark{
   width:100%;
-  height:100%;
+  height:calc(100% - 28vw) !important;
   overflow-y:auto;
 }
 .header{

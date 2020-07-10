@@ -84,7 +84,10 @@ export default new Router({
     {
       path: '/user/bookmark',
       name: 'user/bookmark',
-      component: UserBookmark
+      component: UserBookmark,
+      meta:{
+        keepAlive:true,
+      }
     }
   ]
 })

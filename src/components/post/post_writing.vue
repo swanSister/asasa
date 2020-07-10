@@ -129,6 +129,7 @@ export default {
           tag:'XXXX',
           title:this.subject,
           text:this.content,
+          like:0,
         })
         let mineRes = await this.$api.postByPath(`${this.$store.state.me.path}/mine`, {
           path: writingRes.headers.location,

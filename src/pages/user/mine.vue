@@ -26,7 +26,7 @@
             <div class="sub">{{item.fields.type == 1 ? 
               `${item.fields.topic.name} 채널에 게시글을 등록하였습니다.` : 
               `${item.fields.topic.name} 채널의 게시글에 댓글을 등록하였습니다.`}}</div>
-            <div class="time">{{$getTime(item.createdAt)}}</div>
+            <div class="time">{{$getTime(item.fields.createdAt._seconds)}}</div>
           </div>
         </div>
       </div>

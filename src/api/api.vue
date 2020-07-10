@@ -11,9 +11,18 @@ export default {
     console.log("##get API : ",path)
      return axios.get(`${API_URL}/rest/${path}?${where}`)
   },
-  getByPath: function(path, offset, limit){
+  getByPath: function(path, offset, limit, order){
+    if(!order || order == 1){//최신순
+      order = 'createdAt desc'
+    }else if(order == 2){//추천순
+      order = 'like desc'
+    }else if(order == 3){//조회순
+      order = 'view desc'
+    }else{
+      order = 'createdAt desc'
+    }
     console.log("##get API : ",path)
-     return axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}`)
+     return axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}&orderBy=${order}`)
   },
   postByPath: function(path, param){
     try{

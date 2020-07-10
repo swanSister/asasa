@@ -1,90 +1,108 @@
 
 <template>
-  <div>
-      <div class="post-detail" v-if="postData.fields">
-        <div class="flex align-items-center header">
-          <div class="flex auto justify-content-start">
-            <span @click="$router.go('-1')" class="icon-left-open"></span>
-          </div>
-          <div class="flex auto justify-content-end right-icons">
-            <span class="icon-bell-alt"></span>
-            <span :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" class="icon-bookmark" @click="setBookmark"></span>
-            <span class="icon-dot-3"></span>
-          </div>
-        </div>
-        <div class="body">
-          <div class="title">{{postData.fields.title}}</div>
-          <div class="info">
-            <div class="name">
-              {{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span>
+  <div class="post-detail-scroll">
+     <vue-scroll  :ops = "ops"
+        @refresh-start="handleRS"
+        @load-before-deactivate="handleLBD"
+        @refresh-before-deactivate="handleRBD"
+        @load-start="handleLoadStart">
+
+         <div class="slot-load" slot="load-beforeDeactive"></div>
+          <div class="slot-load" slot="load-deactive"></div>
+          <div class="slot-load" slot="load-start"></div>
+          <div class="slot-load" slot="load-active"></div>
+          <div class="slot-refresh" slot="refresh-deactive"></div>
+          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+          <div class="slot-refresh" slot="refresh-start"></div>
+          <div class="slot-refresh" slot="refresh-active"></div>
+
+        <div class="child">
+          <div class="post-detail" v-if="postData.fields">
+            <div class="flex align-items-center header">
+              <div class="flex auto justify-content-start">
+                <span @click="$router.go('-1')" class="icon-left-open"></span>
               </div>
-            <div class="time">{{$getTime(postData.createdAt)}}</div>
+              <div class="flex auto justify-content-end right-icons">
+                <span class="icon-bell-alt"></span>
+                <span :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" class="icon-bookmark" @click="setBookmark"></span>
+                <span class="icon-dot-3"></span>
+              </div>
+            </div>
+            <div class="body">
+              <div class="title">{{postData.fields.title}}</div>
+              <div class="info">
+                <div class="name">
+                  {{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span>
+                  </div>
+                <div class="time">{{$getTime(postData.fields.createdAt._seconds)}}</div>
+              </div>
+              <div class="content">
+                  <pre>{{postData.fields.text}}</pre>
+                  <div class="img-containner" v-for="(item, index) in postData.fields.imgList.files" :key="'imageList'+index">
+                    <div v-if="item">
+                      <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
+                      <img :src="item">
+                      <div class="img-desc" v-if="postData.fields.imgDescList[index]">
+                        {{postData.fields.imgDescList[index]}}
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="button-content flex align-items-center">
+              <div :class="{'red':$store.state.me.like && $store.state.me.like[postData.path]}" @click="setLike" 
+              class="flex none justify-content-center align-items-center border-right"><!-- like-->
+                <span class="icon red icon-thumbs-up-alt"></span>{{postData.fields.like ? postData.fields.like : '좋아요'}}
+              </div>
+              <div class="flex none justify-content-center align-items-center border-right"><!-- comment-->
+                <span class="icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
+              </div>
+              <div class="flex none justify-content-center align-items-center"><!-- comment-->
+                <span class="icon-share-1"></span>공유하기
+              </div>
+            </div>
           </div>
-          <div class="content">
-              <pre>{{postData.fields.text}}</pre>
-              <div class="img-containner" v-for="(item, index) in postData.fields.imgList.files" :key="'imageList'+index">
-                <div v-if="item">
-                  <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                  <img :src="item">
-                  <div class="img-desc" v-if="postData.fields.imgDescList[index]">
-                    {{postData.fields.imgDescList[index]}}
+
+          <div class="comment-list" v-if="commentList.length">
+              <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
+                <div class="name flex align-items-center">
+                  {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
+                </div>
+                <div class="comment-img-list flex">
+                  <div v-for="(src,index) in item.fields.imgList.files" :key="'comment-img'+index">
+                    <img v-if="src" :src="src"/>
                   </div>
                 </div>
+                <div class="text">{{item.fields.text}}</div>
+                <div class="time">
+                  {{$getTime(item.fields.createdAt._seconds)}}
+                </div>
               </div>
+            </div>
+        </div>
+      </vue-scroll>
+      <div class="footer flex column align-items-center">
+        <div ref="commentImg" class="flex justify-content-start comment-img" :style="{
+          borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
+        }">
+          <div v-for="(item, index) in imgInputList" :key="'commentImga'+index" >
+              <div class="flex align-items-center justify-content-center close-btn" @click="removeCommentImg(index)">
+                <span class="icon-cancel"></span>
+              </div>
+              <img :src="item.src">
           </div>
         </div>
-        <div class="button-content flex align-items-center">
-          <div :class="{'red':$store.state.me.like && $store.state.me.like[postData.path]}" @click="setLike" 
-          class="flex none justify-content-center align-items-center border-right"><!-- like-->
-            <span class="icon red icon-thumbs-up-alt"></span>{{postData.fields.like ? postData.fields.like : '좋아요'}}
+        <div class="flex comment-input align-items:center;">
+          <div class="flex none justify-content-start align-items-center;">
+              <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
+              <label for="file" class="icon icon-camera"></label>
           </div>
-          <div class="flex none justify-content-center align-items-center border-right"><!-- comment-->
-            <span class="icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
-          </div>
-          <div class="flex none justify-content-center align-items-center"><!-- comment-->
-            <span class="icon-share-1"></span>공유하기
-          </div>
+          <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
+          </textarea>
+          <div @click="addComment" class="flex align-items-start upload">등록</div>
         </div>
       </div>
-
-       <div class="comment-list" v-if="commentList.length">
-          <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
-            <div class="name flex align-items-center">
-              {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
-            </div>
-            <div class="comment-img-list flex">
-              <div v-for="(src,index) in item.fields.imgList.files" :key="'comment-img'+index">
-                <img v-if="src" :src="src"/>
-              </div>
-            </div>
-            <div class="text">{{item.fields.text}}</div>
-            <div class="time">
-              {{$getTime(item.createdAt)}}
-            </div>
-          </div>
-        </div>
-        <div class="footer flex column align-items-center">
-          <div ref="commentImg" class="flex justify-content-start comment-img" :style="{
-            borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
-          }">
-            <div v-for="(item, index) in imgInputList" :key="'commentImga'+index" >
-                <div class="flex align-items-center justify-content-center close-btn" @click="removeCommentImg(index)">
-                  <span class="icon-cancel"></span>
-                </div>
-                <img :src="item.src">
-            </div>
-          </div>
-          <div class="flex comment-input align-items:center;">
-            <div class="flex none justify-content-start align-items-center;">
-                <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
-                <label for="file" class="icon icon-camera"></label>
-            </div>
-            <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
-            </textarea>
-            <div @click="addComment" class="flex align-items-start upload">등록</div>
-          </div>
-        </div>
-  </div>
+      </div>
 </template>
 
 <script>
@@ -98,15 +116,57 @@ export default {
   
   data: function () {
     return {
-      varUA:null,
       postData:{},
       inputRange:null,
       imgInputList:[],
       commentList:[],
       commentText:'',
+      ops : {
+      vuescroll: {
+        mode: 'slide',
+        pullRefresh: {
+          enable: true,
+          tips:{
+            deactive: '',
+            active: '',
+            start: '',
+            beforeDeactive: ''
+          }
+        },
+        pushLoad: {
+          enable: true,
+          tips:{
+            deactive: '',
+            active: '',
+            start: '',
+            beforeDeactive: ''
+          }
+        }
+      }
+    },
+    offset:0,
+    limit:10,
+    size:0,
     }
   },
   methods: {
+    async handleLoadStart(vm, dom, done) {
+      if(this.offset + this.limit <= this.size){
+        this.offset+=this.limit
+        await this.getCommentList(this.currentPath,this.offset+1, this.limit)
+      }
+      done();
+    },
+    handleLBD(vm, loadDom, done) {
+      done();
+    },
+    async handleRS(vsInstance, refreshDom, done) {
+      this.getMessageDetail()
+      done();
+    },
+    handleRBD(vm, loadDom, done) {
+      done();
+    },
     async setBookmark(){
       await this.$setCount('counts/bookmark',this.postData.path)
     },
@@ -171,13 +231,14 @@ export default {
         alert("댓글을 등록했습니다.")
         this.imgInputList = []
         this.commentText = ''
+        this.commentList = []
+        this.offset = 0
         this.getCommentList()
       }else{
         console.error(writingRes)
         console.error(mineRes)
         alert("댓글을 등록 실패")
       }
-        
     },
     async previewFiles(event) {
       let that = this
@@ -202,11 +263,13 @@ export default {
       this.postData = messages.data
     },
     async getCommentList(){
-      let comments = await this.$api.getByPath(`${this.$route.query.path}/comments`)
-      this.commentList = comments.data.documents
-      //console.log("comments",this.commentList)
+      let comments = await this.$api.getByPath(`${this.$route.query.path}/comments`, this.offset, this.limit, 1)
+      this.size = comments.data.size
+      comments.data.documents.map(item => this.commentList.push(item))
     },
     async getMessageDetail(){
+      this.commentList = []
+      this.offset = 0
       if(this.$route.query.path){
         this.getPostDetail()
         this.getCommentList()
@@ -225,7 +288,6 @@ export default {
         await this.$updateUserInfo()
       }
       this.getMessageDetail()
-      this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
    }catch(e){
      console.error(e.messages)
      alert("error")
@@ -236,6 +298,9 @@ export default {
 </script>
 
 <style scoped>
+  .post-detail-scroll{
+    height:calc(100% - 14vw);
+  }
   .post-detail{
     width:100vw;
     padding:2vw 4vw;
@@ -268,8 +333,8 @@ export default {
     color:#aaa;
     margin-bottom:6vw;
   }
-  .body .info .name{
-   
+  .body .info .time{
+   margin-top: 2vw;
   }
   .body .info .name span{
    color:tomato;

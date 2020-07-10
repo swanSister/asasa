@@ -54,7 +54,7 @@
             <span class="icon icon-right-open"> </span>
           </div>
           <div class="flex li" >
-            <div class="flex auto list-title" @click="$router.push({name: 'user/bookmark'})">북마크</div>
+            <div class="flex auto list-title" @click="$router.push({name: 'user/bookmark',params:{reload:true}})">북마크</div>
             <span class="icon icon-right-open"> </span>
           </div>
         </div>

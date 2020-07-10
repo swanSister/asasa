@@ -18,7 +18,7 @@
       <div class="slot-refresh" slot="refresh-start"></div>
       <div class="slot-refresh" slot="refresh-active"></div>
         <div class="child">
-           <PostList :postList="postList"></PostList>
+           <PostList @sort="onSort" :postList="postList"></PostList>
         </div>
      
       </vue-scroll>
@@ -71,22 +71,32 @@ export default {
       }
     },
     offset:0,
-    limit:2,
+    limit:10,
     size:0,
-    currentPath:''
+    currentPath:'',
+    sort:1,
     }
   },
   methods:{
+    onSort(sort){
+      //sort 1: 최신순, 2: 추천순, 3:조회순
+      this.postList = []
+      this.offset = 0
+      this.sort = sort
+      console.log(this.offset, this.sort)
+      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+    },
     async handleRS(vsInstance, refreshDom, done) {
-      console.log("handleRS1")
-      let messages = await this.$api.getByPath(`${this.currentPath}/messages`,this.offset,this.limit)
-      console.log(messages)
+      let messages = await this.$api.getByPath(`${this.currentPath}/messages`,this.offset,this.limit, this.sort)
       let size = messages.data.size
-      console.log(size, this.size)
       if(size > this.size){
-        console.log('size change')
+        this.offset = 0
+        this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
       }
-      
+      done();
+    },
+    handleRBD(vm, loadDom, done) {
+      console.log("handleRS4")
       done();
     },
     async handleLoadStart(vm, dom, done) {
@@ -100,15 +110,12 @@ export default {
       console.log("handleRS3")
       done();
     },
-    handleRBD(vm, loadDom, done) {
-      console.log("handleRS4")
-      done();
-    },
+   
     async onClickHeader(item){
       this.postList = []
       this.currentPath = item.path
       this.offset = 0
-      this.getMessages(this.currentPath, this.offset, this.limit)
+      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
     },
     async getPosts(){
       if(this.$store.state.me.isAuth){
@@ -117,11 +124,11 @@ export default {
         this.headerData = [this.$store.state.me.topics[0]]
       }
       this.currentPath = this.headerData[0].path
-      this.getMessages(this.currentPath, this.offset, this.limit)
+      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
     },
-    async getMessages(path, offset, limit){
+    async getMessages(path, offset, limit, sort){
       console.log(`${offset}~${limit}`)
-      let messages = await this.$api.getByPath(`${path}/messages`,offset,limit)
+      let messages = await this.$api.getByPath(`${path}/messages`,offset,limit, sort)
       messages.data.documents.map(item => this.postList.push(item))
       this.size = messages.data.size
       console.log("postlist res ",messages)
@@ -145,13 +152,18 @@ export default {
       this.getPosts()
     }
     this.$eventBus.$on("updateMain",this.updateMain)
+  },
+
+  beforeDestroy(){
+    this.headerData = []
+    this.currentPath = ''
   }
 }
 </script>
 <style scoped>
 .main-content{
   width:100%;
-  height:calc(100% - 16vw) !important;
+  height:calc(100% - 28vw) !important;
   overflow-y:auto;
 }
 </style>
