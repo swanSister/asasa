@@ -55,6 +55,7 @@ export default {
   .post-list{
     width:100%;
   }
+  
   .sorting{
     width:100%;
     display:flex;
