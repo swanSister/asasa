@@ -9,7 +9,7 @@
           마이페이지
         </div>
         <div class="backButton" style="font-size:5vw; margin-right:2vw;">
-            <span @click="$store.commit('me',{}),$router.push('login')" class="icon-logout"></span>
+            <span @click="onLogout" class="icon-logout"></span>
         </div>
       </div>
       <div class="body">
@@ -81,6 +81,13 @@ export default {
     }
   },
   methods:{
+    onLogout(){
+      if (confirm('로그아웃을 계속 진행하시면 모든 내용이 초기화되고 복구가 어렵습니다. 계속 진행하시겠습니까?')) {
+        this.$store.commit('me',{})
+        this.$router.push('login')
+      }
+      
+    },
     denyPopup:function(txt){
       alert(txt)
     },
