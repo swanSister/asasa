@@ -38,7 +38,7 @@ export default {
         { 
           class:"icon-bell",
           isSelect:false,
-          idx:3,//alarm
+          idx:3,//notice
         },
         { 
           class:"icon-dot-3",
@@ -65,7 +65,7 @@ export default {
           this.$router.push('/chat')
         }
         if(idx == 3){
-          this.$router.push('/alarm')
+          this.$router.push('/notice')
         }
         if(idx == 4){
           this.$router.push('/user')

@@ -1,18 +1,55 @@
 <template>
-  <div>
-    <vue-scroll class="user-content">
-      CHAT
+  <div class="chat"> 
+    <div class="chat-header flex align-items-center column justify-content-center">
+      <div class="flex align-items-center title-content">
+        <div class="flex auto justify-content-center title">대화</div>
+        <span class="icon icon-plus-squared-alt"></span>
+      </div>
+      <div class="sub">
+        나와 대화할 수 있는 회원이 <span>100,000명</span> 있습니다.
+      </div>
+    </div>
+    <div class="chat-tab flex auto align-items-center justify-content-center"> 
+        <div @click="setIsMyChat(true)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':isMyChat}">MY</div>
+        <div @click="setIsMyChat(false)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':!isMyChat}">퍼블릭</div>
+    </div>
+    <vue-scroll class="chat-content"
+      :ops = "ops"
+      @refresh-start="handleRS"
+      @load-before-deactivate="handleLBD"
+      @refresh-before-deactivate="handleRBD"
+      @load-start="handleLoadStart">
+        <div class="slot-load" slot="load-beforeDeactive"></div>
+        <div class="slot-load" slot="load-deactive"></div>
+        <div class="slot-load" slot="load-start"></div>
+        <div class="slot-load" slot="load-active"></div>
+        <div class="slot-refresh" slot="refresh-deactive"></div>
+        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+        <div class="slot-refresh" slot="refresh-start"></div>
+        <div class="slot-refresh" slot="refresh-active"></div>
+        <div class="child">
+          <div v-if="isMyChat">
+             <ChatList :chatList="chatList"></ChatList>
+          </div>
+          <div v-else>
+            <div style="color:#555; font-size:4vw; margin-top:10vw;">
+              준비중입니다.
+            </div>
+            </div>
+        </div>
+      </vue-scroll>
+
       <Footer v-bind:footerIndex="2"></Footer>
-    </vue-scroll>
+   
   </div>
 </template>
 
 <script>
-
+import ChatList from '@/components/chat/chat_list.vue'
 import Footer from '@/components/footer'
 export default {
   components:{
-    
+    ChatList,
     Footer,
   },
   props:{
@@ -20,22 +57,172 @@ export default {
   },
   data () {
     return {
-      headerData:[],
-      postList:[],
+      isMyChat:true,
+      chatList:[
+        {
+          title:'채팅 테스트 1, overflow test , 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1',
+          subText: '메세지1 overflow test , 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1',
+          time: '오전 10:40',
+          count:4,
+        },
+        {
+          title:'채팅 테스트 2',
+          subText: '메세지1',
+          time: '오전 10:40',
+          count:4,
+        },
+        {
+          title:'채팅 테스트 3',
+          subText: '메세지1',
+          time: '오전 10:40',
+          count:1,
+        },
+        {
+          title:'채팅 테스트 4',
+          subText: '메세지1',
+          time: '오전 10:40',
+          count:2,
+        },
+        {
+          title:'채팅 테스트 6',
+          subText: '메세지1',
+          time: '오전 10:40',
+          count:2,
+        },
+        {
+          title:'채팅 테스트 7',
+          subText: '메세지1',
+          time: '오전 10:40',
+          count:2,
+        },
+      ],
+      ops : {
+        vuescroll: {
+          mode: 'slide',
+          pullRefresh: {
+            enable: true,
+            tips:{
+              deactive: '',
+            active: '',
+            start: '',
+            beforeDeactive: ''
+            }
+          },
+          pushLoad: {
+            enable: true,
+            auto: true,
+            autoLoadDistance: 10,
+            tips:{
+              deactive: '',
+            active: '',
+            start: '',
+            beforeDeactive: ''
+            }
+          }
+        }
+    },
+    offset:0,
+    limit:10,
+    size:0,
+    currentPath:'',
+    sort:1,
+    searchText:'',
+    
     }
   },
   methods:{
-    
+    setIsMyChat(type){
+      this.isMyChat = type
+    },
+
+    cancelSearch(){
+      this.searchText = ''
+      this.chatList = []
+      this.offset = 0
+      this.size = 0
+    },
+    onKeyPress(e){
+      if (e.keyCode == 13) {
+        this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+      }
+    },
+    onSort(sort){
+      //sort 1: 최신순, 2: 추천순, 3:조회순
+      this.chatList = []
+      this.offset = 0
+      this.sort = sort
+      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+    },
+    async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
+      done();
+    },
+    handleRBD(vm, loadDom, done) {
+      done();
+    },
+    async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
+       if(this.offset + this.limit <= this.size){
+        this.offset+=this.limit
+        await this.getMessages(this.currentPath,this.offset+1, this.limit)
+      }
+      done();
+    },
+    handleLBD(vm, loadDom, done) {
+      done();
+    },
+    async getMessages(path, offset, limit, sort){
+      console.log(path, offset, limit, sort)
+      
+      // let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
+      // messages.data.documents.map(item => this.chatList.push(item))
+      // this.size = messages.data.size
+    },
   },
   async mounted(){
-    
+    this.currentPath = this.$store.state.me.topics[0].path
   }
 }
 </script>
 <style scoped>
-.user-content{
+.chat{
+  background:white;
+}
+.chat-content{
   width:100%;
-  height:100%;
+  height:calc(100% - 48vw) !important;
   overflow-y:auto;
+}
+.chat-header{
+  background:white;
+  height:24vw;
+  border-bottom: 1px solid #eee;
+  padding:0 4vw;
+}
+.chat-header .title-content{
+  margin-bottom:4vw;
+  width:100%;
+  font-size: 6vw;
+  color:#333;
+  font-weight: bold;
+}
+.chat-header .title{
+  margin-right: -6vw;
+}
+.chat-header .sub{
+  font-size: 3vw;
+}
+.chat-header .sub > span{
+  color:#21baf6;
+}
+.chat-tab{
+  height:10vw;
+  background:white;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 4vw;
+}
+.chat-tab .btn{
+  height:100%;
+}
+.chat-tab .btn.selected{
+  border-bottom:3px solid #000;
 }
 </style>

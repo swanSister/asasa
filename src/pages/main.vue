@@ -1,7 +1,7 @@
 <template>
   <div>
-      <Header @onclick="onClickHeader" :headerData="headerData"></Header>
-      <!-- <PostHeader></PostHeader> -->
+    <Header @onclick="onClickHeader" :headerData="headerData"></Header>
+    <!-- <PostHeader></PostHeader> -->
     <vue-scroll class="main-content" 
         :ops = "ops"
         @refresh-start="handleRS"
@@ -86,7 +86,7 @@ export default {
       console.log(this.offset, this.sort)
       this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
     },
-    async handleRS(vsInstance, refreshDom, done) {
+    async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       let messages = await this.$api.getByPath(`${this.currentPath}/messages`,this.offset,this.limit, this.sort)
       let size = messages.data.size
       if(size > this.size){
@@ -99,7 +99,7 @@ export default {
       console.log("handleRS4")
       done();
     },
-    async handleLoadStart(vm, dom, done) {
+    async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
       if(this.offset + this.limit <= this.size){
         this.offset+=this.limit
         await this.getMessages(this.currentPath,this.offset+1, this.limit)

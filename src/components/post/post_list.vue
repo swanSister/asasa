@@ -1,15 +1,16 @@
 
 <template>
   <div class="post-list">
-    <div class="sorting flex align-items-center">
-      <span class="icon icon-down-open"></span>
-      <select class="select-box" @change="onChange">
+    <div class="sorting flex auto align-items-center justify-content-end">
+      
+      <select class="select-box " @change="onChange">
         <option value="1">최신순</option>
         <option value="2">추천순</option>
         <option value="3">조회수순</option>
       </select>
+      <span class="icon icon-down-open"></span>
     </div>
-    <Post @click="$router.push('postDetail')" v-for="(post, index) in postList" :postData="post" :key="index+'post'"></Post>
+    <Post v-for="(post, index) in postList" :postData="post" :key="index+'post'"></Post>
   </div>
 </template>
 
@@ -47,6 +48,7 @@ export default {
     color:#555;
     font-size: 4vw;
     appearance:none;
+    text-align-last: right;
   }
   .select-box:focus{
     border: 0;
@@ -58,10 +60,8 @@ export default {
 
   .sorting{
     width:100%;
-    display:flex;
-    justify-content:flex-end;
     background:white;
-    padding:1.5vw;
+    padding:1.5vw 4vw;
     color:#aaa;
   }
   .sorting .icon{

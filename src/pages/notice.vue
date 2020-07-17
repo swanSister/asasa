@@ -1,13 +1,9 @@
 <template>
-  <div>
-    <div class="search-input flex align-items-center"> 
-      <div class="input-content flex auto align-items-center">
-        <span class="icon icon-search"></span>
-        <input @keypress="onKeyPress" class="flex auto" v-model="searchText" placeholder="검색어를 입력해 주세요.">
-      </div>
-      <div class="btn flex none" @click="cancelSearch">취소</div>
+  <div class="notice">
+    <div class="notice-header flex justify-content-center align-items-center"> 
+      알림
     </div>
-    <vue-scroll class="search-content"
+    <vue-scroll class="notice-content"
       :ops = "ops"
       @refresh-start="handleRS"
       @load-before-deactivate="handleLBD"
@@ -22,10 +18,10 @@
         <div class="slot-refresh" slot="refresh-start"></div>
         <div class="slot-refresh" slot="refresh-active"></div>
         <div class="child">
-            <PostList v-if="postList.length" @sort="onSort" :postList="postList"></PostList>
+           <NoticeList :noticeList="noticeList" ></NoticeList>
         </div>
       </vue-scroll>
-      <Footer v-bind:footerIndex="1"></Footer>
+      <Footer v-bind:footerIndex="3"></Footer>
    
   </div>
 </template>
@@ -33,10 +29,10 @@
 <script>
 
 import Footer from '@/components/footer'
-import PostList from '@/components/post/post_list.vue'
+import NoticeList from '@/components/notice/notice_list.vue'
 export default {
   components:{
-    PostList,
+    NoticeList,
     Footer,
   },
   props:{
@@ -44,8 +40,24 @@ export default {
   },
   data () {
     return {
-      headerData:[],
-      postList:[],
+      noticeList:[{
+        title:'공지사항',
+        sub:'성북동 회원 100명 돌파! 회원들과 대화를 나누세요.',
+        time:'방금 전',
+        writer:'운영진'
+      },
+      {
+        title:'이벤트',
+        sub:'이벤트 1',
+        time:'7분전',
+        writer:'운영진'
+      },
+      {
+        title:'공동구매',
+        sub:'저렴이들 구경 오세요~',
+        time:'3시간 전',
+        writer:'운영진'
+      }],
       ops : {
         vuescroll: {
           mode: 'slide',
@@ -76,29 +88,9 @@ export default {
     size:0,
     currentPath:'',
     sort:1,
-    searchText:'',
-    
     }
   },
   methods:{
-    cancelSearch(){
-      this.searchText = ''
-      this.postList = []
-      this.offset = 0
-      this.size = 0
-    },
-    onKeyPress(e){
-      if (e.keyCode == 13) {
-        this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
-      }
-    },
-    onSort(sort){
-      //sort 1: 최신순, 2: 추천순, 3:조회순
-      this.postList = []
-      this.offset = 0
-      this.sort = sort
-      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
-    },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       done();
     },
@@ -116,10 +108,10 @@ export default {
       done();
     },
     async getMessages(path, offset, limit, sort){
-      //test로 topic 읽어오기
-      let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
-      messages.data.documents.map(item => this.postList.push(item))
-      this.size = messages.data.size
+      console.log(path, offset, limit, sort)
+      // let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
+      // messages.data.documents.map(item => this.chatList.push(item))
+      // this.size = messages.data.size
     },
   },
   async mounted(){
@@ -128,30 +120,22 @@ export default {
 }
 </script>
 <style scoped>
-.search-content{
+.notice{
+  background:white;
+}
+.notice-content{
   width:100%;
   height:calc(100% - 28vw) !important;
   overflow-y:auto;
 }
-.search-input{
+.notice-header{
   background:white;
   height:14vw;
   padding:0 4vw;
   border-bottom: 1px solid #eee;
+  font-size: 6vw;
+  color:#333;
+  font-weight: bold;
 }
-.search-input .input-content{
-  background:rgb(240, 240, 240);
-  margin-right:4vw;
-  height:7vw;
-  border-radius: 3.5vw;
-  padding-left:2vw;
-  color:#555;
-}
-.search-input .input-content > .icon{
-  color:#aaa;
-}
-.search-input .input-content > input{
-  margin-left: 1vw;
-  background: transparent;
-}
+
 </style>

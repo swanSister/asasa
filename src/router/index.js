@@ -8,10 +8,12 @@ import PostWriting from '@/pages/postWriting'
 import PostDetail from '@/pages/postDetail'
 import Search from '@/pages/search'
 import Chat from '@/pages/chat'
-import Alarm from '@/pages/alarm'
+import ChatDetail from '@/pages/chatDetail'
+import Notice from '@/pages/notice'
 import User from '@/pages/user/index'
 import UserMine from '@/pages/user/mine'
 import UserBookmark from '@/pages/user/bookmark'
+
 
 Vue.use(Router)
 
@@ -67,9 +69,14 @@ export default new Router({
       component: Chat
     },
     {
-      path: '/alarm',
-      name: 'alarm',
-      component: Alarm
+      path: '/chatDetail',
+      name: 'chatDetail',
+      component: ChatDetail
+    },
+    {
+      path: '/notice',
+      name: 'notice',
+      component: Notice
     },
     {
       path: '/user',
