@@ -58,44 +58,7 @@ export default {
   data () {
     return {
       isMyChat:true,
-      chatList:[
-        {
-          title:'채팅 테스트 1, overflow test , 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1',
-          subText: '메세지1 overflow test , 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1, 채팅 테스트 1',
-          time: '오전 10:40',
-          count:4,
-        },
-        {
-          title:'채팅 테스트 2',
-          subText: '메세지1',
-          time: '오전 10:40',
-          count:4,
-        },
-        {
-          title:'채팅 테스트 3',
-          subText: '메세지1',
-          time: '오전 10:40',
-          count:1,
-        },
-        {
-          title:'채팅 테스트 4',
-          subText: '메세지1',
-          time: '오전 10:40',
-          count:2,
-        },
-        {
-          title:'채팅 테스트 6',
-          subText: '메세지1',
-          time: '오전 10:40',
-          count:2,
-        },
-        {
-          title:'채팅 테스트 7',
-          subText: '메세지1',
-          time: '오전 10:40',
-          count:2,
-        },
-      ],
+      chatList:[],
       ops : {
         vuescroll: {
           mode: 'slide',
@@ -124,7 +87,6 @@ export default {
     offset:0,
     limit:10,
     size:0,
-    currentPath:'',
     sort:1,
     searchText:'',
     
@@ -133,25 +95,6 @@ export default {
   methods:{
     setIsMyChat(type){
       this.isMyChat = type
-    },
-
-    cancelSearch(){
-      this.searchText = ''
-      this.chatList = []
-      this.offset = 0
-      this.size = 0
-    },
-    onKeyPress(e){
-      if (e.keyCode == 13) {
-        this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
-      }
-    },
-    onSort(sort){
-      //sort 1: 최신순, 2: 추천순, 3:조회순
-      this.chatList = []
-      this.offset = 0
-      this.sort = sort
-      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
     },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       done();
@@ -162,23 +105,24 @@ export default {
     async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
        if(this.offset + this.limit <= this.size){
         this.offset+=this.limit
-        await this.getMessages(this.currentPath,this.offset+1, this.limit)
+        await this.getMessages()
       }
       done();
     },
     handleLBD(vm, loadDom, done) {
       done();
     },
-    async getMessages(path, offset, limit, sort){
-      console.log(path, offset, limit, sort)
-      
-      // let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
-      // messages.data.documents.map(item => this.chatList.push(item))
-      // this.size = messages.data.size
+    async getMessages(){
+      let userId = this.$store.state.me.userId
+      let messages1 = await this.$api.getByPathWhere(`chats`,`senderId=${userId}`)
+      messages1.data.documents.map(item => this.chatList.push(item))
+      let messages2 = await this.$api.getByPathWhere(`chats`,`receiverId=${userId}`)
+      messages2.data.documents.map(item => this.chatList.push(item))
+      console.log(this.chatList)
     },
   },
   async mounted(){
-    this.currentPath = this.$store.state.me.topics[0].path
+    this.getMessages()
   }
 }
 </script>

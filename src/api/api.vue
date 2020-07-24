@@ -9,7 +9,9 @@ export default {
   },
   getByPathWhere: function(path, where){
     console.log("##get API : ",path)
-     return axios.get(`${API_URL}/rest/${path}?${where}`)
+    let res = axios.get(`${API_URL}/rest/${path}?${where}&offset=0&limit=100`)
+    console.log(res)
+     return res
   },
   getByPath: function(path, offset, limit, order){
     if(!order || order == 1){//최신순
@@ -22,7 +24,9 @@ export default {
       order = 'createdAt desc'
     }
     console.log("##get API : ",path)
-     return axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}&orderBy=${order}`)
+    let res = axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}&orderBy=${order}`)
+    console.log(res)
+     return res
   },
   postByPath: function(path, param){
     try{

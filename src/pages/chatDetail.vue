@@ -4,47 +4,83 @@
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.go(-1)" class="icon-left-open"></span>
         </div>
-        <div class="flex auto justify-content-center">
-          채팅방 제목
+        <div v-if="chatData.fields" class="flex auto justify-content-center">
+          {{youData.userId}}
         </div>
         <div @click="isSliderMenuShow= !isSliderMenuShow" class="backButton" style="font-size:5vw; margin-right:2vw;">
             <span class="icon-menu"></span>
         </div>
       </div>
-    <vue-scroll class="chat-detail-content"
-      :ops = "ops"
-      @refresh-start="handleRS"
-      @load-before-deactivate="handleLBD"
-      @refresh-before-deactivate="handleRBD"
-      @load-start="handleLoadStart">
-        <div class="slot-load" slot="load-beforeDeactive"></div>
-        <div class="slot-load" slot="load-deactive"></div>
-        <div class="slot-load" slot="load-start"></div>
-        <div class="slot-load" slot="load-active"></div>
-        <div class="slot-refresh" slot="refresh-deactive"></div>
-        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-        <div class="slot-refresh" slot="refresh-start"></div>
-        <div class="slot-refresh" slot="refresh-active"></div>
-        <div class="child">
-          
+      <vue-scroll ref="vs" class="chat-detail-content"
+        :ops = "ops"
+        @refresh-start="handleRS"
+        @refresh-before-deactivate="handleRBD">
+          <div class="slot-refresh" slot="refresh-deactive"></div>
+          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+          <div class="slot-refresh" slot="refresh-start"></div>
+          <div class="slot-refresh" slot="refresh-active"></div>
+          <div class="child">
+            <div class="chat-content flex column-reverse justify-content-start" >
+              <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
+                <div class="me flex auto justify-content-end align-items-end" v-if="item.fields.userId == $store.state.me.userId">
+                  <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                  <div class="chat-text">{{item.fields.text}}</div>
+                </div>
+                <div class="you flex auto align-items-end" v-else>
+                  <div class="chat-text">{{item.fields.text}}</div>
+                  <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                </div>
+                <div v-if="item.isDateChanged" class="date-line">
+                  <span>{{getDate(item.createdAt)}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </vue-scroll>
+        <div class="text-input-content flex column align-items-center">
+          <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
+            borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
+          }">
+            <div v-for="(item, index) in imgInputList" :key="'chatImage'+index" >
+                <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
+                  <span class="icon-cancel"></span>
+                </div>
+                <img :src="item.src">
+            </div>
+          </div>
+          <div class="flex chat-input align-items:center;">
+            <div class="flex none justify-content-start align-items-center;">
+                <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
+                <label for="file" class="icon icon-camera"></label>
+            </div>
+            <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="inputText">
+            </textarea>
+            <div @click="addChat" class="flex align-items-start upload">등록</div>
+          </div>
         </div>
-      </vue-scroll>
-      <div v-if="isSliderMenuShow" @click.self="isSliderMenuShow=false" class="slide-menu-bg">
-      
-      </div>
+        <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
+        </div>
       <transition name="slide">
-
             <div v-if="isSliderMenuShow" class="slide-menu">
-                <div class="slide-menu-header">Header</div>
-                <vue-scroll class="slide-menu-body">
-                  <div>adsasadvsaddsav</div>
-                  <div>adsasadvsaddsav</div>
-                  <div>adsasadvsaddsav</div>
-                  <div>adsasadvsaddsav</div>
-                  <div>adsasadvsaddsav</div>
-                  <div>adsasadvsaddsav</div>
+                <div class="slide-menu-header flex column justify-content-center align-items-start">
+                  <div>방 생성일</div>
+                  <div class="created-date">{{$moment(chatData.createdAt).format('YYYY-MM-DD')}}</div>
+                </div>
+                <vue-scroll class="slide-menu-body" v-if="youData">
+                  <div class="user-data flex column justify-content-center align-items-start">
+                    <div class="user-id">{{youData.userId}}</div>
+                    <div class="building-name">{{youData.public ? (youData.houseType == 3 ? '주택' : (youData.addressData.buildingName)) : '비공개'}}</div>
+                  </div>
                 </vue-scroll>
-                <div class="slide-menu-body">Footer</div>
+                <div class="slide-menu-footer align-items-center flex align-items-center">
+                  <div class="flex auto justify-content-start"> 
+                    <span class="icon-logout"></span>
+                  </div>
+                  <div class="flex auto">
+                    <div class="flex auto justify-content-end">
+                    </div>
+                  </div>
+                </div> 
             </div>
       </transition>
       <Footer v-bind:footerIndex="2"></Footer>
@@ -77,7 +113,7 @@ export default {
             }
           },
           pushLoad: {
-            enable: true,
+            enable: false,
             auto: true,
             autoLoadDistance: 10,
             tips:{
@@ -92,38 +128,195 @@ export default {
     offset:0,
     limit:10,
     size:0,
-    currentPath:'',
     sort:1,
     searchText:'',
+    chatData:{},
+    chatMessages:[],
+    imgInputList:[],
+    inputText:'',
+    messageInterval:null,
+    youData:{}
     }
   },
   methods:{
-    async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
+    saveMessageSize(){
+      localStorage.setItem(this.$route.query.path,this.size)
+      console.log('#####'+this.size)
+    },
+    getDate(time){
+      // let day = this.$moment(time).format('YYYYMMDD')
+      // let year = this.$moment(time).format('YYYY')
+      // let yesterday = this.$moment().subtract(1, 'days').format('YYYYMMDD')
+      
+      // if(day == yesterday){
+      //   return '어제'
+      // }else{
+      //   if(year == this.$moment(time).format('YYYY')){
+      //     return this.$moment(time).format('MM월 DD')
+      //   }else{
+      //     return this.$moment(time).format('YYYY년 MM월 DD')
+      //   }
+      // }
+      return this.$moment(time).format('YYYY년 MM월 DD')
+    },
+    checkDate(){
+      console.log("####checkDate")
+      this.chatMessages.map(item => item.isDateChanged = false)
+      if(!this.chatMessages.length) return
+      
+      let date = this.$moment(this.chatMessages[0].createdAt).format('YYYYMMDD')
+      for(let i in this.chatMessages){
+        let chatDate = this.$moment(this.chatMessages[i].createdAt).format('YYYYMMDD')
+        
+        if(date != chatDate){
+          this.chatMessages[i].isDateChanged = true
+          date = chatDate
+        }
+      }
+    },
+    async uploadChatImg(){
+       let imgList = []
+        for(let i = 0; i<this.imgInputList.length; i++){
+          imgList.push(this.dataUriToBlob(this.imgInputList[i].src))
+        }
+        let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
+        return imgRes
+    },
+
+
+    async addChat(){
+      this.$eventBus.$emit("showLoading")
+      let imgRes
+
+      if(this.imgInputList.length){
+        imgRes = await this.uploadChatImg()
+      }
+      let writingRes = await this.$api.postByPath(`${this.$route.query.path}/messages`, {
+        imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
+        text:this.inputText,
+        userId:this.$store.state.me.userId,
+        writer:'ref '+this.$store.state.me.path
+      })
+
+      this.$eventBus.$emit("hideLoading")
+      if(writingRes.data.code == 201){
+        this.imgInputList = []
+        this.inputText = ''
+        this.getNewMessages()
+        
+        }else{
+          console.error(writingRes)
+          alert("채팅 실패")
+        }
+    },
+    removeChatImg: function(index){
+      this.imgInputList.splice(index,1);
+    },
+    async previewFiles(event) {
+      let that = this
+      var oFReader = new FileReader()
+        oFReader.readAsDataURL(event.target.files[0])
+        oFReader.onload = function (oFREvent) {
+           let image = new Image()
+              image.src= oFREvent.target.result
+              image.onload = function(){
+                let src = that.$resizeImage(image)
+                let imgInputData = {src:src}
+                that.imgInputList.push(imgInputData)
+              }
+        };
+    },
+    async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 더보기
+      if(this.offset + this.limit <= this.size){
+        this.offset = this.offset + this.limit
+        await this.getMessages()
+      }
       done();
     },
     handleRBD(vm, loadDom, done) {
       done();
     },
     async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
-       if(this.offset + this.limit <= this.size){
-        this.offset+=this.limit
-        await this.getMessages(this.currentPath,this.offset+1, this.limit)
-      }
       done();
     },
     handleLBD(vm, loadDom, done) {
       done();
     },
-    async getMessages(path, offset, limit, sort){
-      console.log(path, offset, limit, sort)
+    async getChatData(){
+      let messages = await this.$api.getByPath(`${this.$route.query.path}`)
+      this.chatData = messages.data
+      if(this.chatData.fields.receiverId == this.$store.state.me.userId){
+        this.youData = this.chatData.fields.sender
+      }else{
+        this.youData = this.chatData.fields.receiver
+      }
+      console.log(this.youData)
       
-      // let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
-      // messages.data.documents.map(item => this.chatList.push(item))
-      // this.size = messages.data.size
     },
+    async getMessages(){
+      let messages = await this.$api.getByPath(`${this.$route.query.path}/messages`, this.offset, this.limit)
+      messages.data.documents.map(item => this.chatMessages.push(item))
+      this.checkDate()
+      this.size = messages.data.size
+      this.saveMessageSize()
+    },
+    async getNewMessages(){//새로운 채팅 있는지 확인
+        //limit갯수만큼 비교하기 때문에 limit 사이 누락 있을수 있음
+        let messages = await this.$api.getByPath(`${this.$route.query.path}/messages`, 0, this.limit)
+        this.size = messages.data.size
+        this.saveMessageSize()
+
+        let documents = messages.data.documents
+        let goToBottom = false
+          if(!this.chatMessages.length){
+            documents.map(item => this.chatMessages.push(item))
+          }else{
+            for(let i in documents){
+              let found = this.chatMessages.find(item => item.path == documents[i].path)
+              if(!found){
+                goToBottom = true
+                this.offset ++
+                this.chatMessages.unshift(documents[i])
+                this.checkDate()
+              }
+            }
+          }
+          if(goToBottom){ //scroll to bottom
+            let that = this
+            setTimeout(function(){
+              that.$refs["vs"].scrollTo(
+              {
+                  y: that.$refs["vs"].scroller.__maxScrollTop
+                },
+                300,
+                "easeInQuad"
+            )
+            },300)
+          }
+          
+    }
   },
   async mounted(){
-    this.currentPath = this.$store.state.me.topics[0].path
+    this.getChatData()
+    this.getMessages()
+
+    let that = this
+    setTimeout(function(){
+      that.$refs["vs"].scrollTo(
+      {
+          y: that.$refs["vs"].scroller.__maxScrollTop
+        },
+        300,
+        "easeInQuad"
+    )
+    },300)
+
+    this.messageInterval = setInterval(function(){
+      that.getNewMessages()
+    },10000)
+  },
+  beforeDestroy(){
+    clearInterval(this.messageInterval)
   }
 }
 </script>
@@ -133,8 +326,11 @@ export default {
 }
 .chat-detail-content{
   width:100%;
-  height:calc(100% - 48vw) !important;
+  height:calc(100vh - 48vw) !important;
   overflow-y:auto;
+}
+.chat-detail-content .child{
+  min-height:calc(100vh - 48vw) !important;
 }
 .header{
   font-size:6vw;
@@ -157,7 +353,7 @@ export default {
 .slide-menu{
   width:60vw;
   height:100%;
-  background:white;
+  background:rgb(240,240,240);
   position: fixed;
   right:0;
   top:0;
@@ -177,13 +373,128 @@ export default {
 .slide-menu-header{
   height:14vw;
   border-bottom: 1px solid #ddd;
+  font-size:3vw;
+  color:#aaa;
+  padding:0 4vw;
+  background:white;
+}
+.slide-menu-header .created-date{
+  color:#000;
+  margin-top:1vw;
 }
 .slide-menu-body{
-  height:calc(100% - 28vw) !important;
+  margin-top:1vw;
+  height:calc(100% - 30vw) !important;
   border-bottom: 1px solid #ddd;
+  background:white;
+}
+.slide-menu-body .user-data{
+  padding:2vw 4vw;
+  border-bottom:1px solid #eee;
+  font-size: 4vw;
+}
+.slide-menu-body .user-data .user-id{
+  color:#000;
+}
+.slide-menu-body .user-data .building-name{
+  color:#aaa;
+  font-size: 3.5vw;
 }
 .slide-menu-footer{
+  margin-top:1vw;
   height:14vw;
-
+  max-height: 14vw;
+  font-size: 5vw;
+  padding:0 4vw;
+  background:white;
+}
+.text-input-content{
+  border-top:1px solid #eee;
+  min-height:10vw;
+  position:fixed;
+  bottom:14vw;
+  left:0;
+  width:100%;
+  background:white;
+  padding:0 2vw;
+}
+.text-input-content .icon{
+  font-size:6vw;
+}
+[placeholder]:empty::before {
+  content: attr(placeholder);
+}
+.text-input-content .chat-input{
+  width:100%;
+  
+  padding-top:2vw;
+}
+.text-input-content .input-content{
+  background:white;
+  height:auto;
+  width:80vw;
+  margin-left:4vw;
+  font-size: 4vw;
+}
+.text-input-content .chat-img{
+  padding:2vw 2vw 0 2vw;
+  width:100%;
+  flex-wrap: wrap;
+  
+}
+.chat-img > div{
+  display:inline-block;
+  position:relative;
+  margin-right:2vw;
+}
+.chat-img > div > .close-btn{
+  width:4vw;
+  height:4vw;
+  border-radius: 50%;;
+  background:#aaa;
+  position:absolute;
+  right:.5vw;
+  top:.5vw;
+  color:#fff;
+}
+.text-input-content .chat-img img{
+  width:20vw; 
+  height:20vw; 
+  object-fit:cover; 
+  display:inline-block;
+}
+.text-input-content .upload{
+  width:10vw;
+  color:tomato;
+}
+.chat-content > div{
+  margin:2vw 4vw;
+}
+.chat-content .me, .chat-content .you{
+  font-size:3vw;
+}
+.chat-content .chat-text{
+  max-width:70vw;
+  font-size: 4vw;
+  background:tomato;
+  padding:2vw;
+  color:white;
+  margin:0 2vw;
+  word-break: break-all;
+  border-radius: 2vw;
+}
+.chat-content .you .chat-text{
+  background:#eee;
+  color:#000;
+}
+.chat-content .date-line{
+  margin-top:6vw;
+  border-bottom:1px solid #eee;
+  line-height: 0.1em;
+}
+.chat-content .date-line span{
+  background:white;
+  padding:0 2vw;
+  font-size: 3.5vw;
 }
 </style>

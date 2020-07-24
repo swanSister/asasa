@@ -32,6 +32,7 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
@@ -44,7 +45,6 @@ export default {
   },
   data: function () {
     return {
-      
     }
   },
   methods:{

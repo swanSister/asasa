@@ -85,7 +85,7 @@ export default {
       var el = e.target
     
       el.style.cssText = 'height:auto; padding:0'
-      el.style.cssText = 'height:' + (el.scrollHeight+20) + 'px'
+      el.style.cssText = 'height:' + (el.scrollHeight) + 'px'
       
     },
   },

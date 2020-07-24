@@ -32,6 +32,9 @@ body {
 .column{
     flex-direction: column;
 }
+.column-reverse{
+    flex-direction: column-reverse;
+}
 .justify-content-end{
     justify-content:flex-end;
 }

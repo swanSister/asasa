@@ -6,12 +6,12 @@
       </div>
       <div class="flex column auto">
         <div class="text-content">
-          <div class="title">{{noticeData.title}}</div>
-          <div class="sub">{{noticeData.sub}}</div>
+          <div class="title">{{noticeData.fields.title}}</div>
+          <div class="sub">{{noticeData.fields.text}}</div>
         </div>
         <div class="flex auto writer-content">
-         <div class="writer">{{noticeData.writer}}</div> 
-         <div class="time">{{noticeData.time}}</div>
+         <div class="writer">{{noticeData.fields.writer}}</div> 
+         <div class="time">{{$moment(noticeData.createdAt).format('YYYY-MM-DD')}}</div>
         </div>
       </div>
      

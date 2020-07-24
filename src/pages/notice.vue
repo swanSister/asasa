@@ -40,24 +40,7 @@ export default {
   },
   data () {
     return {
-      noticeList:[{
-        title:'공지사항',
-        sub:'성북동 회원 100명 돌파! 회원들과 대화를 나누세요.',
-        time:'방금 전',
-        writer:'운영진'
-      },
-      {
-        title:'이벤트',
-        sub:'이벤트 1',
-        time:'7분전',
-        writer:'운영진'
-      },
-      {
-        title:'공동구매',
-        sub:'저렴이들 구경 오세요~',
-        time:'3시간 전',
-        writer:'운영진'
-      }],
+      noticeList:[],
       ops : {
         vuescroll: {
           mode: 'slide',
@@ -92,6 +75,9 @@ export default {
   },
   methods:{
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
+      this.offset = 0
+      this.size = 0
+      this.getMessages(this.offset, this.limit)
       done();
     },
     handleRBD(vm, loadDom, done) {
@@ -100,22 +86,21 @@ export default {
     async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
        if(this.offset + this.limit <= this.size){
         this.offset+=this.limit
-        await this.getMessages(this.currentPath,this.offset+1, this.limit)
+        await this.getMessages(this.offset+1, this.limit)
       }
       done();
     },
     handleLBD(vm, loadDom, done) {
       done();
     },
-    async getMessages(path, offset, limit, sort){
-      console.log(path, offset, limit, sort)
-      // let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
-      // messages.data.documents.map(item => this.chatList.push(item))
-      // this.size = messages.data.size
+    async getMessages( offset, limit, sort){
+      let messages = await this.$api.getByPath(`notice`,offset,limit, sort)
+      messages.data.documents.map(item => this.noticeList.push(item))
+      this.size = messages.data.size
     },
   },
   async mounted(){
-    this.currentPath = this.$store.state.me.topics[0].path
+    this.getMessages(this.offset, this.limit)
   }
 }
 </script>

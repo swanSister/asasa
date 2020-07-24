@@ -8,13 +8,13 @@
       <div class="flex auto">
           <div class="text-content flex column">
             <div class="title flex align-items-center">
-              <div>{{chatData.title}}</div>
-              <span>{{chatData.count}}</span>
+              <div>{{chatData.fields.receiverId == $store.state.me.userId ? chatData.fields.senderId : chatData.fields.receiverId}}</div>
+              <span v-if="notReadCount > 0">{{notReadCount}}</span>
             </div>
-            <div class="sub">{{chatData.subText}}</div>
+            <div class="sub" v-if="messageData.fields">{{messageData.fields.text}}</div>
           </div>
       </div>
-      <div class="time flex none">{{chatData.time}}</div>
+      <div class="time flex align-items-center">{{getTime(messageData.createdAt)}}</div>
      </div>
     </div>
   </div>
@@ -25,19 +25,49 @@ export default {
   name: 'chat',
   props: {
     chatData:{},
+   
   },
   data: function () {
     return {
-      
+      notReadCount:0,
+      messageData:{},
     }
   },
   methods:{
+    getTime(time){
+      let today = this.$moment().format('YYYYMMDD')
+      let day = this.$moment(time).format('YYYYMMDD')
+      let yesterday = this.$moment().subtract(1, 'days').format('YYYYMMDD')
+      
+      if(today == day){
+        return this.$moment(time).format('a h:mm')
+      }else if(day == yesterday){
+        return '어제'
+      }else{
+        return this.$moment(time).format('YYYY년 MM월 DD')
+      }
+    },
    goDetail(){
-     this.$router.push('chatDetail')
+     this.$router.push({name:'chatDetail',query:{path:this.chatData.path}})
+   },
+   async getText(){
+     let messages = await this.$api.getByPath(`${this.chatData.path}/messages`,0, 1)
+   
+     if(localStorage.getItem(this.chatData.path)){
+       let size = parseInt(localStorage.getItem(this.chatData.path))
+       console.log(size, messages.data.size)
+       if(messages.data.size > size){
+         this.notReadCount = messages.data.size - size
+       }
+     }
+     
+     if(messages.data.documents.length){
+       this.messageData = messages.data.documents[0]
+     }
    }
   },
-  mounted () {
-   console.log(this.chatData)
+  async mounted () {
+   this.getText()
   }
 }
 
@@ -90,14 +120,17 @@ export default {
     max-width:90%;
   }
   .chat-body .text-content .title > span{
-    background:#eee;
+    background:tomato;
+    font-weight: bold;
     padding:.5vw 1vw;
-    font-size: 2vw;
+    font-size: 2.5vw;
     margin-left:2vw;
-    color:#aaa;
+    border-radius: 1vw;
+    color:white;
   }
   .chat-body .text-content .sub{
     font-size: 3.5vw;
+    color:#999;
   }
   .chat-body .time{
     font-size: 3vw;

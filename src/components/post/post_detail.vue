@@ -7,14 +7,14 @@
         @refresh-before-deactivate="handleRBD"
         @load-start="handleLoadStart">
 
-         <div class="slot-load" slot="load-beforeDeactive"></div>
-          <div class="slot-load" slot="load-deactive"></div>
-          <div class="slot-load" slot="load-start"></div>
-          <div class="slot-load" slot="load-active"></div>
-          <div class="slot-refresh" slot="refresh-deactive"></div>
-          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-          <div class="slot-refresh" slot="refresh-start"></div>
-          <div class="slot-refresh" slot="refresh-active"></div>
+        <div class="slot-load" slot="load-beforeDeactive"></div>
+        <div class="slot-load" slot="load-deactive"></div>
+        <div class="slot-load" slot="load-start"></div>
+        <div class="slot-load" slot="load-active"></div>
+        <div class="slot-refresh" slot="refresh-deactive"></div>
+        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+        <div class="slot-refresh" slot="refresh-start"></div>
+        <div class="slot-refresh" slot="refresh-active"></div>
 
         <div class="child">
           <div class="post-detail" v-if="postData.fields">
@@ -31,7 +31,7 @@
             <div class="body">
               <div class="title">{{postData.fields.title}}</div>
               <div class="info">
-                <div class="name">
+                <div class="name" @click="WriterPopupOpen(postData.fields.writer)">
                   {{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span>
                   </div>
                 <div class="time">{{$getTime(postData.fields.createdAt._seconds)}}</div>
@@ -65,7 +65,7 @@
 
           <div class="comment-list" v-if="commentList.length">
               <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
-                <div class="name flex align-items-center">
+                <div @click="WriterPopupOpen(item.fields.writer)" class="name flex align-items-center">
                   {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
                 </div>
                 <div class="comment-img-list flex">
@@ -102,6 +102,20 @@
           <div @click="addComment" class="flex align-items-start upload">등록</div>
         </div>
       </div>
+
+      <transition name="fade">
+        <div v-if="isWriterPopupShow" class="writer-popup">
+          <div class="header flex justify-content-end">
+            <span class="icon icon-cancel" @click="isWriterPopupShow=false"></span>
+          </div>
+
+          <div class="user-id">{{writerPopupData.userId}}</div>
+          <div class="building-name">{{writerPopupData.public ? (writerPopupData.houseType == 3 ? '주택' : (writerPopupData.addressData.buildingName)) : '비공개'}}</div>
+          <div class="menu">
+            <div class="item" @click="createChatRoom"><span class="icon-chat-empty"></span> 1:1 대화하기</div>
+          </div>
+        </div>
+      </transition>
       </div>
 </template>
 
@@ -116,6 +130,8 @@ export default {
   
   data: function () {
     return {
+      isWriterPopupShow:false,
+      writerPopupData:{},
       postData:{},
       inputRange:null,
       imgInputList:[],
@@ -150,6 +166,38 @@ export default {
     }
   },
   methods: {
+    async createChatRoom(){//대화방 존재 유무 체크
+        let messages1 = await this.$api.getByPathWhere(`chats`,`senderId=${this.$store.state.me.userId}&receiverId=${this.writerPopupData.userId}`)
+        let messages2 = await this.$api.getByPathWhere(`chats`,`receiverId=${this.$store.state.me.userId}&senderId=${this.writerPopupData.userId}`)
+        let path = ''
+        if(messages1.data.documents[0]){
+          path = messages1.data.documents[0].path
+        }
+        if(messages2.data.documents[0]){
+          path = messages2.data.documents[0].path
+        }
+        if(!path){
+          if(confirm('대화방을 만드시겠습니까?')){
+          if(!path){
+            let writingRes = await this.$api.postByPath(`chats`, {
+              senderId: this.$store.state.me.userId,
+              receiverId: this.writerPopupData.userId,
+              sender: this.$store.state.me,
+              receiver: this.writerPopupData
+            })
+            path = writingRes.headers.location
+          }
+        }
+      }
+      this.$router.push({name:'chatDetail',query:{path}})
+    },
+    WriterPopupOpen(writer){
+      if(writer.userId != this.$store.state.me.userId){
+        this.writerPopupData = writer
+        this.isWriterPopupShow = true
+      }
+      
+    },
     async handleLoadStart(vm, dom, done) {
       if(this.offset + this.limit <= this.size){
         this.offset+=this.limit
@@ -482,4 +530,37 @@ export default {
   .comment-img-list div:last-child img{
     margin-right:0;
   }
+
+  .writer-popup{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100vw;
+    height:100vh;
+    background:white;
+    z-index: 6;
+    padding:0 6vw;
+    text-align: left;
+  }
+  .writer-popup .header{
+    font-size:5vw;
+    padding:4vw 0;
+  }
+  .writer-popup .user-id{
+    font-size:6vw;
+    color:#000;
+    font-weight: bold;
+    margin-bottom: 2vw;
+  }
+  .writer-popup .building-name{
+    margin-bottom:4vw;
+  }
+  .writer-popup .menu{
+    border-top:1px solid #eee;
+  }
+  .writer-popup .menu .item{
+    padding:2vw 0;
+    border-bottom:1px solid #eee;
+  }
+          
 </style>

@@ -6,6 +6,9 @@ import store from './store'
 import eventBus from './eventBus'
 import global from './global'
 import moment from 'moment' 
+import "moment/locale/ko";
+
+moment.locale('ko')
 
 Vue.use(global)
 Vue.use(moment)
