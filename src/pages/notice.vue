@@ -67,7 +67,7 @@ export default {
         }
     },
     offset:0,
-    limit:10,
+    limit:100,
     size:0,
     currentPath:'',
     sort:1,
@@ -77,6 +77,7 @@ export default {
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       this.offset = 0
       this.size = 0
+      this.noticeList = []
       this.getMessages(this.offset, this.limit)
       done();
     },

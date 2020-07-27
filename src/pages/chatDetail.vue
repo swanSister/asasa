@@ -2,7 +2,7 @@
   <div class="chat-detail"> 
     <div class="header flex align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
-            <span @click="$router.go(-1)" class="icon-left-open"></span>
+            <span @click="$router.push('chat')" class="icon-left-open"></span>
         </div>
         <div v-if="chatData.fields" class="flex auto justify-content-center">
           {{youData.userId}}
@@ -22,14 +22,39 @@
           <div class="child">
             <div class="chat-content flex column-reverse justify-content-start" >
               <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
-                <div class="me flex auto justify-content-end align-items-end" v-if="item.fields.userId == $store.state.me.userId">
-                  <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                  <div class="chat-text">{{item.fields.text}}</div>
+                
+                <div class="me flex column auto justify-content-end align-items-end" v-if="item.fields.userId == $store.state.me.userId">
+          
+                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.imgList && item.fields.imgList.files.length">
+                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                    <div class="chat-img flex column">
+                      <img v-for="(item, index) in item.fields.imgList.files" :key="'chatImg'+index" :src="item"/>
+                    </div>
+                  </div>
+
+                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.text">
+                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                    <div class="chat-text">{{item.fields.text}}</div>
+                  </div>
                 </div>
-                <div class="you flex auto align-items-end" v-else>
-                  <div class="chat-text">{{item.fields.text}}</div>
-                  <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                </div>
+
+                <div class="you flex column auto justify-content-start align-items-start" v-if="item.fields.userId != $store.state.me.userId">
+                  
+                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.imgList && item.fields.imgList.files.length">
+                    <div class="chat-img flex column">
+                      <img v-for="(item, index) in item.fields.imgList.files" :key="'chatImg'+index" :src="item"/>
+                    </div>
+                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                  </div>
+
+                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.text">
+                    <div class="chat-text" >{{item.fields.text}}</div>
+                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                  </div>
+                  </div>
+
+                 
+
                 <div v-if="item.isDateChanged" class="date-line">
                   <span>{{getDate(item.createdAt)}}</span>
                 </div>
@@ -126,7 +151,7 @@ export default {
         }
     },
     offset:0,
-    limit:10,
+    limit:100,
     size:0,
     sort:1,
     searchText:'',
@@ -144,19 +169,6 @@ export default {
       console.log('#####'+this.size)
     },
     getDate(time){
-      // let day = this.$moment(time).format('YYYYMMDD')
-      // let year = this.$moment(time).format('YYYY')
-      // let yesterday = this.$moment().subtract(1, 'days').format('YYYYMMDD')
-      
-      // if(day == yesterday){
-      //   return '어제'
-      // }else{
-      //   if(year == this.$moment(time).format('YYYY')){
-      //     return this.$moment(time).format('MM월 DD')
-      //   }else{
-      //     return this.$moment(time).format('YYYY년 MM월 DD')
-      //   }
-      // }
       return this.$moment(time).format('YYYY년 MM월 DD')
     },
     checkDate(){
@@ -182,12 +194,25 @@ export default {
         let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
         return imgRes
     },
-
+    dataUriToBlob(dataURI){
+        var byteString = atob(dataURI.split(',')[1]);
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+        var ab = new ArrayBuffer(byteString.length);
+        var ia = new Uint8Array(ab);
+        for (var i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        var blob = new Blob([ab], {type: mimeString});
+        return blob;
+    },
 
     async addChat(){
+      if(!this.inputText.length && !this.imgInputList.length){
+        return
+      }
       this.$eventBus.$emit("showLoading")
       let imgRes
-
+      
       if(this.imgInputList.length){
         imgRes = await this.uploadChatImg()
       }
@@ -259,6 +284,7 @@ export default {
       this.checkDate()
       this.size = messages.data.size
       this.saveMessageSize()
+      console.log(this.chatMessages)
     },
     async getNewMessages(){//새로운 채팅 있는지 확인
         //limit갯수만큼 비교하기 때문에 limit 사이 누락 있을수 있음
@@ -457,9 +483,10 @@ export default {
   top:.5vw;
   color:#fff;
 }
+
 .text-input-content .chat-img img{
-  width:20vw; 
-  height:20vw; 
+  width:20vw;
+  height:20vw;
   object-fit:cover; 
   display:inline-block;
 }
@@ -467,11 +494,12 @@ export default {
   width:10vw;
   color:tomato;
 }
-.chat-content > div{
-  margin:2vw 4vw;
-}
+
 .chat-content .me, .chat-content .you{
   font-size:3vw;
+}
+.chat-content .me > div, .chat-content .you > div{
+  margin:2vw;
 }
 .chat-content .chat-text{
   max-width:70vw;
@@ -482,6 +510,13 @@ export default {
   margin:0 2vw;
   word-break: break-all;
   border-radius: 2vw;
+}
+.chat-content .chat-img img{
+  width:40vw;
+  height:40vw;
+  margin:0 2vw;
+  margin-top:2vw;
+  object-fit: cover;
 }
 .chat-content .you .chat-text{
   background:#eee;

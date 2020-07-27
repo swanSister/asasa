@@ -10,7 +10,6 @@ export default {
   getByPathWhere: function(path, where){
     console.log("##get API : ",path)
     let res = axios.get(`${API_URL}/rest/${path}?${where}&offset=0&limit=100`)
-    console.log(res)
      return res
   },
   getByPath: function(path, offset, limit, order){
@@ -25,7 +24,6 @@ export default {
     }
     console.log("##get API : ",path)
     let res = axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}&orderBy=${order}`)
-    console.log(res)
      return res
   },
   postByPath: function(path, param){

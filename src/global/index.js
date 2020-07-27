@@ -42,7 +42,6 @@ const global = {
             Vue.prototype.$store.commit('me',me)
             return findUser.data.documents[0]
          }
-         
       }
     }
     Vue.prototype.$setCount = async function(path,docPath){

@@ -1,5 +1,6 @@
 <template>
-  <div class="chat">
+  <div class="chat" v-if="chatData.fields.senderId == $store.state.me.userId || 
+  (messageData.fields && messageData.fields.text && chatData.fields.receiverId == $store.state.me.userId)">
     <div class="chat-body flex auto" @click="goDetail">
      <div class="thumbnail-content">
        <span class="flex justify-content-center align-items-end icon-user thumbnail"></span>
@@ -11,7 +12,7 @@
               <div>{{chatData.fields.receiverId == $store.state.me.userId ? chatData.fields.senderId : chatData.fields.receiverId}}</div>
               <span v-if="notReadCount > 0">{{notReadCount}}</span>
             </div>
-            <div class="sub" v-if="messageData.fields">{{messageData.fields.text}}</div>
+            <div class="sub" v-if="messageData.fields">{{messageData.fields.text ? messageData.fields.text : '사진'}}</div>
           </div>
       </div>
       <div class="time flex align-items-center">{{getTime(messageData.createdAt)}}</div>

@@ -85,7 +85,7 @@ export default {
         }
     },
     offset:0,
-    limit:10,
+    limit:100,
     size:0,
     sort:1,
     searchText:'',
@@ -96,13 +96,13 @@ export default {
     setIsMyChat(type){
       this.isMyChat = type
     },
-    async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
+    async handleRS(vsInstance, refreshDom, done) { //위로 당겨서 새로고침
       done();
     },
     handleRBD(vm, loadDom, done) {
       done();
     },
-    async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
+    async handleLoadStart(vm, dom, done) { //아래 당겨서 더보기
        if(this.offset + this.limit <= this.size){
         this.offset+=this.limit
         await this.getMessages()
@@ -112,12 +112,22 @@ export default {
     handleLBD(vm, loadDom, done) {
       done();
     },
+    chatListSort(chatList){//채팅 최신순 소팅
+    return chatList.sort(function(a, b){
+          console.log(a.fields.createdAt._seconds)
+        return a.fields.createdAt._seconds > b.fields.createdAt._seconds ? -1 : a.fields.createdAt._seconds <= b.fields.createdAt._seconds ? 1 : 0;
+      })
+    },
     async getMessages(){
       let userId = this.$store.state.me.userId
+      let chatList = []
       let messages1 = await this.$api.getByPathWhere(`chats`,`senderId=${userId}`)
-      messages1.data.documents.map(item => this.chatList.push(item))
+      messages1.data.documents.map(item => chatList.push(item))
       let messages2 = await this.$api.getByPathWhere(`chats`,`receiverId=${userId}`)
-      messages2.data.documents.map(item => this.chatList.push(item))
+      messages2.data.documents.map(item => chatList.push(item))
+      
+      this.chatList = this.chatListSort(chatList)
+      
       console.log(this.chatList)
     },
   },
