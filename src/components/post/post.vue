@@ -3,6 +3,7 @@
     <div class="post-body" @click="goDetail">
       <div class="flex auto left">
         <!-- <div class="tag flex none align-items-center"><span>{{postData.fields.tag}}</span></div> -->
+        <div class="topic-name" v-if="postData.isSearchResult">[{{postData.fields.topic.name}}]</div>
         <div class="title">{{postData.fields.title}}</div>
         <div class="content">
           {{postData.fields.text.length > 90 ?postData.fields.text.slice(0,90)+"..." :postData.fields.text}}
@@ -113,6 +114,11 @@ export default {
     margin-bottom:2vw;
     font-size:4.5vw;
     color:#000;
+  }
+  .post-body .topic-name{
+    color:tomato;
+    font-size:3.5vw;
+    font-weight: bold;
   }
   .post-body .text{
     margin-bottom:3vw;

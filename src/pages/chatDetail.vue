@@ -210,6 +210,7 @@ export default {
       if(!this.inputText.length && !this.imgInputList.length){
         return
       }
+      this.getNewMessages()
       this.$eventBus.$emit("showLoading")
       let imgRes
       

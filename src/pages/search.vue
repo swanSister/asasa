@@ -22,7 +22,16 @@
         <div class="slot-refresh" slot="refresh-start"></div>
         <div class="slot-refresh" slot="refresh-active"></div>
         <div class="child">
+            
             <PostList v-if="postList.length" @sort="onSort" :postList="postList"></PostList>
+            <div class="empty-text" v-else>
+              <div v-if="isSearchStart">
+                검색결과가 없습니다.
+              </div>
+              <div v-else>
+                
+              </div>
+            </div>
         </div>
       </vue-scroll>
       <Footer v-bind:footerIndex="1"></Footer>
@@ -77,7 +86,7 @@ export default {
     currentPath:'',
     sort:1,
     searchText:'',
-    
+    isSearchStart:false,
     }
   },
   methods:{
@@ -86,20 +95,22 @@ export default {
       this.postList = []
       this.offset = 0
       this.size = 0
+      this.isSearchStart = false
     },
     onKeyPress(e){
       if (e.keyCode == 13) {
+        this.isSearchStart = true
         this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
       }
     },
     onSort(sort){
       //sort 1: 최신순, 2: 추천순, 3:조회순
-      this.postList = []
-      this.offset = 0
-      this.sort = sort
-      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+      console.log(sort)
+      
     },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
+      this.postList = []
+      await this.getMessages(this.currentPath,this.offset, this.limit, this.sort)
       done();
     },
     handleRBD(vm, loadDom, done) {
@@ -117,8 +128,23 @@ export default {
     },
     async getMessages(path, offset, limit, sort){
       //test로 topic 읽어오기
-      let messages = await this.$api.getByPath(`${this.currentPath}/messages`,offset,limit, sort)
-      messages.data.documents.map(item => this.postList.push(item))
+      let messages = await this.$api.searchByKeyword(this.searchText,offset,limit, sort)
+      
+      let that = this
+      messages.data.map(function(item){
+        let temp = {}
+        temp.id = item.objectID
+        temp.fields = item
+        temp.path = item.topic.path + '/messages/'+temp.id
+        temp.isSearchResult = true
+
+        item.createdAt = {}
+        item = temp
+        
+        that.postList.push(item)
+      })
+      this.size = this.postList.length
+      console.log(this.postList)
       this.size = messages.data.size
     },
   },
@@ -153,5 +179,10 @@ export default {
 .search-input .input-content > input{
   margin-left: 1vw;
   background: transparent;
+}
+.empty-text{
+  color:#999;
+  margin-top: 8vw;
+  font-size: 4vw;
 }
 </style>

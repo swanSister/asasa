@@ -7,6 +7,20 @@ export default {
   install(Vue, options){
     ctx.store = options.store
   },
+
+  searchByKeyword: function(keyword, offset, limit, order){
+    if(!order || order == 1){//최신순
+      order = 'createdAt desc'
+    }else if(order == 2){//추천순
+      order = 'like desc'
+    }else if(order == 3){//조회순
+      order = 'view desc'
+    }else{
+      order = 'createdAt desc'
+    }
+    let res = axios.get(`${API_URL}/search?keyword=${keyword}&offset=${offset}&limit=${limit}&orderBy=${order}`)
+     return res
+  },
   getByPathWhere: function(path, where){
     console.log("##get API : ",path)
     let res = axios.get(`${API_URL}/rest/${path}?${where}&offset=0&limit=100`)
@@ -36,7 +50,6 @@ export default {
       })
     }catch(e){
       console.error(e.message)
-     
     }
   },
   postCount: function(path, param){
@@ -74,6 +87,6 @@ export default {
         Authorization: ''
       }
     })
-  }
+  },
 }
 </script>

@@ -59,7 +59,7 @@ export default {
         }
         if(idx == 1){
           console.log(idx)
-          this.$router.push('/search')
+          this.$router.push({name:'search', params:{reload:true}})
         }
         if(idx == 2){
           this.$router.push('/chat')
