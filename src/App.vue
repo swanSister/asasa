@@ -50,6 +50,7 @@ export default {
     return {
       varUA:null,
        isLoadingShow:false,
+       inputHeightRestTimeout:null
     }
   },
   components:{
@@ -81,12 +82,11 @@ export default {
       }
     },
     autosize: function(e){
-     
-      var el = e.target
-    
-      el.style.cssText = 'height:auto; padding:0'
-      el.style.cssText = 'height:' + (el.scrollHeight) + 'px'
-      
+      e.target.style.cssText = 'height:' + (e.target.scrollHeight) + 'px'
+      if(e.keyCode == 13){
+        e.target.style.cssText = 'height:9.5vw'
+        e.target.blur()
+      }
     },
   },
   mounted:function(){
@@ -98,7 +98,7 @@ export default {
 
       $("input[type=text], textarea").on("focus",that.onFocus)
       $("input[type=text], textarea").on("blur",that.onBlur)
-      $(document).on("keyup", "textarea", that.autosize)
+      $(document).on("keypress", "textarea", that.autosize)
 
       let vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`)

@@ -122,7 +122,7 @@ export default {
             let imgRes = await this.$api.uploadPostImage(this.dataUriToBlob(this.imgInputList[i].src),`${postId}_${i}_post`,this.imgInputList[i].desc)
             console.log(imgRes)
           }
-          this.$router.go(-1)
+          this.$router.push({name:'main', params:{reload:true}})
         }else{
           console.error(writingRes)
         }

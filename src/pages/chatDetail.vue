@@ -64,13 +64,13 @@
             </div>
           </div>
           <div class="flex chat-input align-items:center;">
-            <div class="flex none justify-content-start align-items-center;">
+            <div class="flex none justify-content-start align-items-center">
                 <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
                 <label for="file" class="icon icon-camera"></label>
             </div>
-            <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="inputText">
+            <textarea @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
             </textarea>
-            <div @click="addChat" class="flex align-items-start upload">등록</div>
+            <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
           </div>
         </div>
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
@@ -152,6 +152,11 @@ export default {
     }
   },
   methods:{
+    onKeyPress(e){
+      if (e.keyCode == 13) {
+        this.addChat()
+      }
+    },
     getDate(time){
       return this.$moment(time).format('YYYY년 MM월 DD')
     },
@@ -440,15 +445,15 @@ export default {
 }
 .text-input-content .chat-input{
   width:100%;
-  
-  padding-top:2vw;
+  padding:2vw 0;
 }
 .text-input-content .input-content{
   background:white;
-  height:auto;
+  height:9.5vw;
   width:80vw;
   margin-left:4vw;
   font-size: 4vw;
+  padding:2vw 0;
 }
 .text-input-content .chat-img{
   padding:0 2vw 0 2vw;
@@ -497,6 +502,12 @@ export default {
   word-break: break-all;
   border-radius: 2vw;
   margin:4vw 4vw 0 4vw;
+}
+.chat-content .me .chat-text{
+  text-align: left;
+}
+.chat-content .you .chat-text{
+  text-align: right;
 }
 .chat-content-img{
   width:40vw;

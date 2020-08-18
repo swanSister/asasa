@@ -69,7 +69,7 @@
                   {{item.writer.userId}} <span>· {{item.writer.buildingName}}</span>
                 </div>
                 <div class="comment-img-list flex">
-                  <div v-for="(imgItem,index) in item.imgList" :key="'comment-img'+index">
+                  <div v-for="(imgItem,index) in item.imgList" :key="'comment-img-list'+index">
                     <img v-if="imgItem" :src="imgItem"/>
                   </div>
                 </div>
@@ -93,13 +93,13 @@
           </div>
         </div>
         <div class="flex comment-input align-items:center;">
-          <div class="flex none justify-content-start align-items-center;">
+          <div class="flex none justify-content-start align-items-center">
               <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
               <label for="file" class="icon icon-camera"></label>
           </div>
-          <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
+          <textarea @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
           </textarea>
-          <div @click="uploadComment" class="flex align-items-start upload">등록</div>
+          <div @click="uploadComment" class="flex align-items-center upload">등록</div>
         </div>
       </div>
 
@@ -165,6 +165,13 @@ export default {
   },
 
   methods: {
+    
+    async updateChatReadTime(chatRoomId, userId){
+      await this.$api.updateChatReadTime({
+          chatRoomId:chatRoomId,
+          userId:userId
+        })
+    },
     async createChatRoom(){//대화방 존재 유무 체크
       let chatRoomId = ''
       if(confirm('대화방을 만드시겠습니까?')){
@@ -179,6 +186,7 @@ export default {
           })
           chatRoomId = res.data.data.chatRoomId
           console.log("createChatRoom:", res.data)
+          await this.updateChatReadTime(chatRoomId, this.writerPopupData.userId)
         }else{
           chatRoomId = isExist.data.data.chatRoomId
           console.log("chat room exist:", isExist.data.data)
@@ -270,12 +278,17 @@ export default {
         var blob = new Blob([ab], {type: mimeString});
         return blob;
     },
+    onKeyPress(e){
+      if (e.keyCode == 13) {
+        this.uploadComment()
+      }
+    },
     async uploadComment(){
       try{
         if(!this.$store.state.me. isAuthSuccess){
-          alert('글쓰기는 인증 후 가능합니다.')
           this.commentText = ''
           this.imgInputList = []
+          alert('글쓰기는 인증 후 가능합니다.')
           return
         }
 
@@ -474,25 +487,25 @@ export default {
   .footer .comment-input{
     width:100%;
     
-    padding-top:2vw;
+    padding:2vw 0;
   }
   .footer .input-content{
     background:white;
-    height:auto;
+    height:9.5vw;
     width:80vw;
     margin-left:4vw;
     font-size: 4vw;
+    padding:2vw 0;
   }
   .footer .comment-img{
-    padding:2vw 2vw 0 2vw;
     width:100%;
     flex-wrap: wrap;
-    
   }
   .comment-img > div{
     display:inline-block;
     position:relative;
-    margin-right:2vw;
+    height:20vw;
+    margin:2vw 2vw 2vw 0;
   }
   .comment-img > div > .close-btn{
     width:4vw;
