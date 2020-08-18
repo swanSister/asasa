@@ -3,7 +3,7 @@
     <div class="search-input flex align-items-center"> 
       <div class="input-content flex auto align-items-center">
         <span class="icon icon-search"></span>
-        <input @keypress="onKeyPress" class="flex auto" v-model="searchText" placeholder="검색어를 입력해 주세요.">
+        <input @keypress="onKeyPress" class="flex auto" v-model="keyword" placeholder="검색어를 입력해 주세요.">
       </div>
       <div class="btn flex none" @click="cancelSearch">취소</div>
     </div>
@@ -22,14 +22,12 @@
         <div class="slot-refresh" slot="refresh-start"></div>
         <div class="slot-refresh" slot="refresh-active"></div>
         <div class="child">
-            
             <PostList v-if="postList.length" @sort="onSort" :postList="postList"></PostList>
             <div class="empty-text" v-else>
               <div v-if="isSearchStart">
                 검색결과가 없습니다.
               </div>
               <div v-else>
-                
               </div>
             </div>
         </div>
@@ -85,13 +83,13 @@ export default {
     size:0,
     currentPath:'',
     sort:1,
-    searchText:'',
+    keyword:'',
     isSearchStart:false,
     }
   },
   methods:{
     cancelSearch(){
-      this.searchText = ''
+      this.keyword = ''
       this.postList = []
       this.offset = 0
       this.size = 0
@@ -99,53 +97,49 @@ export default {
     },
     onKeyPress(e){
       if (e.keyCode == 13) {
+        this.postList = []
         this.isSearchStart = true
-        this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+        this.getMessages(this.offset, this.limit, this.sort)
       }
     },
     onSort(sort){
-      //sort 1: 최신순, 2: 추천순, 3:조회순
-      console.log(sort)
-      
+      //sort 1: 최신순, 2: 추천순, 3:조회순, 4:댓글순
+      this.postList = []
+      this.offset = 0
+      this.sort = sort
+      console.log(this.offset, this.sort)
+      this.getMessages(this.offset, this.limit, this.sort)
     },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       this.postList = []
-      await this.getMessages(this.currentPath,this.offset, this.limit, this.sort)
+      this.offset = 0
+      this.getMessages(this.offset, this.limit, this.sort)
       done();
     },
     handleRBD(vm, loadDom, done) {
+      console.log("handleRS4")
       done();
     },
     async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
-       if(this.offset + this.limit <= this.size){
-        this.offset+=this.limit
-        await this.getMessages(this.currentPath,this.offset+1, this.limit)
-      }
+      this.offset+=this.limit
+      this.getMessages(this.offset, this.limit, this.sort)
       done();
     },
     handleLBD(vm, loadDom, done) {
+      console.log("handleRS3")
       done();
     },
-    async getMessages(path, offset, limit, sort){
+    async getMessages(offset, limit, sort){
       //test로 topic 읽어오기
-      let messages = await this.$api.searchByKeyword(this.searchText,offset,limit, sort)
-      
-      let that = this
-      messages.data.map(function(item){
-        let temp = {}
-        temp.id = item.objectID
-        temp.fields = item
-        temp.path = item.topic.path + '/messages/'+temp.id
-        temp.isSearchResult = true
-
-        item.createdAt = {}
-        item = temp
-        
-        that.postList.push(item)
-      })
-      this.size = this.postList.length
-      console.log(this.postList)
-      this.size = messages.data.size
+      let messages = await this.$api.getPostSearchList(
+        {
+          topics:this.$store.state.me.topics,
+          keyword:this.keyword,
+          offset:offset,
+          limit:limit,
+          sort:sort
+        })
+      messages.data.data.map(item => this.postList.push(item))
     },
   },
   async mounted(){

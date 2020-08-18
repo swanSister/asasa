@@ -70,13 +70,11 @@ export default {
     limit:100,
     size:0,
     currentPath:'',
-    sort:1,
     }
   },
   methods:{
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       this.offset = 0
-      this.size = 0
       this.noticeList = []
       this.getMessages(this.offset, this.limit)
       done();
@@ -85,19 +83,19 @@ export default {
       done();
     },
     async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
-       if(this.offset + this.limit <= this.size){
         this.offset+=this.limit
         await this.getMessages(this.offset+1, this.limit)
-      }
       done();
     },
     handleLBD(vm, loadDom, done) {
       done();
     },
-    async getMessages( offset, limit, sort){
-      let messages = await this.$api.getByPath(`notice`,offset,limit, sort)
-      messages.data.documents.map(item => this.noticeList.push(item))
-      this.size = messages.data.size
+    async getMessages( offset, limit){
+      let messages = await this.$api.getNotice({
+        offset:offset,
+        limit:limit
+      })
+      messages.data.data.map(item => this.noticeList.push(item))
     },
   },
   async mounted(){

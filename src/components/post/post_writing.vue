@@ -56,7 +56,6 @@ export default {
       inputRange:null,
       title:'등록위치선택',
       isLocationListShow:false,
-      imgList:[],
       subject:'',
       content:'',
     }
@@ -100,51 +99,34 @@ export default {
     },
 
     async writePost(){
-      
       let found = this.postList.find(item => item.isSelected == true)
       console.log(found)
       if(found){
         this.$eventBus.$emit("showLoading")
-        let imgList = [], imgDescList = []
-        for(let i = 0; i<this.imgInputList.length; i++){
-          imgList.push(this.dataUriToBlob(this.imgInputList[i].src))
-          imgDescList.push(this.imgInputList[i].desc)
-        }
-        console.log("imgInputList:",this.imgInputList)
-        console.log("imgList:",imgList)
-        let imgRes
-        if(imgList.length){
-          imgRes = await this.$api.uploadImages(`upload/images`,imgList)
-        }
-        console.log("uploadres",imgRes)
-       
-       let writingRes = await this.$api.postByPath(`${found.path}/messages`, {
-          topic: found,
-          imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
-          imgDescList:imgDescList,
+ 
+       let writingRes = await this.$api.uploadPost({
+          topicId: found.topicId,
           userId:this.$store.state.me.userId,
-          buildingName:this.$store.state.me.public ?
-          (this.$store.state.me.houseType == 3 ? '주택' : (this.$store.state.me.addressData.buildingName)) : '비공개',
-          writer:'ref '+this.$store.state.me.path,
-          tag:'XXXX',
+          writerId:this.$store.state.me.userId,
           title:this.subject,
           text:this.content,
-          like:0,
+          viewCount:0,
+          likeCount:0
         })
-        let mineRes = await this.$api.postByPath(`${this.$store.state.me.path}/mine`, {
-          path: writingRes.headers.location,
-          type: 1, //글쓰기
-          topic: found,
-          title: this.title
-        })
-        this.$eventBus.$emit("hideLoading")
-
-        if(writingRes.data.code == 201 && mineRes.data.code == 201){
+        
+        console.log(writingRes.data.data.postId)
+        
+        if(writingRes.status == 200){//post image upload 
+          let postId = writingRes.data.data.postId
+          for(let i = 0; i<this.imgInputList.length; i++){
+            let imgRes = await this.$api.uploadPostImage(this.dataUriToBlob(this.imgInputList[i].src),`${postId}_${i}_post`,this.imgInputList[i].desc)
+            console.log(imgRes)
+          }
           this.$router.go(-1)
         }else{
-          console.error("writingRes",writingRes)
-          console.error("mineRes",mineRes)
+          console.error(writingRes)
         }
+        this.$eventBus.$emit("hideLoading")
       }else{
         alert("게시글 등록위치를 선택해 주세요.")
       }
@@ -154,7 +136,7 @@ export default {
     await this.$updateUserInfo()
     let topics = JSON.parse(JSON.stringify(this.$store.state.me.topics))
     
-    this.postList = this.$store.state.me.isAuth ? topics : [topics[0]]
+    this.postList = this.$store.state.me. isAuthSuccess ? topics : [topics[0]]
     this.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
   }
 }

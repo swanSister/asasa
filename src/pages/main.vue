@@ -71,28 +71,25 @@ export default {
       }
     },
     offset:0,
-    limit:100,
+    limit:10,
     size:0,
-    currentPath:'',
+    currentTopicId:'',
     sort:1,
     }
   },
   methods:{
     onSort(sort){
-      //sort 1: 최신순, 2: 추천순, 3:조회순
+      //sort 1: 최신순, 2: 추천순, 3:조회순, 4:댓글순
       this.postList = []
       this.offset = 0
       this.sort = sort
       console.log(this.offset, this.sort)
-      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+      this.getMessages(this.offset, this.limit, this.sort)
     },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
-      let messages = await this.$api.getByPath(`${this.currentPath}/messages`,this.offset,this.limit, this.sort)
-      let size = messages.data.size
-      if(size > this.size){
-        this.offset = 0
-        this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
-      }
+      this.postList = []
+      this.offset = 0
+      this.getMessages(this.offset, this.limit, this.sort)
       done();
     },
     handleRBD(vm, loadDom, done) {
@@ -100,10 +97,8 @@ export default {
       done();
     },
     async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
-      if(this.offset + this.limit <= this.size){
-        this.offset+=this.limit
-        await this.getMessages(this.currentPath,this.offset+1, this.limit)
-      }
+      this.offset+=this.limit
+      this.getMessages(this.offset, this.limit, this.sort)
       done();
     },
     handleLBD(vm, loadDom, done) {
@@ -113,25 +108,26 @@ export default {
    
     async onClickHeader(item){
       this.postList = []
-      this.currentPath = item.path
+      this.currentTopicId = item.topicId
       this.offset = 0
-      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+      this.getMessages(this.offset, this.limit, this.sort)
     },
     async getPosts(){
-      if(this.$store.state.me.isAuth){
-        this.headerData = this.$store.state.me.topics
-      }else{
-        this.headerData = [this.$store.state.me.topics[0]]
-      }
-      this.currentPath = this.headerData[0].path
-      this.getMessages(this.currentPath, this.offset, this.limit, this.sort)
+      this.headerData = this.$store.state.me.topics
+      this.currentTopicId = this.headerData[0].topicId
+     
+      this.getMessages(this.offset, this.limit, this.sort)
     },
-    async getMessages(path, offset, limit, sort){
-      console.log(`${offset}~${limit}`)
-      let messages = await this.$api.getByPath(`${path}/messages`,offset,limit, sort)
-      messages.data.documents.map(item => this.postList.push(item))
-      this.size = messages.data.size
-      console.log("postlist res ",messages)
+    async getMessages(offset, limit, sort){
+      console.log(offset, limit, sort)
+      let messages = await this.$api.getPostList({
+        topicId: this.currentTopicId,
+        offset: offset,
+        limit: limit,
+        sort: sort
+      })
+      console.log(messages)
+      messages.data.data.map(item => this.postList.push(item))
     },
     async updateMain(){
       this.$forceUpdate();
@@ -139,8 +135,7 @@ export default {
   },
   
   async mounted(){
-    console.log("###########")
-    console.log(this.$store.state.me)
+
     if(!this.$store.state.me.userId){
       this.$router.push('login')
     }else{
@@ -151,7 +146,6 @@ export default {
       }
       this.getPosts()
     }
-    this.$eventBus.$on("updateMain",this.updateMain)
   },
 
   beforeDestroy(){

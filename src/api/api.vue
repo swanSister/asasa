@@ -2,91 +2,269 @@
 <script>
 import axios from 'axios'
 let ctx = {}
-const API_URL = "https://api.asasakorea.com"
+const API_URL = "http://localhost:3001"
 export default {
   install(Vue, options){
     ctx.store = options.store
   },
-
-  searchByKeyword: function(keyword, offset, limit, order){
-    if(!order || order == 1){//최신순
-      order = 'createdAt desc'
-    }else if(order == 2){//추천순
-      order = 'like desc'
-    }else if(order == 3){//조회순
-      order = 'view desc'
-    }else{
-      order = 'createdAt desc'
-    }
-    let res = axios.get(`${API_URL}/search?keyword=${keyword}&offset=${offset}&limit=${limit}&orderBy=${order}`)
-     return res
-  },
-  getByPathWhere: function(path, where){
-    console.log("##get API : ",path)
-    let res = axios.get(`${API_URL}/rest/${path}?${where}&offset=0&limit=100`)
-     return res
-  },
-  getByPath: function(path, offset, limit, order){
-    if(!order || order == 1){//최신순
-      order = 'createdAt desc'
-    }else if(order == 2){//추천순
-      order = 'like desc'
-    }else if(order == 3){//조회순
-      order = 'view desc'
-    }else{
-      order = 'createdAt desc'
-    }
-    console.log("##get API : ",path)
-    let res = axios.get(`${API_URL}/rest/${path}?offset=${offset}&limit=${limit}&orderBy=${order}`)
-     return res
-  },
-  postByPath: function(path, param){
-    try{
-       console.log("post API : ",path,"data:",param)
-      return axios.post(`${API_URL}/rest/${path}`,param,{
-        headers: {
-          accept: 'application/json',
-        }
-      })
-    }catch(e){
-      console.error(e.message)
-    }
-  },
-  postCount: function(path, param){
-    try{
-       console.log("post API : ",path,"data:",param)
-      return axios.post(`${API_URL}/${path}`,param,{
-        headers: {
-          accept: 'application/json',
-        }
-      })
-    }catch(e){
-      console.error(e.message)
-    }
-   
-  },
-  uploadImages: function(path, imgList){
-    console.log('uploadImages')
+  //############useer################
+  uploadAuthImage:function(file,filename){
     let formData = new FormData()
-    for(let i=0; i<imgList.length; i++){
-      formData.append('files', imgList[i])
+    formData.append('image', file)
+
+    return axios.post(`${API_URL}/images/auth/${filename}`, formData,{
+      headers: {
+       'content-type': 'multipart/form-data' //do not forget this 
+      }
+    })
+  },
+  isUserExist:function(param){
+    try{
+      return axios.post(`${API_URL}/users/isUserExist`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+    }catch(e){
+      console.error(e.message)
     }
-    console.log('img form', formData)
-    return axios.post(`${API_URL}/${path}`,formData,{
+  },
+  createUser:function(param){
+      return axios.post(`${API_URL}/users/create`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  patchUser:function(param){
+      return axios.post(`${API_URL}/users/patch`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  getUserByUserId:function(param){
+      return axios.post(`${API_URL}/users/getByUserId`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  setUserPublic:function(param){
+    return axios.post(`${API_URL}/users/setPublic`,param,{
       headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        Authorization: ''
+        accept: 'application/json',
       }
     })
   },
-  patchByPath: function(path, param){
-    console.log("post API : ",path,"data:",param)
-    return axios.patch(`${API_URL}/rest/${path}`,param,{
+//############post########
+  uploadPostImage:function(file,filename,text){
+    let formData = new FormData()
+    formData.append('image', file)
+    formData.append('text', text)
+
+    return axios.post(`${API_URL}/images/post/${filename}`, formData,{
       headers: {
-        'Access-Control-Allow-Headers': 'Content-Type',
-        Authorization: ''
+       'content-type': 'multipart/form-data' //do not forget this 
       }
     })
   },
+  uploadPost:function(param){
+    try{
+      return axios.post(`${API_URL}/posts/upload`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+    }catch(e){
+      console.error(e.message)
+    }
+  },
+  getPostList:function(param){
+      return axios.post(`${API_URL}/posts/getByTopicId`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  getPostSearchList:function(param){
+      return axios.post(`${API_URL}/posts/getByKeyword`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  getPostMineList:function(param){
+      return axios.post(`${API_URL}/posts/getByMine`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  getPostBookmarkList:function(param){
+      return axios.post(`${API_URL}/posts/getByBookmark`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+  },
+  getPostDetail:function(param){
+    return axios.post(`${API_URL}/posts/getDetail`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  setViewCount:function(param){
+    return axios.post(`${API_URL}/posts/setViewCount`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  getLikeList:function(param){
+    return axios.post(`${API_URL}/posts/getLikeList`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  setLike:function(param){
+    return axios.post(`${API_URL}/posts/setLike`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  unLike:function(param){
+    return axios.post(`${API_URL}/posts/unLike`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  getBookmarkList:function(param){
+    return axios.post(`${API_URL}/posts/getBookmarkList`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  setBookmark:function(param){
+    return axios.post(`${API_URL}/posts/setBookmark`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  unBookmark:function(param){
+    return axios.post(`${API_URL}/posts/unBookmark`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  //##########COMMENT#############
+  uploadCommentImage:function(file,filename){
+      let formData = new FormData()
+      formData.append('image', file)
+      return axios.post(`${API_URL}/images/comment/${filename}`, formData,{
+        headers: {
+        'content-type': 'multipart/form-data' //do not forget this 
+        }
+      })
+  },
+  uploadComment:function(param){
+    try{
+      return axios.post(`${API_URL}/comments/upload`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+    }catch(e){
+      console.error(e.message)
+    }
+  },
+  getCommentList:function(param){
+    return axios.post(`${API_URL}/comments/getList`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+   //##########CHAT#############
+  uploadChatImage:function(file,filename){
+    let formData = new FormData()
+    formData.append('image', file)
+    return axios.post(`${API_URL}/images/chat/${filename}`, formData,{
+      headers: {
+      'content-type': 'multipart/form-data' //do not forget this 
+      }
+    })
+  },
+   checkChatRoomExist:function(param){
+    return axios.post(`${API_URL}/chat/checkChatRoomExist`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  createChatRoom:function(param){
+    return axios.post(`${API_URL}/chat/createChatRoom`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  getChatRoomList:function(param){
+    return axios.post(`${API_URL}/chat/getChatRoomList`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },  
+  getChatRoom:function(param){
+    return axios.post(`${API_URL}/chat/getChatRoom`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  getChatList:function(param){
+    return axios.post(`${API_URL}/chat/getChatList`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  sendChatMessage:function(param){
+    return axios.post(`${API_URL}/chat/sendChatMessage`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  outChatRoom:function(param){
+    return axios.post(`${API_URL}/chat/outChatRoom`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  updateChatReadTime:function(param){
+    return axios.post(`${API_URL}/chat/updateChatReadTime`, param, {
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  getNotice:function(param){
+    return axios.post(`${API_URL}/notice/get`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+ 
 }
 </script>

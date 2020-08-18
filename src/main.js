@@ -8,6 +8,9 @@ import global from './global'
 import moment from 'moment' 
 import "moment/locale/ko";
 
+import io from 'socket.io-client'; 
+const socket = io('http://localhost:3002'); 
+
 moment.locale('ko')
 
 Vue.use(global)
@@ -18,7 +21,7 @@ Vue.prototype.$eventBus = eventBus
 Vue.prototype.$api = api
 Vue.prototype.$store = store
 Vue.prototype.$moment = moment
-
+Vue.prototype.$socket = socket;
 Vue.use(api,{
   store
 })

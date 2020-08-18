@@ -29,19 +29,24 @@ const global = {
     Vue.prototype.$updateUserInfo = async function(){
       let me = Vue.prototype.$store.state.me
       if(me.userId){
-        let findUser = await Vue.prototype.$api.getByPathWhere(`users`,`userId=${me.userId}`)
-        console.log("fu",findUser)
-        if(!findUser.data.documents.length){
-            alert("재로그인")
-            Vue.prototype.$store.commit('me',{})
-            return null
-         }else{
-           let me = findUser.data.documents[0].fields
-           me.path = findUser.data.documents[0].path
-           console.log('me',me)
-            Vue.prototype.$store.commit('me',me)
-            return findUser.data.documents[0]
-         }
+        let res = await Vue.prototype.$api.getUserByUserId({userId:me.userId})
+        if(res.data.data){
+          Vue.prototype.$store.commit('me',res.data.data)
+
+          let likeRes = await Vue.prototype.$api.getLikeList({userId:me.userId})
+          Vue.prototype.$store.commit('likeList',likeRes.data.data)
+
+          let bookmarkRes = await Vue.prototype.$api.getBookmarkList({userId:me.userId})
+          Vue.prototype.$store.commit('bookmarkList',bookmarkRes.data.data)
+          
+          console.log("####updateUserInfo####")
+          console.log("me:", this.$store.state.me)
+          console.log("likeList:", this.$store.state.likeList)
+          console.log("likeList:", this.$store.state.bookmarkList)
+          console.log("######################")
+        }else{
+          Vue.prototype.$store.commit('me',{})
+        }
       }
     }
     Vue.prototype.$setCount = async function(path,docPath){
@@ -54,8 +59,7 @@ const global = {
     }
     
     Vue.prototype.$getTime = function(timestamp){//n분 전, n 시간 전, n 일 전
-      let now = new Date().getTime()
-      let diff = now - (timestamp*1000)
+      let diff = this.$moment().valueOf() - this.$moment.utc(timestamp).valueOf()
       let second = 1000
       let minute = second * 60
       let hour = minute * 60

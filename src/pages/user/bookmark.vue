@@ -1,28 +1,46 @@
 <template>
   <div>
-      <div class="header flex align-items-center">
-        <div class="backButton" style="font-size:5vw; margin-left:2vw;">
-            <span @click="$router.go(-1)" class="icon-left-open"></span>
-        </div>
-         <div class="flex auto justify-content-center" style="margin-right:5vw">
-          북마크
-        </div>
+    <div class="header flex align-items-center">
+      <div class="backButton" style="font-size:5vw; margin-left:2vw;">
+          <span @click="$router.go(-1)" class="icon-left-open"></span>
       </div>
-      <vue-scroll class="user-bookmark">
-        <PostList @sort="onSort" class="post-list" :postList="postList"></PostList>
+        <div class="flex auto justify-content-center" style="margin-right:5vw">
+        북마크
+      </div>
+    </div>
+    <!-- <PostHeader></PostHeader> -->
+    <vue-scroll class="bookmark-content" 
+        :ops = "ops"
+        @refresh-start="handleRS"
+        @load-before-deactivate="handleLBD"
+        @refresh-before-deactivate="handleRBD"
+        @load-start="handleLoadStart"
+      >
+      <div class="slot-load" slot="load-beforeDeactive"></div>
+      <div class="slot-load" slot="load-deactive"></div>
+      <div class="slot-load" slot="load-start"></div>
+      <div class="slot-load" slot="load-active"></div>
+      <div class="slot-refresh" slot="refresh-deactive"></div>
+      <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+      <div class="slot-refresh" slot="refresh-start"></div>
+      <div class="slot-refresh" slot="refresh-active"></div>
+        <div class="child">
+           <PostList @sort="onSort" :postList="postList"></PostList>
+        </div>
+     
       </vue-scroll>
-    <Footer v-bind:footerIndex="4"></Footer>
+      <Footer v-bind:footerIndex="0"></Footer>
   </div>
 </template>
 
 <script>
-
+//import PostHeader from '@/components/post/post_header.vue'
 import PostList from '@/components/post/post_list.vue'
 import Footer from '@/components/footer'
 export default {
   components:{
+    //PostHeader,
     PostList,
-    
     Footer,
   },
   props:{
@@ -32,58 +50,97 @@ export default {
     return {
       headerData:[],
       postList:[],
+      ops : {
+      vuescroll: {
+        mode: 'slide',
+        pullRefresh: {
+          enable: true,
+          tips:{
+            deactive: '',
+          active: '',
+          start: '',
+          beforeDeactive: ''
+          }
+        },
+        pushLoad: {
+          enable: true,
+          auto: true,
+          autoLoadDistance: 10,
+          tips:{
+            deactive: '',
+          active: '',
+          start: '',
+          beforeDeactive: ''
+          }
+        }
+      }
+    },
+    offset:0,
+    limit:10,
+    size:0,
+    currentTopicId:'',
+    sort:1,
     }
   },
   methods:{
-     onSort(sort){
-      //sort 1: 최신순, 2: 추천순, 3:조회순
-      if(sort==1){
-         this.postList = this.postList.sort(function(a, b){
-          return a.fields.createdAt._seconds > b.fields.createdAt._seconds ? -1 : a.fields.createdAt._seconds <= b.fields.createdAt._seconds ? 1 : 0;
-        })
-      }else if(sort==2){
-         this.postList = this.postList.sort(function(a, b){
-          return a.fields.like > b.fields.like ? -1 : a.fields.like <= b.fields.like ? 1 : 0;
-        })
-      }else if(sort==3){
-         this.postList = this.postList.sort(function(a, b){
-          return a.fields.view > b.fields.view ? -1 : a.fields.view <= b.fields.view? 1 : 0;
-        })
-      }
-    
-     console.log(this.postList)
+    onSort(sort){
+      //sort 1: 최신순, 2: 추천순, 3:조회순, 4:댓글순
+      this.postList = []
+      this.offset = 0
+      this.sort = sort
+      console.log(this.offset, this.sort)
+      this.getMessages(this.offset, this.limit, this.sort)
     },
-    async onClickHeader(item){
-      console.log(item)
-      this.getMessages(item.path)
+    async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
+      this.postList = []
+      this.offset = 0
+      this.getMessages(this.offset, this.limit, this.sort)
+      done();
     },
-    
-    
-  },
-  async mounted(){
-    await this.$updateUserInfo()
-
-    if(this.$store.state.me.bookmark){
-      let bookmark = this.$store.state.me.bookmark
-      console.log("###bookmark",bookmark)
-      for(let key in bookmark){
-        if(typeof(bookmark[key])=='object'){
-
-        this.postList.push({'path':key,
-        fields:bookmark[key]
-        })
-        }
-      }
-      this.postList = this.postList.sort(function(a, b){
-        return a.fields.createdAt._seconds > b.fields.createdAt._seconds ? -1 : a.fields.createdAt._seconds <= b.fields.createdAt._seconds ? 1 : 0;
+    handleRBD(vm, loadDom, done) {
+      console.log("handleRS4")
+      done();
+    },
+    async handleLoadStart(vm, dom, done) {//아래 당겨서 더보기
+      this.offset+=this.limit
+      this.getMessages(this.offset, this.limit, this.sort)
+      done();
+    },
+    handleLBD(vm, loadDom, done) {
+      console.log("handleRS3")
+      done();
+    },
+    async getMessages(offset, limit, sort){
+      console.log(offset, limit, sort)
+      let messages = await this.$api.getPostBookmarkList({
+        userId: this.$store.state.me.userId,
+        offset: offset,
+        limit: limit,
+        sort: sort
       })
+      console.log(messages)
+      messages.data.data.map(item => this.postList.push(item))
+    },
+    async updateMain(){
+      this.$forceUpdate();
     }
-    console.log(this.$store.state.me.bookmark)
+  },
+  
+  async mounted(){
+
+    if(!this.$store.state.me.userId){
+      this.$router.push('login')
+    }else{
+      this.getMessages(this.offset, this.limit, this.sort)
+    }
+  },
+
+  beforeDestroy(){
   }
 }
 </script>
 <style scoped>
-.user-bookmark{
+.bookmark-content{
   width:100%;
   height:calc(100% - 28vw) !important;
   overflow-y:auto;

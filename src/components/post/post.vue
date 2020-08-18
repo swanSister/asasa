@@ -2,33 +2,33 @@
   <div class="post">
     <div class="post-body" @click="goDetail">
       <div class="flex auto left">
-        <!-- <div class="tag flex none align-items-center"><span>{{postData.fields.tag}}</span></div> -->
-        <div class="topic-name" v-if="postData.isSearchResult">[{{postData.fields.topic.name}}]</div>
-        <div class="title">{{postData.fields.title}}</div>
+        <!-- <div class="tag flex none align-items-center"><span>{{postData.tag}}</span></div> -->
+        <div class="topic-name" v-if="postData.isSearchResult">[{{postData.topicName}}]</div>
+        <div class="title">{{postData.title}}</div>
         <div class="content">
-          {{postData.fields.text.length > 90 ?postData.fields.text.slice(0,90)+"..." :postData.fields.text}}
+          {{postData.text.length > 90 ?postData.text.slice(0,90)+"..." :postData.text}}
         </div>
-        <div class="name">{{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span></div>
+        <div class="name">{{postData.writerId}} <span>· {{postData.buildingName}}</span></div>
       </div>
-      <div class="right" v-if="postData.fields.imgList.files && postData.fields.imgList.files.length>0">
-        <img class="thumbnail" :src="postData.fields.imgList.files[0]">
+      <div class="right" v-if="postData.thumbnailUrl">
+        <img class="thumbnail" :src="postData.thumbnailUrl">
       </div>
     </div>
-    <div class="post-footer">
+    <div class="post-footer" v-if="!postData.isSearchResult">
       <div class="left">
         <div class="flex none align-items-center"><!-- view-->
-          <span class="icon icon-eye"></span>{{postData.fields.view}}
+          <span class="icon icon-eye"></span>{{postData.viewCount}}
         </div>
-        <div :class="{'red':$store.state.me.like && $store.state.me.like[postData.path]}" class="flex none align-items-center" @click="setLike('counts/like')"><!-- like-->
-          <span class="icon icon-thumbs-up-alt"></span>{{postData.fields.like ? postData.fields.like : '좋아요'}}
+        <div :class="{'red':isLiking()}" class="flex none align-items-center" @click="isLiking() ? unLike() : setLike()"><!-- like-->
+          <span class="icon icon-thumbs-up-alt"></span>{{postData.likeCount ? postData.likeCount : '좋아요'}}
         </div>
         <div class="flex none align-items-center"><!-- comment-->
-          <span class="icon icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
+          <span class="icon icon-comment"></span>{{postData.commentCount ? postData.commentCount : '댓글'}}
         </div>
       </div>
       <div class="right flex align-items-center">
-        <div class="time">{{$getTime(postData.fields.createdAt._seconds)}}</div>
-        <div class="bookmark" :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" @click="setBookmark('counts/bookmark')"><!-- bookmark-->
+        <div class="time">{{$getTime(postData.createdAt)}}</div>
+        <div class="bookmark" :class="{'red':isBookmarking()}" @click="isBookmarking() ? unBookmark() : setBookmark()"><!-- bookmark-->
           <span class="icon-bookmark"></span>
         </div>
       </div>
@@ -49,20 +49,59 @@ export default {
     }
   },
   methods:{
-    async setBookmark(path){
-      await this.$setCount(path,this.postData.path)
+    isLiking(){
+      let likeList = this.$store.state.likeList
+      let found = likeList.find(item => item.postId == this.postData.postId)
+      return found ? true : false
     },
-    async setLike(path){
-      await this.$setCount(path,this.postData.path)
-      if(this.$store.state.me.like && this.$store.state.me.like[this.postData.path]){
-        this.postData.fields.like --
-      }else{
-        this.postData.fields.like ++
+    async setLike(){
+      let res = await this.$api.setLike({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('likeList',res.data.data)
+        this.postData.likeCount +=1
       }
     },
-    goDetail: function(){
-      this.$router.push({name: 'postDetail', query: { path: this.postData.path }})
+    async unLike(){
+      let res = await this.$api.unLike({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('likeList',res.data.data)
+        this.postData.likeCount >0 ? this.postData.likeCount -- : null 
+      }
     },
+    isBookmarking(){
+      let bookmarkList = this.$store.state.bookmarkList
+      let found = bookmarkList.find(item => item.postId == this.postData.postId)
+      return found ? true : false
+    },
+    async setBookmark(){
+      let res = await this.$api.setBookmark({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('bookmarkList',res.data.data)
+      }
+    },
+    async unBookmark(){
+      let res = await this.$api.unBookmark({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('bookmarkList',res.data.data)
+      }
+    },
+
+    goDetail: function(){
+      this.$router.push({name: 'postDetail', query: { postId: this.postData.postId }})
+    },
+
   },
   mounted () {
     //  console.log("###postData", this.postData)

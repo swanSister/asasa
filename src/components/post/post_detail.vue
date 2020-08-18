@@ -1,7 +1,7 @@
 
 <template>
   <div class="post-detail-scroll">
-     <vue-scroll  :ops = "ops"
+     <vue-scroll ref="vs" :ops = "ops"
         @refresh-start="handleRS"
         @load-before-deactivate="handleLBD"
         @refresh-before-deactivate="handleRBD"
@@ -17,45 +17,45 @@
         <div class="slot-refresh" slot="refresh-active"></div>
 
         <div class="child">
-          <div class="post-detail" v-if="postData.fields">
+          <div class="post-detail">
             <div class="flex align-items-center header">
               <div class="flex auto justify-content-start">
-                <span @click="$router.go('-1')" class="icon-left-open"></span>
+                <span @click="$router.go(-1)" class="icon-left-open"></span>
               </div>
               <div class="flex auto justify-content-end right-icons">
-                <span class="icon-bell-alt"></span>
-                <span :class="{'red':$store.state.me.bookmark && $store.state.me.bookmark[postData.path]}" class="icon-bookmark" @click="setBookmark"></span>
-                <span class="icon-dot-3"></span>
+                <!-- <span class="icon-bell-alt"></span> -->
+                <span :class="{'red':isBookmarking()}" class="icon-bookmark" @click="isBookmarking() ? unBookmark() : setBookmark()"></span>
+                <span class="icon-dot-3" v-if="postData.writerId == $store.state.me.userId"></span>
               </div>
             </div>
             <div class="body">
-              <div class="title">{{postData.fields.title}}</div>
+              <div class="title">{{postData.title}}</div>
               <div class="info">
-                <div class="name" @click="WriterPopupOpen(postData.fields.writer)">
-                  {{postData.fields.userId}} <span>· {{postData.fields.buildingName}}</span>
+                <div class="name" @click="WriterPopupOpen(postData.writer)">
+                  {{postData.writerId}} <span>· {{postData.buildingName}}</span>
                   </div>
-                <div class="time">{{$getTime(postData.fields.createdAt._seconds)}}</div>
+                <div class="time">{{$getTime(postData.createdAt)}}</div>
               </div>
               <div class="content">
-                  <pre>{{postData.fields.text}}</pre>
-                  <div class="img-containner" v-for="(item, index) in postData.fields.imgList.files" :key="'imageList'+index">
+                  <pre>{{postData.text}}</pre>
+                  <div class="img-containner" v-for="(item, index) in postData.imgList" :key="'imageList'+index">
                     <div v-if="item">
                       <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                      <img :src="item">
-                      <div class="img-desc" v-if="postData.fields.imgDescList[index]">
-                        {{postData.fields.imgDescList[index]}}
+                      <img :src="item.url">
+                      <div class="img-desc" v-if="item.text">
+                        {{item.text}}
                       </div>
                     </div>
                   </div>
               </div>
             </div>
             <div class="button-content flex align-items-center">
-              <div :class="{'red':$store.state.me.like && $store.state.me.like[postData.path]}" @click="setLike" 
+              <div :class="{'red':isLiking()}" @click="isLiking() ? unLike() : setLike()" 
               class="flex none justify-content-center align-items-center border-right"><!-- like-->
-                <span class="icon red icon-thumbs-up-alt"></span>{{postData.fields.like ? postData.fields.like : '좋아요'}}
+                <span class="icon red icon-thumbs-up-alt"></span>{{postData.likeCount ? postData.likeCount : '좋아요'}}
               </div>
               <div class="flex none justify-content-center align-items-center border-right"><!-- comment-->
-                <span class="icon-comment"></span>{{postData.fields.commentCount ? postData.fields.commentCount : '댓글'}}
+                <span class="icon-comment"></span>{{postData.commentCount ? postData.commentCount : '댓글'}}
               </div>
               <div class="flex none justify-content-center align-items-center"><!-- comment-->
                 <span class="icon-share-1"></span>공유하기
@@ -65,17 +65,17 @@
 
           <div class="comment-list" v-if="commentList.length">
               <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
-                <div @click="WriterPopupOpen(item.fields.writer)" class="name flex align-items-center">
-                  {{item.fields.userId}} <span>· {{item.fields.buildingName}}</span>
+                <div @click="WriterPopupOpen(item.writer)" class="name flex align-items-center">
+                  {{item.writer.userId}} <span>· {{item.writer.buildingName}}</span>
                 </div>
                 <div class="comment-img-list flex">
-                  <div v-for="(src,index) in item.fields.imgList.files" :key="'comment-img'+index">
-                    <img v-if="src" :src="src"/>
+                  <div v-for="(imgItem,index) in item.imgList" :key="'comment-img'+index">
+                    <img v-if="imgItem" :src="imgItem"/>
                   </div>
                 </div>
-                <div class="text">{{item.fields.text}}</div>
+                <div class="text">{{item.text}}</div>
                 <div class="time">
-                  {{$getTime(item.fields.createdAt._seconds)}}
+                  {{$getTime(item.createdAt)}}
                 </div>
               </div>
             </div>
@@ -89,7 +89,7 @@
               <div class="flex align-items-center justify-content-center close-btn" @click="removeCommentImg(index)">
                 <span class="icon-cancel"></span>
               </div>
-              <img :src="item.src">
+              <img :src="item">
           </div>
         </div>
         <div class="flex comment-input align-items:center;">
@@ -99,7 +99,7 @@
           </div>
           <textarea class="flex align-items-center input-content" ref="inputContent" placeholder="내용을 입력해 주세요" v-model="commentText">
           </textarea>
-          <div @click="addComment" class="flex align-items-start upload">등록</div>
+          <div @click="uploadComment" class="flex align-items-start upload">등록</div>
         </div>
       </div>
 
@@ -108,7 +108,6 @@
           <div class="header flex justify-content-end">
             <span class="icon icon-cancel" @click="isWriterPopupShow=false"></span>
           </div>
-
           <div class="user-id">{{writerPopupData.userId}}</div>
           <div class="building-name">{{writerPopupData.public ? (writerPopupData.houseType == 3 ? '주택' : (writerPopupData.addressData.buildingName)) : '비공개'}}</div>
           <div class="menu">
@@ -120,7 +119,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'postHeader',
 
@@ -165,44 +163,42 @@ export default {
     size:0,
     }
   },
+
   methods: {
     async createChatRoom(){//대화방 존재 유무 체크
-        let messages1 = await this.$api.getByPathWhere(`chats`,`senderId=${this.$store.state.me.userId}&receiverId=${this.writerPopupData.userId}`)
-        let messages2 = await this.$api.getByPathWhere(`chats`,`receiverId=${this.$store.state.me.userId}&senderId=${this.writerPopupData.userId}`)
-        let path = ''
-        if(messages1.data.documents[0]){
-          path = messages1.data.documents[0].path
-        }
-        if(messages2.data.documents[0]){
-          path = messages2.data.documents[0].path
-        }
-        if(!path){
-          if(confirm('대화방을 만드시겠습니까?')){
-          if(!path){
-            let writingRes = await this.$api.postByPath(`chats`, {
-              senderId: this.$store.state.me.userId,
-              receiverId: this.writerPopupData.userId,
-              sender: this.$store.state.me,
-              receiver: this.writerPopupData
-            })
-            path = writingRes.headers.location
-          }
+      let chatRoomId = ''
+      if(confirm('대화방을 만드시겠습니까?')){
+        let isExist = await this.$api.checkChatRoomExist({
+          openerId:this.$store.state.me.userId,
+          userId:this.writerPopupData.userId})
+        console.log(isExist)
+        if(!isExist.data.data){
+          let res = await this.$api.createChatRoom({
+            openerId:this.$store.state.me.userId,
+            userList:[this.writerPopupData.userId, this.$store.state.me.userId]
+          })
+          chatRoomId = res.data.data.chatRoomId
+          console.log("createChatRoom:", res.data)
+        }else{
+          chatRoomId = isExist.data.data.chatRoomId
+          console.log("chat room exist:", isExist.data.data)
         }
       }
-      this.$router.push({name:'chatDetail',query:{path}})
+      this.$router.push({name:'chatDetail',query:{
+        chatRoomId:chatRoomId,
+        youId:this.writerPopupData.userId
+      }})
     },
     WriterPopupOpen(writer){
+      console.log(writer)
       if(writer.userId != this.$store.state.me.userId){
         this.writerPopupData = writer
         this.isWriterPopupShow = true
       }
-      
     },
     async handleLoadStart(vm, dom, done) {
-      if(this.offset + this.limit <= this.size){
-        this.offset+=this.limit
-        await this.getCommentList(this.currentPath,this.offset+1, this.limit)
-      }
+      this.offset+=this.limit
+      await this.getCommentList(this.currentPath,this.offset+1, this.limit)
       done();
     },
     handleLBD(vm, loadDom, done) {
@@ -215,12 +211,53 @@ export default {
     handleRBD(vm, loadDom, done) {
       done();
     },
-    async setBookmark(){
-      await this.$setCount('counts/bookmark',this.postData.path)
+    isLiking(){
+      let likeList = this.$store.state.likeList
+      let found = likeList.find(item => item.postId == this.postData.postId)
+      return found ? true : false
     },
     async setLike(){
-      await this.$setCount('counts/like',this.postData.path)
-      this.getPostDetail()
+      let res = await this.$api.setLike({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('likeList',res.data.data)
+        this.postData.likeCount +=1
+      }
+    },
+    async unLike(){
+      let res = await this.$api.unLike({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('likeList',res.data.data)
+        this.postData.likeCount -=1
+      }
+    },
+    isBookmarking(){
+      let bookmarkList = this.$store.state.bookmarkList
+      let found = bookmarkList.find(item => item.postId == this.postData.postId)
+      return found ? true : false
+    },
+    async setBookmark(){
+      let res = await this.$api.setBookmark({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('bookmarkList',res.data.data)
+      }
+    },
+    async unBookmark(){
+      let res = await this.$api.unBookmark({//return user's like list
+        postId: this.postData.postId,
+        userId: this.$store.state.me.userId,
+      })
+      if(res.status == 200){
+        this.$store.commit('bookmarkList',res.data.data)
+      }
     },
     dataUriToBlob(dataURI){
         var byteString = atob(dataURI.split(',')[1]);
@@ -233,59 +270,45 @@ export default {
         var blob = new Blob([ab], {type: mimeString});
         return blob;
     },
-    async uploadCommentImg(){
-       let imgList = []
-        for(let i = 0; i<this.imgInputList.length; i++){
-          imgList.push(this.dataUriToBlob(this.imgInputList[i].src))
+    async uploadComment(){
+      try{
+        if(!this.$store.state.me. isAuthSuccess){
+          alert('글쓰기는 인증 후 가능합니다.')
+          this.commentText = ''
+          this.imgInputList = []
+          return
         }
-        let imgRes = await this.$api.uploadImages(`upload/images`,imgList)
-        return imgRes
-    },
 
-
-    async addComment(){
-      
-      if(!this.$store.state.me.isAuth){
-         alert('글쓰기는 인증 후 가능합니다.')
-         this.commentText = ''
-         this.imgInputList = []
-        return
-      }
-
-      this.$eventBus.$emit("showLoading")
-      let imgRes
-
-      if(this.imgInputList.length){
-        imgRes = await this.uploadCommentImg()
-      }
-      let writingRes = await this.$api.postByPath(`${this.$route.query.path}/comments`, {
-          imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
-          text:this.commentText,
-          userId:this.$store.state.me.userId,
-          buildingName:this.$store.state.me.public ?
-          (this.$store.state.me.houseType == 3 ? '주택' : (this.$store.state.me.addressData.buildingName)) : '비공개',
-          writer:'ref '+this.$store.state.me.path
-        })
-
-      let mineRes = await this.$api.postByPath(`${this.$store.state.me.path}/mine`, {
-        path: this.$route.query.path,
-        type: 2, //댓글
-        topic: this.postData.fields.topic,
-        title: this.commentText
-      })
-
-      this.$eventBus.$emit("hideLoading")
-      if(writingRes.data.code == 201 && mineRes.data.code == 201){
-        alert("댓글을 등록했습니다.")
-        this.imgInputList = []
-        this.commentText = ''
-        this.commentList = []
-        this.offset = 0
-        this.getCommentList()
-      }else{
-        console.error(writingRes)
-        console.error(mineRes)
-        alert("댓글을 등록 실패")
+        this.$eventBus.$emit("showLoading")
+        
+        let writingRes = await this.$api.uploadComment({
+            postId: this.$route.query.postId,
+            text:this.commentText,
+            writerId:this.$store.state.me.userId
+          })
+        
+        console.log(writingRes)
+        if(writingRes.status==200){
+          let commentId = writingRes.data.data.commentId
+          console.log("####imgInputList", this.imgInputList)
+          for(let i = 0; i<this.imgInputList.length; i++){
+            let imgRes = await this.$api.uploadCommentImage(this.dataUriToBlob(this.imgInputList[i]),`${commentId}_${i}_post`)
+            console.log(imgRes)
+          }
+          alert("댓글을 등록했습니다.")
+          this.imgInputList = []
+          this.commentText = ''
+          this.commentList = []
+          this.offset = 0
+          this.getCommentList()
+        }else{
+          console.error(writingRes)
+          alert("댓글을 등록 실패")
+        }
+        this.$eventBus.$emit("hideLoading")
+      }catch(e){
+        console.error(e.message)
+        this.$eventBus.$emit("hideLoading")
       }
     },
     async previewFiles(event) {
@@ -297,8 +320,7 @@ export default {
               image.src= oFREvent.target.result
               image.onload = function(){
                 let src = that.$resizeImage(image)
-                let imgInputData = {src:src}
-                that.imgInputList.push(imgInputData)
+                that.imgInputList.push(src)
               }
         };
     },
@@ -306,35 +328,44 @@ export default {
       this.imgInputList.splice(index,1);
     },
     async getPostDetail(){
-      let messages = await this.$api.getByPath(`${this.$route.query.path}`)
+      let messages = await this.$api.getPostDetail({postId: this.$route.query.postId})
       console.log("psot detail:",messages)
-      this.postData = messages.data
+      this.postData = messages.data.data
     },
     async getCommentList(){
-      let comments = await this.$api.getByPath(`${this.$route.query.path}/comments`, this.offset, this.limit, 1)
-      this.size = comments.data.size
-      comments.data.documents.map(item => this.commentList.push(item))
+      let comments = await this.$api.getCommentList({
+        postId:this.$route.query.postId,
+        offset:this.offset,
+        limit:this.limit
+      })
+      comments.data.data.map(item => this.commentList.push(item))
+      console.log("comments:",comments.data.data)
     },
     async getMessageDetail(){
       this.commentList = []
       this.offset = 0
-      if(this.$route.query.path){
+      if(this.$route.query.postId){
         this.getPostDetail()
         this.getCommentList()
-        
       }else{
         this.$router.go(-1)
       }
     },
+    async checkView(){
+      let viewList = this.$store.state.viewList
+      let found = viewList.find(item => item == this.$route.query.postId)
+      if(!found){
+        let res = await this.$api.setViewCount({postId:this.$route.query.postId})
+        if(res.status == 200){
+          viewList.push(this.$route.query.postId)
+          this.$store.commit('viewList',viewList)
+        }
+      }
+    }
   },
   async mounted () {
    try{
-      window.sessionStorage.setItem('postDetail','true')
-      if( !this.$store.state.me.view || (this.$store.state.me.view && !this.$store.state.me.view[this.$route.query.path])){
-        this.$setCount('counts/view',this.$route.query.path)
-      }else{
-        await this.$updateUserInfo()
-      }
+      this.checkView()
       this.getMessageDetail()
    }catch(e){
      console.error(e.messages)
@@ -347,7 +378,7 @@ export default {
 
 <style scoped>
   .post-detail-scroll{
-    height:calc(100% - 14vw);
+    height:calc(100% - 14vw) !important;
   }
   .post-detail{
     width:100vw;

@@ -2,11 +2,11 @@
 <template>
   <div class="post-list">
     <div class="sorting flex auto align-items-center justify-content-end">
-      
       <select class="select-box " @change="onChange">
         <option value="1">최신순</option>
         <option value="2">추천순</option>
         <option value="3">조회수순</option>
+        <option value="4">댓글순</option>
       </select>
       <span class="icon icon-down-open"></span>
     </div>
@@ -32,7 +32,6 @@ export default {
     }
   },
   methods: {
-   
     onChange(e){
       this.$emit("sort",e.target.value)
       this.isSelectBoxFocus = false

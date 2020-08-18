@@ -50,7 +50,7 @@ export default {
   },
   methods:{
     goPostWriting(){
-      this.$store.state.me.isAuth ? this.$router.push('postWriting') : alert('글쓰기는 인증 후 가능합니다.')
+      this.$store.state.me. isAuthSuccess ? this.$router.push('postWriting') : alert('글쓰기는 인증 후 가능합니다.')
     },
     onClickFooter(item, idx){
       if(idx == this.footerIndex) return

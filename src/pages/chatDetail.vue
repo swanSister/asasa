@@ -4,7 +4,7 @@
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.push('chat')" class="icon-left-open"></span>
         </div>
-        <div v-if="chatData.fields" class="flex auto justify-content-center">
+        <div class="flex auto justify-content-center">
           {{youData.userId}}
         </div>
         <div @click="isSliderMenuShow= !isSliderMenuShow" class="backButton" style="font-size:5vw; margin-right:2vw;">
@@ -22,38 +22,28 @@
           <div class="child">
             <div class="chat-content flex column-reverse justify-content-start" >
               <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
-                
-                <div class="me flex column auto justify-content-end align-items-end" v-if="item.fields.userId == $store.state.me.userId">
-          
-                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.imgList && item.fields.imgList.files.length">
-                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                    <div class="chat-img flex column">
-                      <img v-for="(item, index) in item.fields.imgList.files" :key="'chatImg'+index" :src="item"/>
-                    </div>
-                  </div>
 
-                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.text">
+                <div class="me flex column auto justify-content-end align-items-end" v-if="item.writerId == $store.state.me.userId">
+          
+                  <div class="flex auto justify-content-end align-items-end">
                     <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                    <div class="chat-text">{{item.fields.text}}</div>
+                    
+                    <div class="flex column">
+                      <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
+                      <div class="chat-text" v-if="item.text">{{item.text}}</div>
+                    </div>
                   </div>
                 </div>
 
-                <div class="you flex column auto justify-content-start align-items-start" v-if="item.fields.userId != $store.state.me.userId">
-                  
-                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.imgList && item.fields.imgList.files.length">
-                    <div class="chat-img flex column">
-                      <img v-for="(item, index) in item.fields.imgList.files" :key="'chatImg'+index" :src="item"/>
+                <div class="you flex column auto justify-content-start align-items-start" v-if="item.writerId != $store.state.me.userId">
+                  <div class="flex auto justify-content-end align-items-end">
+                    <div class="flex column">
+                      <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
+                      <div class="chat-text" v-if="item.text">{{item.text}}</div>
                     </div>
                     <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
                   </div>
-
-                  <div class="flex auto justify-content-end align-items-end" v-if="item.fields.text">
-                    <div class="chat-text" >{{item.fields.text}}</div>
-                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                  </div>
-                  </div>
-
-                 
+                </div>
 
                 <div v-if="item.isDateChanged" class="date-line">
                   <span>{{getDate(item.createdAt)}}</span>
@@ -70,7 +60,7 @@
                 <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
                   <span class="icon-cancel"></span>
                 </div>
-                <img :src="item.src">
+                <img :src="item">
             </div>
           </div>
           <div class="flex chat-input align-items:center;">
@@ -86,27 +76,27 @@
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
         </div>
       <transition name="slide">
-            <div v-if="isSliderMenuShow" class="slide-menu">
-                <div class="slide-menu-header flex column justify-content-center align-items-start">
-                  <div>방 생성일</div>
-                  <div class="created-date">{{$moment(chatData.createdAt).format('YYYY-MM-DD')}}</div>
+          <div v-if="isSliderMenuShow" class="slide-menu">
+              <div class="slide-menu-header flex column justify-content-center align-items-start">
+                <div>방 생성일</div>
+                <div class="created-date">{{$moment(chatRoom.createdAt).format('YYYY-MM-DD')}}</div>
+              </div>
+              <vue-scroll class="slide-menu-body" v-if="youData">
+                <div class="user-data flex column justify-content-center align-items-start">
+                  <div class="user-id">{{youData.userId}}</div>
+                  <div class="building-name">{{youData.public ? (youData.houseType == 3 ? '주택' : (youData.addressData.buildingName)) : '비공개'}}</div>
                 </div>
-                <vue-scroll class="slide-menu-body" v-if="youData">
-                  <div class="user-data flex column justify-content-center align-items-start">
-                    <div class="user-id">{{youData.userId}}</div>
-                    <div class="building-name">{{youData.public ? (youData.houseType == 3 ? '주택' : (youData.addressData.buildingName)) : '비공개'}}</div>
+              </vue-scroll>
+              <div class="slide-menu-footer align-items-center flex align-items-center">
+                <div class="flex auto justify-content-start"> 
+                  <span class="icon-logout" @click="outChatRoom"></span>
+                </div>
+                <div class="flex auto">
+                  <div class="flex auto justify-content-end">
                   </div>
-                </vue-scroll>
-                <div class="slide-menu-footer align-items-center flex align-items-center">
-                  <div class="flex auto justify-content-start"> 
-                    <span class="icon-logout"></span>
-                  </div>
-                  <div class="flex auto">
-                    <div class="flex auto justify-content-end">
-                    </div>
-                  </div>
-                </div> 
-            </div>
+                </div>
+              </div> 
+          </div>
       </transition>
       <Footer v-bind:footerIndex="2"></Footer>
    
@@ -151,23 +141,17 @@ export default {
         }
     },
     offset:0,
-    limit:100,
+    limit:10,
     size:0,
     sort:1,
-    searchText:'',
-    chatData:{},
+    chatRoom:{},
     chatMessages:[],
     imgInputList:[],
     inputText:'',
-    messageInterval:null,
     youData:{}
     }
   },
   methods:{
-    saveMessageSize(){
-      localStorage.setItem(this.$route.query.path,this.size)
-      console.log('#####'+this.size)
-    },
     getDate(time){
       return this.$moment(time).format('YYYY년 MM월 DD')
     },
@@ -205,30 +189,47 @@ export default {
         var blob = new Blob([ab], {type: mimeString});
         return blob;
     },
+    async outChatRoom(){
+      if(confirm('채팅방을 나가시겠습니까?')){
+        let outUserList = this.chatRoom.outUserList
+        outUserList.push(this.$store.state.me.userId)
 
+        let messages = await this.$api.outChatRoom({
+          chatRoomId:this.chatRoom.chatRoomId,
+          outUserList:outUserList
+        })
+        if(messages.status == 200){
+          this.$router.go(-1)
+        }
+      }
+    },
     async addChat(){
       if(!this.inputText.length && !this.imgInputList.length){
         return
       }
-      this.getNewMessages()
-      this.$eventBus.$emit("showLoading")
-      let imgRes
-      
-      if(this.imgInputList.length){
-        imgRes = await this.uploadChatImg()
-      }
-      let writingRes = await this.$api.postByPath(`${this.$route.query.path}/messages`, {
-        imgList:imgRes ? `ref ${imgRes.headers.location}` : '',
-        text:this.inputText,
-        userId:this.$store.state.me.userId,
-        writer:'ref '+this.$store.state.me.path
-      })
 
+      let writingRes = await this.$api.sendChatMessage({
+        chatRoomId:this.$route.query.chatRoomId,
+        writerId:this.$store.state.me.userId,
+        text:this.inputText,
+        userList:this.chatRoom.userList,
+        imgList:[],
+      })
       this.$eventBus.$emit("hideLoading")
-      if(writingRes.data.code == 201){
+      if(writingRes.status == 200){
+        let chatData = writingRes.data.data
+        let chatId = chatData.chatId
+        console.log(this.imgInputList)
+        for(let i = 0; i<this.imgInputList.length; i++){
+          console.log("#####",i)
+          let imgRes = await this.$api.uploadChatImage(this.dataUriToBlob(this.imgInputList[i]),`${chatId}_${i}_post`)
+          chatData.imgList.push(imgRes.data.data)
+        }
+
         this.imgInputList = []
         this.inputText = ''
-        this.getNewMessages()
+
+        this.$socket.emit('message',{ message: chatData })
         
         }else{
           console.error(writingRes)
@@ -247,17 +248,14 @@ export default {
               image.src= oFREvent.target.result
               image.onload = function(){
                 let src = that.$resizeImage(image)
-                let imgInputData = {src:src}
-                that.imgInputList.push(imgInputData)
+                that.imgInputList.push(src)
               }
         };
     },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 더보기
-      if(this.offset + this.limit <= this.size){
-        this.offset = this.offset + this.limit
-        await this.getMessages()
-      }
-      done();
+        this.offset += this.limit
+        await this.getChatList()
+        done();
     },
     handleRBD(vm, loadDom, done) {
       done();
@@ -268,82 +266,69 @@ export default {
     handleLBD(vm, loadDom, done) {
       done();
     },
-    async getChatData(){
-      let messages = await this.$api.getByPath(`${this.$route.query.path}`)
-      this.chatData = messages.data
-      if(this.chatData.fields.receiverId == this.$store.state.me.userId){
-        this.youData = this.chatData.fields.sender
-      }else{
-        this.youData = this.chatData.fields.receiver
-      }
-      console.log(this.youData)
-      
-    },
-    async getMessages(){
-      let messages = await this.$api.getByPath(`${this.$route.query.path}/messages`, this.offset, this.limit)
-      messages.data.documents.map(item => this.chatMessages.push(item))
-      this.checkDate()
-      this.size = messages.data.size
-      this.saveMessageSize()
-      console.log(this.chatMessages)
-    },
-    async getNewMessages(){//새로운 채팅 있는지 확인
-        //limit갯수만큼 비교하기 때문에 limit 사이 누락 있을수 있음
-        let messages = await this.$api.getByPath(`${this.$route.query.path}/messages`, 0, this.limit)
-        this.size = messages.data.size
-        this.saveMessageSize()
+    async getChatRoom(){
+      let messages = await this.$api.getChatRoom({
+        chatRoomId:this.$route.query.chatRoomId,
+        youId:this.$route.query.youId})
 
-        let documents = messages.data.documents
-        let goToBottom = false
-          if(!this.chatMessages.length){
-            documents.map(item => this.chatMessages.push(item))
-          }else{
-            for(let i in documents){
-              let found = this.chatMessages.find(item => item.path == documents[i].path)
-              if(!found){
-                goToBottom = true
-                this.offset ++
-                this.chatMessages.unshift(documents[i])
-                this.checkDate()
-              }
-            }
-          }
-          if(goToBottom){ //scroll to bottom
-            let that = this
-            setTimeout(function(){
-              that.$refs["vs"].scrollTo(
-              {
-                  y: that.$refs["vs"].scroller.__maxScrollTop
-                },
-                300,
-                "easeInQuad"
-            )
-            },300)
-          }
-          
+      this.chatRoom = messages.data.data
+      this.youData = this.chatRoom.youData
+      this.getChatList()
+    },
+    async getChatList(){
+      let messages = await this.$api.getChatList({
+        chatRoomId:this.$route.query.chatRoomId,
+        userId:this.$store.state.me.userId,
+        offset:this.offset,
+        limit:this.limit
+      })
+      messages.data.data.map(item => this.chatMessages.push(item))
+      console.log(this.chatMessages)
+      this.checkDate()
+    },
+    async updateChatReadTime(){
+      let messages = await this.$api.updateChatReadTime({
+          chatRoomId:this.chatRoom.chatRoomId,
+          userId:this.$store.state.me.userId
+        })
+        console.log("updateChatReadTime:",messages.data)
+    },
+    socketJoinListener(data){
+      this.offset ++
+      console.log("#####receive message:", data) 
+      this.chatMessages.unshift(data)
+      this.goToScrollBottom()
+    },
+    goToScrollBottom(){
+      let that = this
+      setTimeout(function(){
+        if(!that.$refs["vs"]) return
+        that.$refs["vs"].scrollTo(
+        {
+            y: that.$refs["vs"].scroller.__maxScrollTop
+          },
+          300,
+          "easeInQuad"
+      )
+      },300)
     }
   },
   async mounted(){
-    this.getChatData()
-    this.getMessages()
+    this.chatMessages = []
+    this.getChatRoom()
+    this.goToScrollBottom()
+    this.$socket.emit('join',this.$route.query.chatRoomId)
 
     let that = this
-    setTimeout(function(){
-      that.$refs["vs"].scrollTo(
-      {
-          y: that.$refs["vs"].scroller.__maxScrollTop
-        },
-        300,
-        "easeInQuad"
-    )
-    },300)
-
-    this.messageInterval = setInterval(function(){
-      that.getNewMessages()
-    },10000)
+    this.$socket.on('message', (data)=> { 
+      that.socketJoinListener(data)
+    })
   },
-  beforeDestroy(){
-    clearInterval(this.messageInterval)
+  async beforeDestroy(){
+    console.log("######chat room beforeDestroy")
+    
+    this.updateChatReadTime()
+    this.$socket.removeListener('message', this.socketJoinListener)
   }
 }
 </script>
@@ -464,17 +449,16 @@ export default {
   font-size: 4vw;
 }
 .text-input-content .chat-img{
-  padding:2vw 2vw 0 2vw;
+  padding:0 2vw 0 2vw;
   width:100%;
   flex-wrap: wrap;
-  
 }
-.chat-img > div{
+.text-input-content .chat-img > div{
   display:inline-block;
   position:relative;
-  margin-right:2vw;
+  margin :2vw;
 }
-.chat-img > div > .close-btn{
+.text-input-content .chat-img > div > .close-btn{
   width:4vw;
   height:4vw;
   border-radius: 50%;;
@@ -500,7 +484,7 @@ export default {
   font-size:3vw;
 }
 .chat-content .me > div, .chat-content .you > div{
-  margin:2vw;
+
 }
 .chat-content .chat-text{
   max-width:70vw;
@@ -508,16 +492,15 @@ export default {
   background:tomato;
   padding:2vw;
   color:white;
-  margin:0 2vw;
   word-break: break-all;
   border-radius: 2vw;
+  margin:4vw 4vw 0 4vw;
 }
-.chat-content .chat-img img{
+.chat-content-img{
   width:40vw;
   height:40vw;
-  margin:0 2vw;
-  margin-top:2vw;
   object-fit: cover;
+  margin:4vw 4vw 0 4vw;
 }
 .chat-content .you .chat-text{
   background:#eee;

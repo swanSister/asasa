@@ -23,28 +23,27 @@
                 <div class="type"> {{$store.state.me.houseType.name}}</div>
               </div>
             </div>
-            <div v-if="$store.state.me.auth &&!$store.state.me.auth.isAuthComplete">
-              <div class="flex deny justify-content-center" @click="denyPopup(`거절사유: ${$store.state.me.auth.reason}`)">인증 거절</div>
+            <div v-if="!$store.state.me.isAuthSuccess && !$store.state.me.isAuthWait">
+              <div class="flex deny justify-content-center" @click="denyPopup(`거절사유: ${$store.state.me.authReason}`)">인증 거절</div>
             </div>
             <div class="flex column btn-content auto" v-else>
               <div class="flex btn first">
-                <div v-if="$store.state.me.isAuth" class="select">
+                <div v-if="$store.state.me.isAuthSuccess" class="select">
                   <span class="icon-ok" style="margin-right:2vw;"></span>
                   인증
                 </div>
-                <div v-if="!$store.state.me.isAuth" >
+                <div v-else>
                    <span class="icon-cancel" style="margin-right:2vw;"></span>
                    미인증
                 </div>
               </div>
-              <div class="flex btn" v-if="$store.state.me.isAuth">
-                <div :class="{'select':$store.state.me.public}" @click="setPublic(true)">공개</div>
-                <div :class="{'select':!$store.state.me.public}" @click="setPublic(false)"> 비공개</div>
+              <div class="flex btn" v-if="$store.state.me.isAuthSuccess">
+                <div :class="{'select':$store.state.me.isPublic}" @click="setPublic(true)">공개</div>
+                <div :class="{'select':!$store.state.me.isPublic}" @click="setPublic(false)"> 비공개</div>
               </div>
             </div>
-
           </div>
-          <div @click="$router.push('reAuth')" class="re-auth" v-if="$store.state.me.isAuth || ($store.state.me.auth &&!$store.state.me.auth.isAuthComplete)">
+          <div @click="$router.push('reAuth')" class="re-auth" v-if="!$store.state.me.isAuthWait">
             재인증
           </div>
         </div>
@@ -92,10 +91,14 @@ export default {
       alert(txt)
     },
     async setPublic(isPublic){
-      await this.$api.patchByPath(this.$store.state.me.path,{
-        public:isPublic
-      })
-      await this.$updateUserInfo()
+      let messages = await this.$api.setUserPublic({
+        userId:this.$store.state.me.userId,
+        isPublic:isPublic})
+        if(messages.data.data){
+          let me = this.$store.state.me
+          me.isPublic = messages.data.data.isPublic
+          this.$store.commit('me',me)
+        }
     }
   },
   async mounted(){

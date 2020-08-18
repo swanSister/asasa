@@ -1,19 +1,14 @@
 <template>
     <div class="auth">
-      <div class="header flex align-items-center">
-        <div @click="$router.go(-1)" class="backButton" style="font-size:5vw; margin-left:2vw;">
-            <span class="icon-left-open"></span>
-        </div>
-        <div class="flex auto justify-content-center" style="margin-right:5vw">
-          재인증
-        </div>
+      <div class="header">
+        재인증
       </div>
       <div class="body">
         <div class="user-info">
           <div class="section">
             <div class="flex none justify-content-center align-items-center main-text">
               <div class="left">닉네임</div>
-              <input readonly class="right" v-model="userId"/>
+              <input class="right" readonly v-model="userId" @keydown="onKeyPress"/>
             </div>
             <div class="sub-text">{{idSubTxt}}</div>
           </div>
@@ -79,11 +74,9 @@ export default {
   },
   data () {
     return {
-      isReAuth:'false',
       authImageSrc:'',
       address:'',
       buildingName:'',
-      bcode:'',
       isAddressPopup:false,
       userId:'',
       idSubTxt:'',
@@ -102,10 +95,31 @@ export default {
         type:3,
         isSelect:false,
       }],
-      userPath:'',
+      isUserExistTimeout: null,
+      isUserExist:false,
     }
   },
   methods:{
+    async onKeyPress(){
+      let that = this
+
+      if(this.isUserExistTimeout) clearTimeout(this.isUserExistTimeout)
+
+      this.isUserExistTimeout = setTimeout(async function(){
+        if(that.userId.length < 4){
+        that.idSubTxt = "4자 이상 입력해 주세요."
+        }else{
+          let messages = await that.$api.isUserExist({userId:that.userId})
+          if(messages.data.data.length){
+            that.idSubTxt = "해당 ID가 존재합니다."
+            that.isUserExist = true
+          }else{
+            that.idSubTxt = "사용가능한 ID 입니다."
+            that.isUserExist = false
+          }
+        }
+      },300)
+    },
     dataUriToBlob(dataURI){
       var byteString = atob(dataURI.split(',')[1]);
       var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
@@ -117,102 +131,66 @@ export default {
       var blob = new Blob([ab], {type: mimeString});
       return blob;
     },
-    async uploadAuthImg(){
-      let imgRes = await this.$api.uploadImages(`upload/images`,{
-        "img_0" : this.dataUriToBlob(this.authImageSrc)
-      })
-      return imgRes
-    },
     imageClick(){
       $('#authImageLabel').click()
     },
     async patchUser(){
-
+      try{
+        if(this.userId.length < 4){
+          alert("ID를 4자 이상 입력해 주세요.")
+          return
+        }
+        if(this.isUserExist){
+          alert("ID가 이미 존재합니다.")
+          return
+        }
         if(!this.address.address){
           alert("주소를 입력해 주세요.")
           return
         }
+        if(!this.authImageSrc){
+          alert("인증사진을 등록해 주세요.")
+          return
+        }
         
         this.$eventBus.$emit("showLoading")
-        let bcode = this.bcode
+        let bcode = this.address.bcode
         let sido_code = parseInt(bcode.substring(0,2),10)
         let sigungu_code = parseInt(bcode.substring(0,5),10)
         let b_code = parseInt(bcode.substring(0,8),10)
 
-        //create 시군구, 읍면동 토픽 생성 및 id 가져오기
-        let path1 = await this.getPostIdById(sido_code, this.address.sido, 1)
-        let path2 = await this.getPostIdById(sigungu_code, this.address.sigungu, 2, this.address.sido)
-        let path3 = await this.getPostIdById(b_code, this.address.bname, 3, this.address.sido, this.address.sigungu)
-        let imgRes = this.authImageSrc ? (await this.uploadAuthImg()).headers.location : ''
-        console.log(path1, path2, path3)
+        let addressData = this.address
+        addressData.sido_code = sido_code
+        addressData.sigungu_code = sigungu_code
+        addressData.b_code = b_code
+
         let houseType = this.houseType.find(item=>item.isSelect==true)
         let me = {
           userId: this.userId,
-          addressData:this.address,
+          isPublic: houseType.type == 1 ? true : false,
+          addressData:addressData,
           buildingName:this.buildingName,
-          houseType:houseType,
-          topics:[
-            {
-              name:'토픽',
-              code:'00',
-              path:'posts/topic'
-            },
-            {
-            name:this.address.sido,
-            code:sido_code,
-            path:path1
-            },
-            {
-            name:this.address.sigungu,
-            code:sigungu_code,
-            path:path2
-            },
-            {
-            name:this.address.bname,
-            code:b_code,
-            path:path3
-            }],
-          isAuth: false,
-          authImgSrc: imgRes ? `ref ${imgRes}` : '',
-          auth:null
+          houseType:houseType.type
         }
-        let messages = await this.$api.patchByPath(this.userPath,me)
-        me.path = messages.headers.location
+        let messages = await this.$api.patchUser(me)
+        let imgRes = await this.$api.uploadAuthImage(this.dataUriToBlob(this.authImageSrc),`${me.userId}_auth`)
+        me = messages.data.data
+        me.authImgUrl = imgRes.data.data
+        this.$store.commit('me',me)
+        console.log(me)
         this.$eventBus.$emit("hideLoading")
-        if(messages.data.code == 200){
-          this.$store.commit('me',me)
-          this.$router.push('main')
-        }else{
-          alert("ERROR code : " + messages.data.code)
-        }
-        
-      },
+        this.$router.push({name:'main', params:{reload:true}})
+      }catch(e){
+        console.error(e.message)
+        this.$eventBus.$emit("hideLoading")
+      }
+    },
       generateUID() {
-      // I generate the UID from two parts here 
-      // to ensure the random number provide enough bits.
       var firstPart = (Math.random() * 46656) | 0;
       var secondPart = (Math.random() * 46656) | 0;
       firstPart = ("000" + firstPart.toString(36)).slice(-3);
       secondPart = ("000" + secondPart.toString(36)).slice(-3);
       return firstPart + secondPart;
-      },
-      async getPostIdById(code, name, type, parent1, parent2){//type 1 : 시도 , 2: 군구, 3:동읍면리
-        let getMessage = await this.$api.getByPathWhere(`posts`,`code=${code}`)
-        let path = ''
-        if(!getMessage.data.documents.length){
-          let postMessage = await this.$api.postByPath(`posts?`,{
-            code: code,
-            name: name,
-            type: type,
-            parent1: parent1 ? parent1 : '',
-            parent2:parent2 ? parent2 : '',
-          })
-          path = postMessage.headers.location
-        }else{
-          path = getMessage.data.documents[0].path
-        }
-        console.log("####path", path)
-          return path
       },
    async previewFiles(event) {
       let that = this
@@ -246,30 +224,23 @@ export default {
             height:"100%",
             oncomplete: function(data) {
               console.log(data)
-              that.buildingName = data.buildingName
-              that.bcode = data.bcode
               that.address = data
+              that.buildingName = data.buildingName
+              
               that.isAddressPopup = false
             }
         }).embed(document.getElementById("addressSearch"));
         clearInterval(interval)
       },50)
     },
-    async getuserPath()
-    {
-      let messages = await this.$api.getByPathWhere(`users`,`userId=${this.userId}`)
-      return messages.data.documents[0].path
-    }
   },
-   async mounted(){
+  mounted(){
+    console.log("###auth")
     this.userId = this.$store.state.me.userId
-    this.userPath = await this.getuserPath()
-    console.log(this.userPath)
   }
 }
 </script>
 <style scoped>
-  
   .auth{
     overflow:auto;
     padding-bottom:4vw;

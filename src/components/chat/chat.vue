@@ -1,6 +1,5 @@
 <template>
-  <div class="chat" v-if="chatData.fields.senderId == $store.state.me.userId || 
-  (messageData.fields && messageData.fields.text && chatData.fields.receiverId == $store.state.me.userId)">
+  <div class="chat">
     <div class="chat-body flex auto" @click="goDetail">
      <div class="thumbnail-content">
        <span class="flex justify-content-center align-items-end icon-user thumbnail"></span>
@@ -9,10 +8,10 @@
       <div class="flex auto">
           <div class="text-content flex column">
             <div class="title flex align-items-center">
-              <div>{{chatData.fields.receiverId == $store.state.me.userId ? chatData.fields.senderId : chatData.fields.receiverId}}</div>
-              <span v-if="notReadCount > 0">{{notReadCount}}</span>
+              <div>{{chatData.userList[0] == $store.state.me.userId ? chatData.userList[1] : chatData.userList[0]}}</div>
+              <span v-if="chatData.notiCount > 0">{{chatData.notiCount}}</span>
             </div>
-            <div class="sub" v-if="messageData.fields">{{messageData.fields.text ? messageData.fields.text : '사진'}}</div>
+            <div class="sub"> {{chatData.lastChat.imgList && chatData.lastChat.imgList.length ? '사진' : (chatData.lastChat.text ? chatData.lastChat.text : '대화를 시작해 보세요.')}}</div>
           </div>
       </div>
       <div class="time flex align-items-center">{{getTime(messageData.createdAt)}}</div>
@@ -49,26 +48,14 @@ export default {
       }
     },
    goDetail(){
-     this.$router.push({name:'chatDetail',query:{path:this.chatData.path}})
+     this.$router.push({name:'chatDetail',query:{
+       chatRoomId:this.chatData.chatRoomId,
+       youId:this.chatData.userList[0] == this.$store.state.me.userId ? this.chatData.userList[1] : this.chatData.userList[0]
+      }})
    },
-   async getText(){
-     let messages = await this.$api.getByPath(`${this.chatData.path}/messages`,0, 1)
-   
-     if(localStorage.getItem(this.chatData.path)){
-       let size = parseInt(localStorage.getItem(this.chatData.path))
-       console.log(size, messages.data.size)
-       if(messages.data.size > size){
-         this.notReadCount = messages.data.size - size
-       }
-     }
-     
-     if(messages.data.documents.length){
-       this.messageData = messages.data.documents[0]
-     }
-   }
+ 
   },
   async mounted () {
-   this.getText()
   }
 }
 

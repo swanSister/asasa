@@ -5,9 +5,6 @@
         <div class="flex auto justify-content-center title">대화</div>
         <span class="icon icon-plus-squared-alt"></span>
       </div>
-      <div class="sub">
-        나와 대화할 수 있는 회원이 <span>100,000명</span> 있습니다.
-      </div>
     </div>
     <div class="chat-tab flex auto align-items-center justify-content-center"> 
         <div @click="setIsMyChat(true)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':isMyChat}">MY</div>
@@ -88,8 +85,6 @@ export default {
     limit:100,
     size:0,
     sort:1,
-    searchText:'',
-    
     }
   },
   methods:{
@@ -112,23 +107,12 @@ export default {
     handleLBD(vm, loadDom, done) {
       done();
     },
-    chatListSort(chatList){//채팅 최신순 소팅
-    return chatList.sort(function(a, b){
-          console.log(a.fields.createdAt._seconds)
-        return a.fields.createdAt._seconds > b.fields.createdAt._seconds ? -1 : a.fields.createdAt._seconds <= b.fields.createdAt._seconds ? 1 : 0;
-      })
-    },
     async getMessages(){
-      let userId = this.$store.state.me.userId
-      let chatList = []
-      let messages1 = await this.$api.getByPathWhere(`chats`,`senderId=${userId}`)
-      messages1.data.documents.map(item => chatList.push(item))
-      let messages2 = await this.$api.getByPathWhere(`chats`,`receiverId=${userId}`)
-      messages2.data.documents.map(item => chatList.push(item))
-      
-      this.chatList = this.chatListSort(chatList)
-      
-      console.log(this.chatList)
+        let messages = await this.$api.getChatRoomList({
+          userId:this.$store.state.me.userId
+        })
+        this.chatList = messages.data.data
+        console.log(messages)
     },
   },
   async mounted(){
