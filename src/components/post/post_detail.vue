@@ -32,7 +32,7 @@
               <div class="title">{{postData.title}}</div>
               <div class="info">
                 <div class="name" @click="WriterPopupOpen(postData.writer)">
-                  {{postData.writerId}} <span>· {{postData.buildingName}}</span>
+                  {{postData.writerId}} <span>· {{$getBuildingName(postData.writer)}}</span>
                   </div>
                 <div class="time">{{$getTime(postData.createdAt)}}</div>
               </div>
@@ -66,7 +66,7 @@
           <div class="comment-list" v-if="commentList.length">
               <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
                 <div @click="WriterPopupOpen(item.writer)" class="name flex align-items-center">
-                  {{item.writer.userId}} <span>· {{item.writer.buildingName}}</span>
+                  {{item.writer.userId}} <span>· {{$getBuildingName(item.writer)}}</span>
                 </div>
                 <div class="comment-img-list flex">
                   <div v-for="(imgItem,index) in item.imgList" :key="'comment-img-list'+index">
@@ -108,8 +108,9 @@
           <div class="header flex justify-content-end">
             <span class="icon icon-cancel" @click="isWriterPopupShow=false"></span>
           </div>
+          
           <div class="user-id">{{writerPopupData.userId}}</div>
-          <div class="building-name">{{writerPopupData.public ? (writerPopupData.houseType == 3 ? '주택' : (writerPopupData.addressData.buildingName)) : '비공개'}}</div>
+          <div class="building-name">{{$getBuildingName(writerPopupData)}}</div>
           <div class="menu">
             <div class="item" @click="createChatRoom"><span class="icon-chat-empty"></span> 1:1 대화하기</div>
           </div>
@@ -281,6 +282,7 @@ export default {
     onKeyPress(e){
       if (e.keyCode == 13) {
         this.uploadComment()
+        this.$eventBus.$emmit("inputBlur", e)
       }
     },
     async uploadComment(){
@@ -297,7 +299,8 @@ export default {
         let writingRes = await this.$api.uploadComment({
             postId: this.$route.query.postId,
             text:this.commentText,
-            writerId:this.$store.state.me.userId
+            writerId:this.$store.state.me.userId,
+            writer:this.$store.state.me,
           })
         
         console.log(writingRes)
@@ -397,7 +400,7 @@ export default {
     width:100vw;
     padding:2vw 4vw;
     background:white;
-    font-size:4vw;
+    font-size:4.5vw;
     text-align: left;
     margin-bottom:2vw;
   }
@@ -405,7 +408,7 @@ export default {
     padding:1vw 0;
   }
   .right-icons span{
-    font-size:4vw;
+    font-size:4.5vw;
     color:#aaa;
     margin-right:2vw;
   }
@@ -416,12 +419,12 @@ export default {
 
   }
   .body .title{
-   font-size:6vw;
+   font-size:6.5vw;
    font-weight: bold;
    margin:4vw 0;
   }
   .body .info{
-    font-size:3vw;
+    font-size:3.5vw;
     color:#aaa;
     margin-bottom:6vw;
   }
@@ -479,7 +482,7 @@ export default {
     padding:0 2vw;
   }
   .footer .icon{
-    font-size:6vw;
+    font-size:6.5vw;
   }
   [placeholder]:empty::before {
     content: attr(placeholder);
@@ -548,11 +551,11 @@ export default {
   }
   .comment .text{
     min-height:4vw;
-    font-size:3vw;
+    font-size:3.5vw;
     margin:1vw 0;
   }
   .comment .name, .comment .time{
-    font-size:3vw;
+    font-size:3.5vw;
     color:#aaa;
   }
   .comment .name{
@@ -591,7 +594,7 @@ export default {
     padding:4vw 0;
   }
   .writer-popup .user-id{
-    font-size:6vw;
+    font-size:6.5vw;
     color:#000;
     font-weight: bold;
     margin-bottom: 2vw;

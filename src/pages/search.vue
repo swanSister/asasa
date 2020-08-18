@@ -162,8 +162,8 @@ export default {
 .search-input .input-content{
   background:rgb(240, 240, 240);
   margin-right:4vw;
-  height:7vw;
-  border-radius: 3.5vw;
+  height:9vw;
+  border-radius: 4vw;
   padding-left:2vw;
   color:#555;
 }

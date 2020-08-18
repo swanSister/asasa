@@ -69,7 +69,7 @@ const global = {
       let res = ''
       
       if(diff < minute){
-        res =  parseInt(diff/second) + '초 전'
+        res = '방금'
       }else if(diff < hour){
         res = parseInt(diff/minute) + '분 전'
       }else if(diff < day){
@@ -82,6 +82,22 @@ const global = {
         res = parseInt(diff/month) + '달 전'
       }
       return res
+    }
+    Vue.prototype.$getBuildingName = function(userData){
+      if(!userData)return
+      if(userData.isPublic){
+        if(userData.houseType == 3){
+          return '주택'
+        }else{
+          if(userData.addressData.buildingName){
+            return userData.addressData.buildingName
+          }else{
+            return '이름 없음'
+          }
+        }
+      }else{
+        return '비공개'
+      }
     }
   }
 }

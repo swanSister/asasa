@@ -45,7 +45,7 @@ export default {
     border:0;
     background: transparent;
     color:#555;
-    font-size: 4vw;
+    font-size: 4.5vw;
     appearance:none;
     text-align-last: right;
   }

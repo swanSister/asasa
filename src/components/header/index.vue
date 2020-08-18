@@ -1,12 +1,14 @@
 <template>
   <div class="flex none header justify-content-center align-items-center" style="padding:2vw;">
     <div class="flex auto justify-content-start">
-      <div ref="xScroller" id="x-scroller" class="flex auto align-items-center justify-content-center">
-        <span @click="onClickHeader(item, index)" class="category flex none" 
-        v-for="(item, index) in headerData" :key="'headerDatas'+index"
-        :class="{'current':index==current}">
-          {{item.name}}
-        </span>
+      <div class="flex auto align-items-center justify-content-center header-content">
+        <div class="flex none justify-content-start align-items-center x-scroller"> 
+          <span @click="onClickHeader(item, index)" class="category flex none align-items-center" 
+          v-for="(item, index) in headerData" :key="'headerDatas'+index">
+          <div v-if="index==current" class="current"></div>
+            {{item.name}}
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -49,29 +51,34 @@ export default {
   background:#333;
   color:white;
 }
-#x-scroller{
-  overflow-x:scroll;
+.header-content{
+  width:100vw;
   margin:0 4vw;
-  flex-wrap: nowrap;
   height:14vw;
 }
+.x-scroller{
+  max-width: 90%;
+  height:100%;
+  overflow:auto;
+}
+.x-scroller::-webkit-scrollbar {display: none;}
 .category{
   padding:0 4vw;
   flex-wrap: nowrap;
-}
-.category.current{
+  font-size:5vw;
   position:relative;
+  height:100%;
+  overflow: visible;
 }
-.category.current:after{
+.category .current{
   position:absolute;
-  left:calc(50% - .5vw);
-  width:1vw;
-  height:1vw;
-  border-radius: 50%;
+  left:50%;
+  top:70%;
   background:white;
-  
-  top:100%;
-  content:"";
+  width:1vw;
+  height: 1vw;
+  border-radius: .5vw;
 }
+
 
 </style>

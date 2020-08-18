@@ -83,15 +83,16 @@ export default {
     },
     autosize: function(e){
       e.target.style.cssText = 'height:' + (e.target.scrollHeight) + 'px'
-      if(e.keyCode == 13){
-        e.target.style.cssText = 'height:9.5vw'
-        e.target.blur()
-      }
     },
+    onInputBlur: function(e){
+      e.target.style.cssText = 'height:9.5vw'
+      e.target.blur()
+    }
   },
   mounted:function(){
     this.$eventBus.$on("showLoading", this.onShowLoading)
     this.$eventBus.$on("hideLoading", this.onHideLoading)
+    this.$eventBus.$on("inputBlur", this.onInputBlur)
     let that = this
     $( document ).ready(function() {
       that.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기

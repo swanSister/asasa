@@ -16,7 +16,7 @@ body {
     padding:0;
     margin:0;
     position: fixed;
-    font-size:4vw;
+    font-size:4.5vw;
 }
 .flex{
     display: flex;
@@ -63,6 +63,7 @@ div[contenteditable] {
     -webkit-user-select: text;
     user-select: text;
     border:0;
+    font-size:4.5vw;
 }
 
 .slot-load, .slot-refresh {

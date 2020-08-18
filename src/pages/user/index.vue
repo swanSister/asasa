@@ -120,7 +120,7 @@ export default {
   background:rgb(240, 240, 240);
 }
 .header{
-  font-size:6vw;
+  font-size:6.5vw;
   font-weight: bold;
   padding:4vw 0;
   background:white;
@@ -134,7 +134,7 @@ export default {
 }
 .body .user-info .id{
   justify-content: flex-start;
-  font-size:4vw;
+  font-size:4.5vw;
   text-align: left;
   margin-bottom:4vw;
 }
@@ -146,7 +146,7 @@ export default {
 }
 .body .user-info .address .building-info{
   margin-top:1vw;
-  font-size:4vw;
+  font-size:4.5vw;
 }
 .body .user-info .address .building-info .name{
   color:tomato;
@@ -184,7 +184,7 @@ export default {
   width:28vw;
   font-weight: bold;
   padding:1vw 0;
-  font-size:4vw;
+  font-size:4.5vw;
 }
 .body .user-info .btn-content .btn div.select{
   background:tomato;

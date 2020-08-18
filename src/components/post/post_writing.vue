@@ -108,6 +108,7 @@ export default {
           topicId: found.topicId,
           userId:this.$store.state.me.userId,
           writerId:this.$store.state.me.userId,
+          writer:this.$store.state.me,
           title:this.subject,
           text:this.content,
           viewCount:0,
@@ -151,7 +152,7 @@ export default {
     height:14vw;
     border-bottom:1px solid #ddd;
     padding:0 4vw;
-    font-size: 4vw;
+    font-size: 4.5vw;
   }
   .header .cancel{
     color:#000;
@@ -239,12 +240,12 @@ export default {
     padding:3vh 0;
   }
   .location-list .list .item .name{
-    font-size:4vw;
+    font-size:4.5vw;
     font-weight: bold;
     color:#000;
   }
   .location-list .list .item .desc{
-    font-size:3vw;
+    font-size:3.5vw;
     color:#aaa;
     font-weight: bold;
     margin-top:1vw;

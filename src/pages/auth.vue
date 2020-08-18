@@ -247,7 +247,7 @@ export default {
     background:white;
   }
   .auth .header{
-    font-size:6vw;
+    font-size:6.5vw;
     font-weight:bold;
     margin:4vw 0;
   }
@@ -256,7 +256,7 @@ export default {
     margin-left:10%;
   }
   .auth-title{
-    font-size:4vw;
+    font-size:4.5vw;
     margin:4vw 0 2vw 0;
     text-align: left;
   }
@@ -286,7 +286,7 @@ export default {
     min-width:80%;
     max-width:80%;
     padding:2vw;
-    font-size:4vw;
+    font-size:4.5vw;
   }
   .auth .building{
     color:tomato;
@@ -358,7 +358,7 @@ export default {
   background:white;
 }
 .auth-popup .popup-title{
-  font-size:6vw;
+  font-size:6.5vw;
   margin:8vw;
 }
 .btn-content{

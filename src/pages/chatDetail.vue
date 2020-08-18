@@ -77,14 +77,24 @@
         </div>
       <transition name="slide">
           <div v-if="isSliderMenuShow" class="slide-menu">
-              <div class="slide-menu-header flex column justify-content-center align-items-start">
+              <div class="slide-menu-header flex justify-content-start align-items-center">
                 <div>방 생성일</div>
                 <div class="created-date">{{$moment(chatRoom.createdAt).format('YYYY-MM-DD')}}</div>
               </div>
               <vue-scroll class="slide-menu-body" v-if="youData">
                 <div class="user-data flex column justify-content-center align-items-start">
-                  <div class="user-id">{{youData.userId}}</div>
-                  <div class="building-name">{{youData.public ? (youData.houseType == 3 ? '주택' : (youData.addressData.buildingName)) : '비공개'}}</div>
+                  
+                  <div class="user-id flex align-items-center">
+                    <div class="thumbnail-content">
+                      <span class="flex justify-content-center align-items-end icon-user thumbnail"></span>
+                    </div>
+                    <div>
+                      <div>{{youData.userId}}</div>
+                      <div class="building-name">{{$getBuildingName(youData)}}</div>
+                    </div>
+                    
+                  </div>
+                  
                 </div>
               </vue-scroll>
               <div class="slide-menu-footer align-items-center flex align-items-center">
@@ -155,6 +165,7 @@ export default {
     onKeyPress(e){
       if (e.keyCode == 13) {
         this.addChat()
+        this.$eventBus.$emmit("inputBlur", e)
       }
     },
     getDate(time){
@@ -352,7 +363,7 @@ export default {
   min-height:calc(100vh - 48vw) !important;
 }
 .header{
-  font-size:6vw;
+  font-size:6.5vw;
   font-weight: bold;
   padding:4vw 0;
   background:white;
@@ -392,14 +403,15 @@ export default {
 .slide-menu-header{
   height:14vw;
   border-bottom: 1px solid #ddd;
-  font-size:3vw;
+  font-size:4vw;
   color:#aaa;
   padding:0 4vw;
   background:white;
 }
 .slide-menu-header .created-date{
   color:#000;
-  margin-top:1vw;
+  font-weight: bold;
+  margin-left:4vw;
 }
 .slide-menu-body{
   margin-top:1vw;
@@ -410,14 +422,30 @@ export default {
 .slide-menu-body .user-data{
   padding:2vw 4vw;
   border-bottom:1px solid #eee;
-  font-size: 4vw;
+  font-size: 5vw;
 }
 .slide-menu-body .user-data .user-id{
   color:#000;
 }
+.slide-menu-body .user-data .user-id > .thumbnail-content{
+  width:10vw;
+  height:10vw;
+  border-radius: 50%;
+  background:#eee;
+  overflow: hidden;
+  margin-right:4vw;
+}
+.slide-menu-body .user-data .user-id > .thumbnail-content > .thumbnail{
+  width:10vw;
+  height:10vw;
+  font-size:8vw;
+  color:#aaa;
+}
 .slide-menu-body .user-data .building-name{
   color:#aaa;
   font-size: 3.5vw;
+  text-align: left;
+  color:tomato;
 }
 .slide-menu-footer{
   margin-top:1vw;
@@ -438,7 +466,7 @@ export default {
   padding:0 2vw;
 }
 .text-input-content .icon{
-  font-size:6vw;
+  font-size:6.5vw;
 }
 [placeholder]:empty::before {
   content: attr(placeholder);
@@ -488,7 +516,7 @@ export default {
 }
 
 .chat-content .me, .chat-content .you{
-  font-size:3vw;
+  font-size:3.5vw;
 }
 .chat-content .me > div, .chat-content .you > div{
 

@@ -8,7 +8,7 @@
         <div class="content">
           {{postData.text.length > 90 ?postData.text.slice(0,90)+"..." :postData.text}}
         </div>
-        <div class="name">{{postData.writerId}} <span>· {{postData.buildingName}}</span></div>
+        <div class="name">{{postData.writerId}} <span>· {{$getBuildingName(postData.writer)}}</span></div>
       </div>
       <div class="right" v-if="postData.thumbnailUrl">
         <img class="thumbnail" :src="postData.thumbnailUrl">
@@ -145,18 +145,17 @@ export default {
     color:white;
     font-weight: bold;
     border-radius:3vw;
-    font-size:3vw;
+    font-size:3.5vw;
     padding:.5vh 4vw;
   }
   .post-body .title{
-    margin-top:4vw;
     margin-bottom:2vw;
-    font-size:4.5vw;
+    font-size:5vw;
     color:#000;
   }
   .post-body .topic-name{
     color:tomato;
-    font-size:3.5vw;
+    font-size:4.5vw;
     font-weight: bold;
   }
   .post-body .text{
@@ -166,7 +165,7 @@ export default {
     margin-bottom:2vw;
   }
   .post-body .name{
-    font-size:3.5vw;
+    font-size:4.5vw;
   }
   .post-body .name span{
     margin-left:2vw;
@@ -186,7 +185,7 @@ export default {
   }
   .post-footer > .left > div{
     margin-right:6vw;
-    font-size:3vw;
+    font-size:3.5vw;
   }
   .post-footer > .right{
     width:40%;

@@ -140,7 +140,7 @@ export default {
   height:calc(100% - 28vw) !important;
 }
 .header{
-  font-size:4vw;
+  font-size:4.5vw;
   font-weight: bold;
   padding:4vw 0;
   background:white;
@@ -156,9 +156,9 @@ export default {
 .post-list .li .icon{
   margin-top:1vw;
   margin-right: 4vw;
-  width:6vw;
-  height:6vw;
-  font-size: 3vw;
+  width:8vw;
+  height:8vw;
+  font-size: 4vw;
   border-radius: 50%;
   background:tomato;
   color:white;
@@ -172,10 +172,10 @@ export default {
 }
 .post-list .li .content div{
   margin-bottom: 2vw;
-  font-size: 3vw;
+  font-size: 4vw;
 }
 .post-list .li .content .title{
-  font-size: 4vw;
+  font-size: 5vw;
   font-weight: bold;
   width:100%;
   text-align: left;

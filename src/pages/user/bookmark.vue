@@ -127,9 +127,8 @@ export default {
   },
   
   async mounted(){
-
     if(!this.$store.state.me.userId){
-      this.$router.push('login')
+      this.$router.replace('login')
     }else{
       this.getMessages(this.offset, this.limit, this.sort)
     }
@@ -146,7 +145,7 @@ export default {
   overflow-y:auto;
 }
 .header{
-  font-size:4vw;
+  font-size:4.5vw;
   font-weight: bold;
   padding:4vw 0;
   background:white;

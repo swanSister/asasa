@@ -3,7 +3,6 @@
     <div class="chat-header flex align-items-center column justify-content-center">
       <div class="flex align-items-center title-content">
         <div class="flex auto justify-content-center title">대화</div>
-        <span class="icon icon-plus-squared-alt"></span>
       </div>
     </div>
     <div class="chat-tab flex auto align-items-center justify-content-center"> 
@@ -29,7 +28,7 @@
              <ChatList :chatList="chatList"></ChatList>
           </div>
           <div v-else>
-            <div style="color:#555; font-size:4vw; margin-top:10vw;">
+            <div style="color:#555; font-size:4.5vw; margin-top:10vw;">
               준비중입니다.
             </div>
             </div>
@@ -153,24 +152,20 @@ export default {
 }
 .chat-content{
   width:100%;
-  height:calc(100% - 48vw) !important;
+  height:calc(100% - 38vw) !important;
   overflow-y:auto;
 }
 .chat-header{
   background:white;
-  height:24vw;
+  height:14vw;
   border-bottom: 1px solid #eee;
   padding:0 4vw;
 }
 .chat-header .title-content{
-  margin-bottom:4vw;
   width:100%;
   font-size: 6vw;
   color:#333;
   font-weight: bold;
-}
-.chat-header .title{
-  margin-right: -6vw;
 }
 .chat-header .sub{
   font-size: 3vw;
@@ -182,7 +177,6 @@ export default {
   height:10vw;
   background:white;
   border-bottom: 1px solid #eee;
-  margin-bottom: 4vw;
 }
 .chat-tab .btn{
   height:100%;
