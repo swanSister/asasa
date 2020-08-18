@@ -9,7 +9,7 @@ import moment from 'moment'
 import "moment/locale/ko";
 
 import io from 'socket.io-client'; 
-const socket = io('http://localhost:3003'); 
+const socket = io('http://52.78.225.105:3003'); 
 
 moment.locale('ko')
 
