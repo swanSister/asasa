@@ -136,14 +136,14 @@ export default {
     this.$socket.emit('joinList',this.$store.state.me.userId)
 
     let that = this
-    this.$socket.on('message', (data)=> { 
+    this.$socket.on('listMessage', (data)=> { 
       that.socketJoinListener(data)
     })
     this.getMessages()
   },
   async beforeDestroy(){
     console.log("######chat list beforeDestroy")
-    this.$socket.removeListener('message', this.socketJoinListener)
+    this.$socket.removeListener('listMessage', this.socketJoinListener)
   }
 }
 </script>
