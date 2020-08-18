@@ -282,7 +282,7 @@ export default {
     onKeyPress(e){
       if (e.keyCode == 13) {
         this.uploadComment()
-        this.$eventBus.$emmit("inputBlur", e)
+        this.$eventBus.$emit("inputBlur", e)
       }
     },
     async uploadComment(){
@@ -354,6 +354,7 @@ export default {
         offset:this.offset,
         limit:this.limit
       })
+      
       comments.data.data.map(item => this.commentList.push(item))
       console.log("comments:",comments.data.data)
     },

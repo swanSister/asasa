@@ -165,7 +165,7 @@ export default {
     onKeyPress(e){
       if (e.keyCode == 13) {
         this.addChat()
-        this.$eventBus.$emmit("inputBlur", e)
+        this.$eventBus.$emit("inputBlur", e)
       }
     },
     getDate(time){
