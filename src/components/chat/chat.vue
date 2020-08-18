@@ -14,7 +14,7 @@
             <div class="sub"> {{chatData.lastChat.imgList && chatData.lastChat.imgList.length ? '사진' : (chatData.lastChat.text ? chatData.lastChat.text : '대화를 시작해 보세요.')}}</div>
           </div>
       </div>
-      <div class="time flex align-items-center">{{getTime(messageData.createdAt)}}</div>
+      <div class="time flex align-items-center">{{getTime(chatData.lastChat.createdAt)}}</div>
      </div>
     </div>
   </div>

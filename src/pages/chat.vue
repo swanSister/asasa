@@ -114,9 +114,31 @@ export default {
         this.chatList = messages.data.data
         console.log(messages)
     },
+    socketJoinListener(data){
+      console.log("#####receive message:", data)
+      let found = this.chatList.find(item=>item.chatRoomId=data.chatRoomId)
+      found.notiCount ++
+      found.lastChat={
+        imgList:data.imgList,
+        text:data.imgList,
+        writerId:data.writerId,
+        createdAt:data.createdAt
+      }
+    },
   },
-  async mounted(){
+  async mounted(){  
+    console.log("####joinList")
+    this.$socket.emit('joinList',this.$store.state.me.userId)
+
+    let that = this
+    this.$socket.on('message', (data)=> { 
+      that.socketJoinListener(data)
+    })
     this.getMessages()
+  },
+  async beforeDestroy(){
+    console.log("######chat list beforeDestroy")
+    this.$socket.removeListener('message', this.socketJoinListener)
   }
 }
 </script>

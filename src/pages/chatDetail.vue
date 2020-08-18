@@ -229,8 +229,9 @@ export default {
         this.imgInputList = []
         this.inputText = ''
 
+        chatData.youId = this.youData.userId
+        chatData.createdAt = new Date()
         this.$socket.emit('message',{ message: chatData })
-        
         }else{
           console.error(writingRes)
           alert("채팅 실패")
@@ -273,6 +274,7 @@ export default {
 
       this.chatRoom = messages.data.data
       this.youData = this.chatRoom.youData
+      console.log("youData:",this.youData)
       this.getChatList()
     },
     async getChatList(){
