@@ -115,15 +115,20 @@ export default {
         console.log(messages)
     },
     socketJoinListener(data){
-      console.log("#####receive message:", data)
-      let found = this.chatList.find(item=>item.chatRoomId=data.chatRoomId)
-      found.notiCount ++
-      found.lastChat={
-        imgList:data.imgList,
-        text:data.imgList,
-        writerId:data.writerId,
-        createdAt:data.createdAt
+      let found = this.chatList.find(item=>item.chatRoomId==data.chatRoomId)
+      if(found){
+        found.notiCount ++
+        found.lastChat={
+          imgList:data.imgList,
+          text:data.text,
+          writerId:data.writerId,
+          createdAt:data.createdAt
+        }
+      }else{
+        this.chatList = []
+        this.getMessages()
       }
+      
     },
   },
   async mounted(){  
