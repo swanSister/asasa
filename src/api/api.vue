@@ -2,7 +2,7 @@
 <script>
 import axios from 'axios'
 let ctx = {}
-const API_URL = "http://localhost:3001"
+const API_URL = "http://localhost:3000"
 export default {
   install(Vue, options){
     ctx.store = options.store
