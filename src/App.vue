@@ -85,8 +85,10 @@ export default {
       e.target.style.cssText = 'height:' + (e.target.scrollHeight) + 'px'
     },
     onInputBlur: function(e){
+      console.log("inputblur")
       e.target.style.cssText = 'height:9.5vw'
       e.target.blur()
+      
     }
   },
   mounted:function(){

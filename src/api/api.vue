@@ -58,6 +58,13 @@ export default {
     })
   },
 //############post########
+  deletePostById:function(param){
+    return axios.post(`${API_URL}/post/deleteById`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
   uploadPostImage:function(file,filename,text){
     let formData = new FormData()
     formData.append('image', file)
@@ -265,6 +272,8 @@ export default {
       }
     })
   },
+
+  
  
 }
 </script>

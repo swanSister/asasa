@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header @onclick="onClickHeader" :headerData="headerData"></Header>
+    <Header @onclick="onClickHeader" :headerData="headerData" :currentTopicId="currentTopicId"></Header>
     <!-- <PostHeader></PostHeader> -->
     <vue-scroll class="main-content" 
         :ops = "ops"
@@ -114,7 +114,7 @@ export default {
     },
     async getPosts(){
       this.headerData = this.$store.state.me.topics
-      this.currentTopicId = this.headerData[0].topicId
+      this.currentTopicId = this.$route.query.topicId ? this.$route.query.topicId : this.headerData[0].topicId
      
       this.getMessages(this.offset, this.limit, this.sort)
     },
@@ -131,7 +131,7 @@ export default {
     },
     async updateMain(){
       this.$forceUpdate();
-    }
+    },
   },
   
   async mounted(){
@@ -144,6 +144,7 @@ export default {
         this.$router.push('login')
         return
       }
+      
       this.getPosts()
     }
   },

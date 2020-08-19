@@ -22,6 +22,8 @@ Vue.prototype.$api = api
 Vue.prototype.$store = store
 Vue.prototype.$moment = moment
 Vue.prototype.$socket = socket;
+
+
 Vue.use(api,{
   store
 })

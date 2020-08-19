@@ -123,7 +123,10 @@ export default {
             let imgRes = await this.$api.uploadPostImage(this.dataUriToBlob(this.imgInputList[i].src),`${postId}_${i}_post`,this.imgInputList[i].desc)
             console.log(imgRes)
           }
-          this.$router.push({name:'main', params:{reload:true}})
+          this.$eventBus.$emit('uploadMainList', found.topicId)
+          this.$router.push({name:'main', params:{reload:true}, query:{
+            topicId:found.topicId
+          }})
         }else{
           console.error(writingRes)
         }

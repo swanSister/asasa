@@ -165,7 +165,10 @@ export default {
     onKeyPress(e){
       if (e.keyCode == 13) {
         this.addChat()
-        this.$eventBus.$emit("inputBlur", e)
+        setTimeout(function(){
+          e.target.style.cssText = 'height:9.5vw'
+        },100)
+        
       }
     },
     getDate(time){

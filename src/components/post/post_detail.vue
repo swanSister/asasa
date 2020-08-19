@@ -25,7 +25,14 @@
               <div class="flex auto justify-content-end right-icons">
                 <!-- <span class="icon-bell-alt"></span> -->
                 <span :class="{'red':isBookmarking()}" class="icon-bookmark" @click="isBookmarking() ? unBookmark() : setBookmark()"></span>
-                <span class="icon-dot-3" v-if="postData.writerId == $store.state.me.userId"></span>
+                <div class="more-btn-content">
+                  <span class="icon-dot-3 more-btn" v-if="postData.writerId == $store.state.me.userId"></span>
+                  <select @change="onChangeSelect">
+                    <option value="0" hidden selected></option>
+                    <option value="1">삭제</option>
+                    <option value="2">수정</option>
+                  </select>
+                </div>
               </div>
             </div>
             <div class="body">
@@ -120,6 +127,13 @@
 </template>
 
 <script>
+
+
+global.jQuery = require('jquery');
+var $ = global.jQuery;
+window.$ = $;
+
+
 export default {
   name: 'postHeader',
 
@@ -166,7 +180,20 @@ export default {
   },
 
   methods: {
-    
+    async onChangeSelect(e){
+      let res = e.target.value
+      console.log(e.target.value)
+      e.target.selectedIndex = 0
+
+      if(res==1){
+        if(confirm("게시글을 삭제 하시겠습니까?")){
+          this.deletePost()
+        }
+      }
+    },
+    async deletePost(){
+      await this.$api.deletePostById(this.postData)
+    },
     async updateChatReadTime(chatRoomId, userId){
       await this.$api.updateChatReadTime({
           chatRoomId:chatRoomId,
@@ -282,7 +309,10 @@ export default {
     onKeyPress(e){
       if (e.keyCode == 13) {
         this.uploadComment()
-        this.$eventBus.$emit("inputBlur", e)
+        setTimeout(function(){
+            e.target.style.cssText = 'height:9.5vw'
+            e.target.blur()
+          },100)
       }
     },
     async uploadComment(){
@@ -394,6 +424,7 @@ export default {
 </script>
 
 <style scoped>
+ 
   .post-detail-scroll{
     height:calc(100% - 14vw) !important;
   }
@@ -610,5 +641,25 @@ export default {
     padding:2vw 0;
     border-bottom:1px solid #eee;
   }
-          
+  .more-btn-content{
+    position:relative;
+  }
+  .more-btn-content select{
+    position:absolute;
+    left:0;
+    top:0;
+    border:0; 
+    height:100%;
+    background:transparent;
+    opacity: .5;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+  }
+   .more-btn-content select:focus{
+     border:0;
+     box-shadow: 0;
+     outline:none;
+   }
 </style>

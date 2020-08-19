@@ -5,7 +5,7 @@
         <div class="flex none justify-content-start align-items-center x-scroller"> 
           <span @click="onClickHeader(item, index)" class="category flex none align-items-center" 
           v-for="(item, index) in headerData" :key="'headerDatas'+index">
-          <div v-if="index==current" class="current"></div>
+          <div v-if="item.topicId==currentTopicId" class="current"></div>
             {{item.name}}
           </span>
         </div>
@@ -18,6 +18,7 @@
 export default {
   props:{
     headerData:Array,
+    currentTopicId:String
   },
   data () {
     return {
