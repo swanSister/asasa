@@ -76,7 +76,7 @@ export default {
   },
   async mounted(){
     let that = this
-    $("#logoAnimation").fadeOut(2000, function(){
+    $("#logoAnimation").fadeOut(1500, function(){
       that.isEndAnim = true
       $("#logo").fadeIn(500)
       $("#body").fadeIn(500)
