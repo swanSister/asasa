@@ -289,7 +289,7 @@ export default {
     font-size:4.5vw;
   }
   .auth .building{
-    color:tomato;
+    color:rgb(21, 134, 204);
     display: inline-block;
   }
   .auth .image-box{
@@ -319,13 +319,13 @@ export default {
     color:black;
   }
    .auth-content .sub-text.red {
-     color:tomato; 
+     color:rgb(21, 134, 204); 
      margin-top:2vw;
    }
   #authBtn{
     margin:0 auto;
     margin-top:4vw;
-    background-color:tomato;
+    background-color:rgb(21, 134, 204);
     color:white;
     font-size: 4vw;
     height:12vw;
@@ -371,7 +371,7 @@ export default {
   padding:2vw 0;
 }
 .btn-content .btn.selected{
-  background:tomato;
+  background:rgb(21, 134, 204);
   color:white;
   font-weight: bold;
 }

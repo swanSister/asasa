@@ -1,14 +1,25 @@
 <template>
   <div class="login">
-    <div class="header">로고</div>
-    <div class="body">
+    
+    <div class="header flex justify-content-center">
+      <img id="logo" src="@/assets/logo.png">
+      <img id="logoAnimation" style="width:34vw;" src="@/assets/logo_animation.png">
+    </div>
+    <div id="body" class="body">
       <div id="loginBtn" @click="goAuth">시작하기</div>
     </div>
-    <div v-if="isAddressPopup" id="addressSearch" ></div>
+    <div class="footer">
+      <img src="@/assets/login_footer.png">
+    </div>
   </div>
 </template>
 
 <script>
+
+global.jQuery = require('jquery');
+var $ = global.jQuery;
+window.$ = $;
+
 export default {
   components:{
   },
@@ -21,12 +32,17 @@ export default {
       buildingName:'',
       bcode:'',
       isAddressPopup:false,
-      userId:''
+      userId:'',
     }
   },
   methods:{
     async goAuth(){
-      this.$router.push('auth')
+      let me = this.$store.state.me
+      if(me.userId){
+        this.$router.push('main')
+      }else{
+        this.$router.push('auth')
+      }
     },
     async getAddress(){
       console.log("aaaa")
@@ -59,27 +75,30 @@ export default {
     }
   },
   async mounted(){
-    let me = this.$store.state.me
-    if(me.userId){
-      this.$router.push('main')
-    }
-    console.log(this.$store.state.me)
+    let that = this
+    $("#logoAnimation").fadeOut(1000, function(){
+      that.isEndAnim = true
+      $("#logo").fadeIn(500)
+      $("#body").fadeIn(500)
+    })
   }
 }
 </script>
 <style scoped>
 .login{
-  background:white;
+  background:#80aeff;
 }
-.header{
-  width:80vw;
-  color:tomato;
-  font-weight:bold;
-  font-size:20vw;
-  margin:10vw;
+.header img{
+ width:42vw;
+ height:auto;
+ margin:20vw 0 10vw 0;
+}
+.header #logo{
+  display: none;
 }
 .body{
   padding:10vw;
+  display: none;
 }
 #addressInput{
   padding:0 4vw;
@@ -90,8 +109,7 @@ export default {
   color:black;
 }
 #loginBtn{
-  margin-top:4vw;
-  background-color:tomato;
+  background-color:rgb(21, 134, 204);
   color:white;
   font-size: 4vw;
   height:12vw;
@@ -104,5 +122,11 @@ export default {
   left:0;
   top:0;
 }
-
+.footer img{
+ width:88vw;
+ height:auto;
+ position:absolute;
+ bottom:4vw;
+ left:6vw;
+}
 </style>

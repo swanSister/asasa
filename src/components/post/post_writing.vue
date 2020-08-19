@@ -123,7 +123,6 @@ export default {
             let imgRes = await this.$api.uploadPostImage(this.dataUriToBlob(this.imgInputList[i].src),`${postId}_${i}_post`,this.imgInputList[i].desc)
             console.log(imgRes)
           }
-          this.$eventBus.$emit('uploadMainList', found.topicId)
           this.$router.push({name:'main', params:{reload:true}, query:{
             topicId:found.topicId
           }})
@@ -168,7 +167,7 @@ export default {
     margin-left:1vw;
   }
   .header .add{
-    color:tomato;
+    color:rgb(21, 134, 204);
   }
   .body{
     padding:2vw;

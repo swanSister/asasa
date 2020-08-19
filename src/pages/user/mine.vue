@@ -160,7 +160,7 @@ export default {
   height:8vw;
   font-size: 4vw;
   border-radius: 50%;
-  background:tomato;
+  background:rgb(21, 134, 204);
   color:white;
 }
 .post-list .li .icon.gray{

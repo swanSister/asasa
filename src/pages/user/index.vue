@@ -129,7 +129,7 @@ export default {
 .body .user-info{
   color:white;
   padding:6vw;
-  background:rgb(66,66,76);
+  background:rgb(15, 76, 129);
   text-align: left;
 }
 .body .user-info .id{
@@ -149,7 +149,7 @@ export default {
   font-size:4.5vw;
 }
 .body .user-info .address .building-info .name{
-  color:tomato;
+  color:rgb(21, 134, 204);
   font-weight: bold;
   margin-right:4vw;
 }
@@ -162,7 +162,7 @@ export default {
   font-size: 3.5vw;
   width:20vw;
   padding:2vw 0;
-  background:tomato;
+  background:rgb(21, 134, 204);
 }
 .body .user-info .btn-content{
   margin-left:4vw;
@@ -187,7 +187,7 @@ export default {
   font-size:4.5vw;
 }
 .body .user-info .btn-content .btn div.select{
-  background:tomato;
+  background:rgb(255, 117, 117);
 }
 
 .body .re-auth{
