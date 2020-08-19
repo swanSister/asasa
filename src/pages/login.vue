@@ -76,7 +76,7 @@ export default {
   },
   async mounted(){
     let that = this
-    $("#logoAnimation").fadeOut(1000, function(){
+    $("#logoAnimation").fadeOut(2000, function(){
       that.isEndAnim = true
       $("#logo").fadeIn(500)
       $("#body").fadeIn(500)
@@ -99,6 +99,7 @@ export default {
 .body{
   padding:10vw;
   display: none;
+  z-index: 2;
 }
 #addressInput{
   padding:0 4vw;
@@ -123,10 +124,11 @@ export default {
   top:0;
 }
 .footer img{
- width:88vw;
+ width:60vw;
  height:auto;
  position:absolute;
  bottom:4vw;
- left:6vw;
+ left:20vw; 
+ z-index: 1;
 }
 </style>
