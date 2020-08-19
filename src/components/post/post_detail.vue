@@ -25,12 +25,11 @@
               <div class="flex auto justify-content-end right-icons">
                 <!-- <span class="icon-bell-alt"></span> -->
                 <span :class="{'red':isBookmarking()}" class="icon-bookmark" @click="isBookmarking() ? unBookmark() : setBookmark()"></span>
-                <div class="more-btn-content">
-                  <span class="icon-dot-3 more-btn" v-if="postData.writerId == $store.state.me.userId"></span>
+                <div class="more-btn-content" v-if="postData.writerId == $store.state.me.userId">
+                  <span class="icon-dot-3 more-btn"></span>
                   <select @change="onChangeSelect">
                     <option value="0" hidden selected></option>
                     <option value="1">삭제</option>
-                    <option value="2">수정</option>
                   </select>
                 </div>
               </div>
@@ -81,8 +80,17 @@
                   </div>
                 </div>
                 <div class="text">{{item.text}}</div>
-                <div class="time">
-                  {{$getTime(item.createdAt)}}
+                <div class="flex align-items-center">
+                  <div class="time flex auto">
+                    {{$getTime(item.createdAt)}}
+                  </div>
+                  <div class="more-btn-content flex" v-if="item.writerId == $store.state.me.userId">
+                    <span class="icon-dot-3 more-btn"></span>
+                    <select @change="onChangeCommentSelect($event, item)">
+                      <option value="0" hidden selected></option>
+                      <option value="1">삭제</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -182,7 +190,6 @@ export default {
   methods: {
     async onChangeSelect(e){
       let res = e.target.value
-      console.log(e.target.value)
       e.target.selectedIndex = 0
 
       if(res==1){
@@ -191,8 +198,36 @@ export default {
         }
       }
     },
+    async onChangeCommentSelect(e, item){
+      let res = e.target.value
+      e.target.selectedIndex = 0
+      if(res==1){
+        if(confirm("댓글을 삭제 하시겠습니까?")){
+          this.deleteComment(item)
+        }
+      }
+    },
+    
+    async deleteComment(item){
+      let messages = await this.$api.deleteCommentById(item)
+      if(messages.status == 200){
+        this.commentList = []
+        this.offset = 0
+        this.postData.commentCount --
+        this.getCommentList()
+      }else{
+        alert("댓글 삭제에 실패했습니다.")
+      }
+    },
     async deletePost(){
-      await this.$api.deletePostById(this.postData)
+      let messages = await this.$api.deletePostById(this.postData)
+      if(messages.status == 200){
+          this.$router.push({name:'main', params:{reload:true}, query:{
+            topicId:this.postData.topicId
+          }})
+      }else{
+        alert("게시글 삭제에 실패했습니다.")
+      }
     },
     async updateChatReadTime(chatRoomId, userId){
       await this.$api.updateChatReadTime({
@@ -341,15 +376,15 @@ export default {
             let imgRes = await this.$api.uploadCommentImage(this.dataUriToBlob(this.imgInputList[i]),`${commentId}_${i}_post`)
             console.log(imgRes)
           }
-          alert("댓글을 등록했습니다.")
           this.imgInputList = []
           this.commentText = ''
           this.commentList = []
           this.offset = 0
+          this.postData.commentCount ++
           this.getCommentList()
         }else{
           console.error(writingRes)
-          alert("댓글을 등록 실패")
+          alert("댓글을 등록에 실패했습니다.")
         }
         this.$eventBus.$emit("hideLoading")
       }catch(e){

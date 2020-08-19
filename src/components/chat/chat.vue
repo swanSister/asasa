@@ -1,6 +1,6 @@
 <template>
   <div class="chat">
-    <div class="chat-body flex auto" @click="goDetail">
+    <div class="chat-body flex auto align-items-center" @click="goDetail">
      <div class="thumbnail-content">
        <span class="flex justify-content-center align-items-end icon-user thumbnail"></span>
     </div>
@@ -77,6 +77,7 @@ export default {
     border-radius: 50%;
     background:#eee;
     overflow: hidden;
+    margin-bottom:4vw;
   }
   .chat-body > .thumbnail-content > .thumbnail{
     width:10vw;
@@ -100,7 +101,7 @@ export default {
     text-overflow: ellipsis;
   }
   .chat-body .text-content .title{
-    font-size: 4vw;
+    font-size: 5vw;
     color:#555;
     margin-bottom: 1.5vw;
   }
@@ -111,16 +112,16 @@ export default {
     background:tomato;
     font-weight: bold;
     padding:.5vw 1vw;
-    font-size: 2.5vw;
+    font-size: 3.5vw;
     margin-left:2vw;
     border-radius: 1vw;
     color:white;
   }
   .chat-body .text-content .sub{
-    font-size: 3.5vw;
+    font-size: 4vw;
     color:#999;
   }
   .chat-body .time{
-    font-size: 3vw;
+    font-size: 3.5vw;
   }
 </style>

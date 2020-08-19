@@ -58,13 +58,7 @@ export default {
     })
   },
 //############post########
-  deletePostById:function(param){
-    return axios.post(`${API_URL}/post/deleteById`,param,{
-      headers: {
-        accept: 'application/json',
-      }
-    })
-  },
+
   uploadPostImage:function(file,filename,text){
     let formData = new FormData()
     formData.append('image', file)
@@ -172,7 +166,17 @@ export default {
     })
   },
   //##########COMMENT#############
-  uploadCommentImage:function(file,filename){
+  deleteCommentById:function(param){
+    try{
+      return axios.post(`${API_URL}/comments/deleteById`,param,{
+        headers: {
+          accept: 'application/json',
+        }
+      })
+    }catch(e){
+      console.error(e.message)
+    }
+  },  uploadCommentImage:function(file,filename){
       let formData = new FormData()
       formData.append('image', file)
       return axios.post(`${API_URL}/images/comment/${filename}`, formData,{
@@ -199,6 +203,16 @@ export default {
       }
     })
   },
+  deletePostById:function(param){
+    return axios.post(`${API_URL}/posts/deleteById`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+
+
+
    //##########CHAT#############
   uploadChatImage:function(file,filename){
     let formData = new FormData()
