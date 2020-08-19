@@ -89,9 +89,9 @@ export default {
   background:#80aeff;
 }
 .header img{
- width:42vw;
+ width:34vw;
  height:auto;
- margin:20vw 0 10vw 0;
+ margin:14vw 0 10vw 0;
 }
 .header #logo{
   display: none;
