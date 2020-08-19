@@ -1,15 +1,11 @@
 <template>
-  <div class="login flex column">
+  <div class="login flex column justify-content-center">
     
-    <div class="header flex none justify-content-center">
-      <img id="logo" src="@/assets/logo.png">
-      <img id="logoAnimation" style="width:34vw;" src="@/assets/logo_animation.png">
-    </div>
-    <div id="body" class="body flex auto">
-      <div id="loginBtn" @click="goAuth">시작하기</div>
-    </div>
-    <div class="footer flex auto align-items-end justify-content-center">
+    <div class="header">
       <img src="@/assets/login_footer.png">
+    </div>
+    <div id="body" class="body">
+      <div id="loginBtn" @click="goAuth">시작하기</div>
     </div>
   </div>
 </template>
@@ -75,30 +71,22 @@ export default {
     }
   },
   async mounted(){
-    let that = this
-    $("#logoAnimation").fadeOut(1500, function(){
-      that.isEndAnim = true
-      $("#logo").fadeIn(500)
-      $("#body").fadeIn(500)
-    })
+
   }
 }
 </script>
 <style scoped>
 .login{
-  background:#80aeff;
+  background:white;
 }
 .header img{
- width:34vw;
+ width:80vw;
  height:auto;
- margin:14vw 0 10vw 0;
-}
-.header #logo{
-  display: none;
+ margin-top:-10vw;
 }
 .body{
   padding:0 10vw;
-  display: none;
+  margin-top:10vw;
 }
 #addressInput{
   padding:0 4vw;
@@ -109,7 +97,7 @@ export default {
   color:black;
 }
 #loginBtn{
-  background-color:rgb(21, 134, 204);
+  background-color:rgb(128, 174, 255);
   color:white;
   font-size: 4vw;
   height:12vw;
