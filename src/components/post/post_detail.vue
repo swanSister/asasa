@@ -480,7 +480,7 @@ export default {
     margin-right:2vw;
   }
   .right-icons .red{
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .body{
 
@@ -499,7 +499,7 @@ export default {
    margin-top: 2vw;
   }
   .body .info .name span{
-   color:rgb(21, 134, 204);
+   color:rgb(21, 134, 204) ;
   }
   .body .content{
     padding:4vw 0 2vw 0;
@@ -534,7 +534,7 @@ export default {
     margin-right:2vw;
   }
   .button-content > div.red{
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .button-content > div.border-right{
     border-right:1px solid #ddd;
@@ -595,7 +595,7 @@ export default {
   }
   .footer .upload{
     width:10vw;
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .img-desc{
     border-bottom:1px solid #ddd;
@@ -630,7 +630,7 @@ export default {
   }
   .comment .name span{
     margin-left:2vw;
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .comment-img-list{
     flex-wrap: wrap;

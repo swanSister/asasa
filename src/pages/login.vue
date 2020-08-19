@@ -2,7 +2,7 @@
   <div class="login flex column justify-content-center">
     
     <div class="header">
-      <img src="@/assets/login_footer.png">
+      <img src="@/assets/login_footer_dark.png">
     </div>
     <div id="body" class="body">
       <div id="loginBtn" @click="goAuth">시작하기</div>
@@ -97,7 +97,7 @@ export default {
   color:black;
 }
 #loginBtn{
-  background-color:rgb(128, 174, 255);
+  background-color:rgb(21, 134, 204) ;
   color:white;
   font-size: 4vw;
   height:12vw;

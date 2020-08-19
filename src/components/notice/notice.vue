@@ -55,10 +55,10 @@ export default {
     border-bottom:1px solid #eee;
   }
   .notice-body .icon span{
-    border:1px solid rgb(21, 134, 204);
+    border:1px solid rgb(21, 134, 204) ;
     border-radius: 50%;
     font-size: 4vw;
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .notice-body .text-content{
     text-align: left;

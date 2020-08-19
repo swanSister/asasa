@@ -448,7 +448,7 @@ export default {
   color:#aaa;
   font-size: 3.5vw;
   text-align: left;
-  color:rgb(21, 134, 204);
+  color:rgb(21, 134, 204) ;
 }
 .slide-menu-footer{
   margin-top:1vw;
@@ -515,7 +515,7 @@ export default {
 }
 .text-input-content .upload{
   width:10vw;
-  color:rgb(21, 134, 204);
+  color:rgb(21, 134, 204) ;
 }
 
 .chat-content .me, .chat-content .you{
@@ -527,7 +527,7 @@ export default {
 .chat-content .chat-text{
   max-width:70vw;
   font-size: 4vw;
-  background:rgb(21, 134, 204);
+  background:rgb(21, 134, 204) ;
   padding:2vw;
   color:white;
   word-break: break-all;

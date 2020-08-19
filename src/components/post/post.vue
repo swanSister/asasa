@@ -154,7 +154,7 @@ export default {
     color:#000;
   }
   .post-body .topic-name{
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
     font-size:4.5vw;
     font-weight: bold;
   }
@@ -169,7 +169,7 @@ export default {
   }
   .post-body .name span{
     margin-left:2vw;
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .post-footer{
     padding:1.5vw 4vw;
@@ -196,6 +196,6 @@ export default {
     font-size: 3.5vw;
   }
   .post-footer > .left > div.red, .post-footer > .right .red{
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
 </style>

@@ -49,7 +49,7 @@ export default {
 .header{
   min-height:14vw;
   max-height:14vw;
-  background:rgb(21, 134, 204);
+  background:rgb(21, 134, 204) ;
   color:white;
 }
 .header-content{

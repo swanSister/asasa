@@ -109,7 +109,7 @@ export default {
     max-width:90%;
   }
   .chat-body .text-content .title > span{
-    background:rgb(21, 134, 204);
+    background:rgb(21, 134, 204) ;
     font-weight: bold;
     padding:.5vw 1vw;
     font-size: 3.5vw;

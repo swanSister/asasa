@@ -167,7 +167,7 @@ export default {
     margin-left:1vw;
   }
   .header .add{
-    color:rgb(21, 134, 204);
+    color:rgb(21, 134, 204) ;
   }
   .body{
     padding:2vw;

@@ -30,7 +30,7 @@
   position: absolute;
   width: 5px;
   height: 5px;
-  background: rgb(21, 134, 204);
+  background: rgb(21, 134, 204) ;
   border-radius: 50%;
   animation: lds-default 1.2s linear infinite;
 }

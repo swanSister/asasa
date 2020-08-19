@@ -3,7 +3,7 @@
     
     <div  @click="onClickFooter(item,index)" class="flex auto justify-content-center" v-for="(item, index) in footerIcon" :key="'footerIcon'+index"> 
       <div class="icon" :class="item.class" :style="{
-        'color' : item.isSelect ? 'rgb(21, 134, 204)' : '#999'
+        'color' : item.isSelect ? 'rgb(21, 134, 204) ' : '#999'
       }"></div>
     </div>
     <div @click="goPostWriting" class="flex auto justify-content-center align-items-center pencil">
@@ -109,7 +109,7 @@ export default {
   max-height:9vw;
   min-height:9vw;
   border-radius: 50%;
-  background:rgb(21, 134, 204);
+  background:rgb(21, 134, 204) ;
   color:white;
 }
 </style>

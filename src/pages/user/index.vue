@@ -149,7 +149,7 @@ export default {
   font-size:4.5vw;
 }
 .body .user-info .address .building-info .name{
-  color:rgb(21, 134, 204);
+  color:rgb(21, 134, 204) ;
   font-weight: bold;
   margin-right:4vw;
 }
@@ -162,7 +162,7 @@ export default {
   font-size: 3.5vw;
   width:20vw;
   padding:2vw 0;
-  background:rgb(21, 134, 204);
+  background:rgb(21, 134, 204) ;
 }
 .body .user-info .btn-content{
   margin-left:4vw;
