@@ -1,14 +1,14 @@
 <template>
-  <div class="login">
+  <div class="login flex column">
     
-    <div class="header flex justify-content-center">
+    <div class="header flex none justify-content-center">
       <img id="logo" src="@/assets/logo.png">
       <img id="logoAnimation" style="width:34vw;" src="@/assets/logo_animation.png">
     </div>
-    <div id="body" class="body">
+    <div id="body" class="body flex auto">
       <div id="loginBtn" @click="goAuth">시작하기</div>
     </div>
-    <div class="footer">
+    <div class="footer flex auto align-items-end justify-content-center">
       <img src="@/assets/login_footer.png">
     </div>
   </div>
@@ -97,9 +97,8 @@ export default {
   display: none;
 }
 .body{
-  padding:10vw;
+  padding:0 10vw;
   display: none;
-  z-index: 2;
 }
 #addressInput{
   padding:0 4vw;
@@ -115,6 +114,7 @@ export default {
   font-size: 4vw;
   height:12vw;
   line-height:12vw;
+  z-index: 2;
 }
 #addressSearch{
   width:100vw;
@@ -126,9 +126,7 @@ export default {
 .footer img{
  width:60vw;
  height:auto;
- position:absolute;
- bottom:4vw;
- left:20vw; 
  z-index: 1;
+ margin-bottom:4vw;
 }
 </style>
