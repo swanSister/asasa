@@ -650,7 +650,7 @@ export default {
     left:0;
     top:0;
     width:100vw;
-    height:100vh;
+    height:100%;
     background:white;
     z-index: 6;
     padding:0 6vw;

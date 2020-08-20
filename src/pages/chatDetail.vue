@@ -341,8 +341,8 @@ export default {
     },
     onFocusInput(){
       console.log(this.$refs.textInputContent)
-      this.$refs.textInputContent.setAttribute("style","height:50%;")
-      this.$refs.scrollChild.setAttribute("style","padding-bottom:45vh")
+      this.$refs.textInputContent.setAttribute("style","height:50vh;")
+      this.$refs.scrollChild.setAttribute("style","padding-bottom:60vh")
       this.goToScrollBottom()
       setTimeout(function(){
         window.scrollTo(0,0)
@@ -398,7 +398,7 @@ export default {
 .slide-menu-bg{
   overflow: hidden;
   width:100vw;
-  height:100vh;
+  height:100%;
   background:rgba(0,0,0,.5);
   position:fixed;
   left:0;

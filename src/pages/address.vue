@@ -44,6 +44,6 @@ export default {
 
 #__daum__layer_1{
   width:100vw !important;
-  height: 100vh !important;
+  height: 100% !important;
 }
 </style>

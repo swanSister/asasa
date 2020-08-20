@@ -208,6 +208,8 @@ export default {
       };
     },
     async getAddress(){
+      try{
+        
       console.log("aaaa")
       this.isAddressPopup = true
       let recaptchaScript = document.createElement('script')
@@ -231,7 +233,11 @@ export default {
             }
         }).embed(document.getElementById("addressSearch"));
         clearInterval(interval)
-      },50)
+      },100)
+
+      }catch(e){
+        console.error(e.message)
+      }
     },
   },
   mounted(){
@@ -334,7 +340,7 @@ export default {
 
   #addressSearch{
   width:100vw;
-  height:100vh;
+  height:100%;
   position:fixed;
   left:0;
   top:0;
