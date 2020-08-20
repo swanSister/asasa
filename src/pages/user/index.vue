@@ -120,6 +120,8 @@ export default {
   background:rgb(240, 240, 240);
 }
 .header{
+  min-height: 14vw;
+  max-height: 14vw;
   font-size:6.5vw;
   font-weight: bold;
   padding:4vw 0;

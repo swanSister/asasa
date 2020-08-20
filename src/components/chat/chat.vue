@@ -38,13 +38,18 @@ export default {
       let today = this.$moment().format('YYYYMMDD')
       let day = this.$moment(time).format('YYYYMMDD')
       let yesterday = this.$moment().subtract(1, 'days').format('YYYYMMDD')
+      let year = this.$moment().format('YYYY')
       
+
       if(today == day){
         return this.$moment(time).format('a h:mm')
       }else if(day == yesterday){
         return '어제'
-      }else{
-        return this.$moment(time).format('YYYY년 MM월 DD')
+      }else if(year == this.$moment(time).format('YYYY')){
+        return this.$moment(time).format('MM월 DD일')
+      }
+      else{
+        return this.$moment(time).format('YYYY.MM.DD')
       }
     },
    goDetail(){

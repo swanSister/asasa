@@ -79,8 +79,9 @@ const global = {
       }else if(diff < month){
         res = parseInt(diff/week) + '주 전'
       }else{
-        res = parseInt(diff/month) + '달 전'
+        res = this.$moment().utc(timestamp).format('YYYY.MM.DD')
       }
+      
       return res
     }
     Vue.prototype.$getBuildingName = function(userData){

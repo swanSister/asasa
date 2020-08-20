@@ -1,6 +1,6 @@
 <template>
   <div class="chat-detail"> 
-    <div class="header flex align-items-center">
+    <div class="header flex none align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.push('chat')" class="icon-left-open"></span>
         </div>
@@ -108,16 +108,12 @@
               </div> 
           </div>
       </transition>
-      <Footer v-bind:footerIndex="2"></Footer>
-   
   </div>
 </template>
 
 <script>
-import Footer from '@/components/footer'
 export default {
   components:{
-    Footer,
   },
   props:{
     
@@ -164,7 +160,7 @@ export default {
   methods:{
     onKeyPress(e){
       if (e.keyCode == 13) {
-        this.addChat()
+        this.addChat(e)
         setTimeout(function(){
           e.target.style.cssText = 'height:9.5vw'
         },100)
@@ -172,7 +168,7 @@ export default {
       }
     },
     getDate(time){
-      return this.$moment(time).format('YYYY년 MM월 DD')
+      return this.$moment(time).format('YYYY.MM.DD')
     },
     checkDate(){
       console.log("####checkDate")
@@ -222,7 +218,8 @@ export default {
         }
       }
     },
-    async addChat(){
+    async addChat(e){
+      e.preventDefault()
       if(!this.inputText.length && !this.imgInputList.length){
         return
       }
@@ -238,7 +235,7 @@ export default {
       if(writingRes.status == 200){
         let chatData = writingRes.data.data
         let chatId = chatData.chatId
-        console.log(this.imgInputList)
+        
         for(let i = 0; i<this.imgInputList.length; i++){
           console.log("#####",i)
           let imgRes = await this.$api.uploadChatImage(this.dataUriToBlob(this.imgInputList[i]),`${chatId}_${i}_post`)
@@ -319,6 +316,7 @@ export default {
       console.log("#####receive message:", data) 
       this.chatMessages.unshift(data)
       this.goToScrollBottom()
+      this.checkDate()
     },
     goToScrollBottom(){
       let that = this
@@ -359,7 +357,7 @@ export default {
 }
 .chat-detail-content{
   width:100%;
-  height:calc(100vh - 48vw) !important;
+  height:calc(100% - 28vw) !important;
   overflow-y:auto;
 }
 .chat-detail-content .child{
@@ -368,7 +366,7 @@ export default {
 .header{
   font-size:6.5vw;
   font-weight: bold;
-  padding:4vw 0;
+  height:14vw;
   background:white;
   color:#333;
 }
@@ -461,8 +459,6 @@ export default {
 .text-input-content{
   border-top:1px solid #eee;
   min-height:10vw;
-  position:fixed;
-  bottom:14vw;
   left:0;
   width:100%;
   background:white;
@@ -517,7 +513,9 @@ export default {
   width:10vw;
   color:rgb(21, 134, 204) ;
 }
-
+.chat-content{
+  padding-bottom:4vw;
+}
 .chat-content .me, .chat-content .you{
   font-size:3.5vw;
 }
