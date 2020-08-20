@@ -105,7 +105,6 @@ export default {
       console.log("handleRS3")
       done();
     },
-   
     async onClickHeader(item){
       this.postList = []
       this.currentTopicId = item.topicId
