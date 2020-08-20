@@ -249,7 +249,7 @@ export default {
         chatData.youId = this.youData.userId
         chatData.createdAt = new Date()
         this.$socket.emit('message',{ message: chatData })
-        this.$refs.inputContent.focus().click()
+        this.$refs.inputContent.click()
         console.log("input click@@@@@@@")
         }else{
           console.error(writingRes)
