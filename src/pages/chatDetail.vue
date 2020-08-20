@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-detail"> 
+  <div class="chat-detail flex column"> 
     <div class="header flex none align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.push('chat')" class="icon-left-open"></span>
@@ -52,25 +52,27 @@
             </div>
           </div>
         </vue-scroll>
-        <div class="text-input-content flex column align-items-center">
-          <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
-            borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
-          }">
-            <div v-for="(item, index) in imgInputList" :key="'chatImage'+index" >
-                <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
-                  <span class="icon-cancel"></span>
-                </div>
-                <img :src="item">
+        <div class="flex auto align-items-end">
+          <div class="text-input-content flex column align-items-center">
+            <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
+              borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
+            }">
+              <div v-for="(item, index) in imgInputList" :key="'chatImage'+index" >
+                  <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
+                    <span class="icon-cancel"></span>
+                  </div>
+                  <img :src="item">
+              </div>
             </div>
-          </div>
-          <div class="flex chat-input align-items:center;">
-            <div class="flex none justify-content-start align-items-center">
-                <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
-                <label for="file" class="icon icon-camera"></label>
+            <div class="flex chat-input align-items:center;">
+              <div class="flex none justify-content-start align-items-center">
+                  <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
+                  <label for="file" class="icon icon-camera"></label>
+              </div>
+              <textarea @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
+              </textarea>
+              <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
             </div>
-            <textarea @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
-            </textarea>
-            <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
           </div>
         </div>
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
@@ -336,11 +338,13 @@ export default {
     }
   },
   async mounted(){
+    this.updateChatReadTime()
+
     this.chatMessages = []
     this.getChatRoom()
     this.goToScrollBottom()
     this.$socket.emit('join',this.$route.query.chatRoomId)
-
+    
     let that = this
     this.$socket.on('message', (data)=> { 
       that.socketJoinListener(data)
@@ -360,12 +364,11 @@ export default {
 }
 .chat-detail-content{
   width:100%;
-  height:calc(100% - 28vw) !important;
+  max-height:calc(100% - 28vw) !important;
+  height:auto !important;
   overflow-y:auto;
 }
-.chat-detail-content .child{
-  min-height:calc(100vh - 48vw) !important;
-}
+
 .header{
   font-size:6.5vw;
   font-weight: bold;
