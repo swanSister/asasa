@@ -1,11 +1,11 @@
 <template>
-  <div class="chat-detail flex column"> 
+  <div ref="chatDetail" class="chat-detail"> 
     <div class="header flex none align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.push('chat')" class="icon-left-open"></span>
         </div>
         <div class="flex auto justify-content-center">
-          {{youData.userId}}
+          {{youData.userId}},{{keyboardHeight}}
         </div>
         <div @click="isSliderMenuShow= !isSliderMenuShow" class="backButton" style="font-size:5vw; margin-right:2vw;">
             <span class="icon-menu"></span>
@@ -19,7 +19,7 @@
           <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
           <div class="slot-refresh" slot="refresh-start"></div>
           <div class="slot-refresh" slot="refresh-active"></div>
-          <div class="child">
+          <div ref="scrollChild" class="child">
             <div class="chat-content flex column-reverse justify-content-start" >
               <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
 
@@ -51,28 +51,29 @@
               </div>
             </div>
           </div>
+
+
         </vue-scroll>
-        <div class="flex auto align-items-end">
-          <div class="text-input-content flex column align-items-center">
-            <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
-              borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
-            }">
-              <div v-for="(item, index) in imgInputList" :key="'chatImage'+index" >
-                  <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
-                    <span class="icon-cancel"></span>
-                  </div>
-                  <img :src="item">
-              </div>
+        
+        <div ref="textInputContent" class="text-input-content flex column align-items-center">
+          <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
+            borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
+          }">
+            <div v-for="(item, index) in imgInputList" :key="'chatImage'+index" >
+                <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
+                  <span class="icon-cancel"></span>
+                </div>
+                <img :src="item">
             </div>
-            <div class="flex chat-input align-items:center;">
-              <div class="flex none justify-content-start align-items-center">
-                  <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
-                  <label for="file" class="icon icon-camera"></label>
-              </div>
-              <textarea @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
-              </textarea>
-              <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
+          </div>
+          <div class="flex chat-input align-items:center;">
+            <div class="flex none justify-content-start align-items-center">
+                <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
+                <label for="file" class="icon icon-camera"></label>
             </div>
+            <textarea @focus="onFocusInput" @blur="onBlurInput" @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
+            </textarea>
+            <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
           </div>
         </div>
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
@@ -122,6 +123,7 @@ export default {
   },
   data () {
     return {
+      keyboardHeight:'',
       isSliderMenuShow:false,
       ops : {
         vuescroll: {
@@ -161,12 +163,13 @@ export default {
   },
   methods:{
     onKeyPress(e){
+      window.scrollTo(0,0)
       if (e.keyCode == 13) {
         this.addChat(e)
         setTimeout(function(){
           e.target.style.cssText = 'height:9.5vw'
+          
         },100)
-        
       }
     },
     getDate(time){
@@ -335,6 +338,19 @@ export default {
           "easeInQuad"
       )
       },300)
+    },
+    onFocusInput(){
+      console.log(this.$refs.textInputContent)
+      this.$refs.textInputContent.setAttribute("style","height:50%;")
+      this.$refs.scrollChild.setAttribute("style","padding-bottom:50%;")
+      this.goToScrollBottom()
+      setTimeout(function(){
+        window.scrollTo(0,0)
+      },100)
+    },
+    onBlurInput(){
+      this.$refs.textInputContent.setAttribute("style","height:14vw;")
+      this.$refs.scrollChild.setAttribute("style","padding-bottom:0;")
     }
   },
   async mounted(){
@@ -349,10 +365,11 @@ export default {
     this.$socket.on('message', (data)=> { 
       that.socketJoinListener(data)
     })
+    
+
   },
   async beforeDestroy(){
     console.log("######chat room beforeDestroy")
-    
     this.updateChatReadTime()
     this.$socket.removeListener('message', this.socketJoinListener)
   }
@@ -361,14 +378,15 @@ export default {
 <style scoped>
 .chat-detail{
   background:white;
+  position:fixed;
+  height:100%;
+  width:100%;
 }
 .chat-detail-content{
   width:100%;
-  max-height:calc(100% - 28vw) !important;
-  height:auto !important;
+  height:calc(100% - 28vw) !important;
   overflow-y:auto;
 }
-
 .header{
   font-size:6.5vw;
   font-weight: bold;
@@ -465,10 +483,13 @@ export default {
 .text-input-content{
   border-top:1px solid #eee;
   min-height:10vw;
-  left:0;
   width:100%;
   background:white;
   padding:0 2vw;
+  position:absolute;
+  bottom:0;
+  height:14vw;
+  left:0;
 }
 .text-input-content .icon{
   font-size:6.5vw;
@@ -503,7 +524,7 @@ export default {
   height:4vw;
   border-radius: 50%;;
   background:#aaa;
-  position:absolute;
+  position:fixed;
   right:.5vw;
   top:.5vw;
   color:#fff;
