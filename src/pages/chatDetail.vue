@@ -71,7 +71,7 @@
                 <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
                 <label for="file" class="icon icon-camera"></label>
             </div>
-            <textarea @focus="onFocusInput" @blur="onBlurInput" @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
+            <textarea type="text" @focus="onFocusInput" @blur="onBlurInput" @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
             </textarea>
             <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
           </div>
@@ -342,7 +342,7 @@ export default {
     onFocusInput(){
       console.log(this.$refs.textInputContent)
       this.$refs.textInputContent.setAttribute("style","height:50%;")
-      this.$refs.scrollChild.setAttribute("style","padding-bottom:70%")
+      this.$refs.scrollChild.setAttribute("style","padding-bottom:45vh")
       this.goToScrollBottom()
       setTimeout(function(){
         window.scrollTo(0,0)
