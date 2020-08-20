@@ -342,15 +342,15 @@ export default {
     onFocusInput(){
       console.log(this.$refs.textInputContent)
       this.$refs.textInputContent.setAttribute("style","height:50%;")
-      this.$refs.scrollChild.setAttribute("style","padding-bottom:50%;")
+      this.$refs.scrollChild.setAttribute("style","padding-bottom:70%")
       this.goToScrollBottom()
       setTimeout(function(){
         window.scrollTo(0,0)
-      },100)
+      },200)
     },
     onBlurInput(){
       this.$refs.textInputContent.setAttribute("style","height:14vw;")
-      this.$refs.scrollChild.setAttribute("style","padding-bottom:0;")
+      this.$refs.scrollChild.setAttribute("style","padding-bottom:4vw;")
     }
   },
   async mounted(){
