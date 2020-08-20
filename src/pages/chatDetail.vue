@@ -220,6 +220,7 @@ export default {
     },
     async addChat(e){
       e.preventDefault()
+      e.stopPropagation()
       if(!this.inputText.length && !this.imgInputList.length){
         return
       }
@@ -248,6 +249,7 @@ export default {
         chatData.youId = this.youData.userId
         chatData.createdAt = new Date()
         this.$socket.emit('message',{ message: chatData })
+        this.$refs.inputContent.focus()
         }else{
           console.error(writingRes)
           alert("채팅 실패")
