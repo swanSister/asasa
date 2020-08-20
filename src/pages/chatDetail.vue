@@ -249,7 +249,8 @@ export default {
         chatData.youId = this.youData.userId
         chatData.createdAt = new Date()
         this.$socket.emit('message',{ message: chatData })
-        this.$refs.inputContent.focus()
+        this.$refs.inputContent.focus().click()
+        console.log("input click@@@@@@@")
         }else{
           console.error(writingRes)
           alert("채팅 실패")
