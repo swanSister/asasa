@@ -1,6 +1,6 @@
 <template>
   <div ref="chatDetail" class="chat-detail"> 
-    <div class="header flex none align-items-center">
+      <div class="header flex none align-items-center">
         <div class="backButton" style="font-size:5vw; margin-left:2vw;">
             <span @click="$router.push('chat')" class="icon-left-open"></span>
         </div>
@@ -19,8 +19,8 @@
           <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
           <div class="slot-refresh" slot="refresh-start"></div>
           <div class="slot-refresh" slot="refresh-active"></div>
-          <div ref="scrollChild" class="child">
-            <div class="chat-content flex column-reverse justify-content-start" >
+          <div ref="scrollChild" class="child flex column justify-content-end">
+            <div class="chat-content flex auto column-reverse justify-content-start align-items-end" >
               <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
 
                 <div class="me flex column auto justify-content-end align-items-end" v-if="item.writerId == $store.state.me.userId">
@@ -51,11 +51,9 @@
               </div>
             </div>
           </div>
-
-
         </vue-scroll>
-        
-        <div ref="textInputContent" class="text-input-content flex column align-items-center">
+
+        <div ref="textInputContent" class="text-input-content flex auto column align-items-center">
           <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
             borderBottom: imgInputList.length ? '1px solid #ddd' : '0'
           }">
@@ -71,11 +69,15 @@
                 <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
                 <label for="file" class="icon icon-camera"></label>
             </div>
-            <textarea type="text" @focus="onFocusInput" @blur="onBlurInput" @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
+            <textarea type="text" @keypress="onKeyPress" class="flex align-items-center input-content" ref="inputContent"  v-model="inputText">
             </textarea>
             <div @click="addChat" class="flex align-items-center upload send-btn">전송</div>
           </div>
         </div>
+
+
+
+
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
         </div>
       <transition name="slide">
@@ -115,6 +117,11 @@
 </template>
 
 <script>
+global.jQuery = require('jquery');
+var $ = global.jQuery;
+window.$ = $;
+
+
 export default {
   components:{
   },
@@ -151,7 +158,7 @@ export default {
         }
     },
     offset:0,
-    limit:10,
+    limit:20,
     size:0,
     sort:1,
     chatRoom:{},
@@ -163,7 +170,6 @@ export default {
   },
   methods:{
     onKeyPress(e){
-      window.scrollTo(0,0)
       if (e.keyCode == 13) {
         this.addChat(e)
         setTimeout(function(){
@@ -223,9 +229,7 @@ export default {
         }
       }
     },
-    async addChat(e){
-      e.preventDefault()
-      e.stopPropagation()
+    async addChat(){
       if(!this.inputText.length && !this.imgInputList.length){
         return
       }
@@ -308,7 +312,10 @@ export default {
         offset:this.offset,
         limit:this.limit
       })
-      messages.data.data.map(item => this.chatMessages.push(item))
+      await messages.data.data.map(item => this.chatMessages.push(item))
+      // console.log($(".__panel"))
+      // console.log($(".child"))
+      // $(".__panel").attr("style","min-height:100%; height:auto;")
       console.log(this.chatMessages)
       this.checkDate()
     },
@@ -339,19 +346,19 @@ export default {
       )
       },300)
     },
-    onFocusInput(){
-      console.log(this.$refs.textInputContent)
-      this.$refs.textInputContent.setAttribute("style","height:50vh;")
-      this.$refs.scrollChild.setAttribute("style","padding-bottom:60vh")
-      this.goToScrollBottom()
-      setTimeout(function(){
-        window.scrollTo(0,0)
-      },200)
-    },
-    onBlurInput(){
-      this.$refs.textInputContent.setAttribute("style","height:14vw;")
-      this.$refs.scrollChild.setAttribute("style","padding-bottom:4vw;")
-    }
+    // onFocusInput(){
+    //   console.log(this.$refs.textInputContent)
+    //   this.$refs.textInputContent.setAttribute("style","height:50vh;")
+    //   this.$refs.scrollChild.setAttribute("style","padding-bottom:60vh")
+    //   this.goToScrollBottom()
+    //   setTimeout(function(){
+    //     window.scrollTo(0,0)
+    //   },200)
+    // },
+    // onBlurInput(){
+    //   this.$refs.textInputContent.setAttribute("style","height:14vw;")
+    //   this.$refs.scrollChild.setAttribute("style","padding-bottom:4vw;")
+    // }
   },
   async mounted(){
     this.updateChatReadTime()
@@ -384,9 +391,13 @@ export default {
 }
 .chat-detail-content{
   width:100%;
-  height:calc(100% - 28vw) !important;
+  height:calc(100vh - 28vw) !important;
   overflow-y:auto;
 }
+.chat-detail-content .child{
+  height:calc(100vh - 28vw) !important;
+}
+
 .header{
   font-size:6.5vw;
   font-weight: bold;
@@ -486,10 +497,8 @@ export default {
   width:100%;
   background:white;
   padding:0 2vw;
-  position:absolute;
-  bottom:0;
   height:14vw;
-  left:0;
+
 }
 .text-input-content .icon{
   font-size:6.5vw;
