@@ -2,7 +2,7 @@
   <div>
     <Header @onclick="onClickHeader" :headerData="headerData" :currentTopicId="currentTopicId"></Header>
     <!-- <PostHeader></PostHeader> -->
-    <div class="scroll-containner">
+    
       <vue-scroll ref="vs" class="main-content" 
           :ops = "ops"
           @refresh-start="handleRS"
@@ -23,7 +23,6 @@
           </div>
       
         </vue-scroll>
-      </div>
       <Footer v-bind:footerIndex="0"></Footer>
   </div>
 </template>

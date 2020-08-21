@@ -12,7 +12,6 @@
         </div>
       </div>
       <div class="scroll-containner">
-        <div class="scroll-containner">
           <vue-scroll ref="vs" class="chat-detail-content"
             :ops = "ops"
             @refresh-start="handleRS"
@@ -21,7 +20,7 @@
               <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
               <div class="slot-refresh" slot="refresh-start"></div>
               <div class="slot-refresh" slot="refresh-active"></div>
-              <div ref="scrollChild" class="child flex justify-content-start">
+              <div ref="scrollChild" class="child flex justify-content-start" @click="$refs.inputContent.blur()">
                 <div class="chat-content flex auto column-reverse ">
                   <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
 
@@ -30,7 +29,7 @@
                       <div class="flex auto justify-content-end align-items-end">
                         <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
                         
-                        <div class="flex column">
+                        <div class="flex column align-items-end">
                           <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
                           <div class="chat-text" v-if="item.text">{{item.text}}</div>
                         </div>
@@ -54,7 +53,6 @@
                 </div>
               </div>
             </vue-scroll>
-          </div>
         </div>
 
         <div ref="textInputContent" class="text-input-content flex auto column align-items-center">
@@ -504,7 +502,7 @@ export default {
   width:100%;
   background:white;
   padding:0 2vw;
-  height:14vw;
+  min-height:14vw;
   position:absolute;
   bottom:0;
   left:0;

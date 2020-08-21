@@ -1,7 +1,6 @@
 
 <template>
   <div class="post-header">
-  <div class="scroll-containner">
     <vue-scroll>
       <div class="x-scroller flex auto align-items-center">
         <div class="flex none align-items-center plus-btn" ><span class="icon-plus"></span></div>
@@ -10,7 +9,6 @@
         </div>
       </div>
     </vue-scroll>
-  </div>
   </div>
 </template>
 

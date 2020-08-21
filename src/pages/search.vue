@@ -7,7 +7,7 @@
       </div>
       <div class="btn flex none" @click="cancelSearch">취소</div>
     </div>
-    <div class="scroll-containner">
+    
       <vue-scroll class="search-content"
         :ops = "ops"
         @refresh-start="handleRS"
@@ -33,7 +33,6 @@
               </div>
           </div>
         </vue-scroll>
-      </div>
       <Footer v-bind:footerIndex="1"></Footer>
    
   </div>

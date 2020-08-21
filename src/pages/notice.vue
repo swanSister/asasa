@@ -3,7 +3,7 @@
     <div class="notice-header flex justify-content-center align-items-center"> 
       알림
     </div>
-    <div class="scroll-containner">
+   
       <vue-scroll class="notice-content"
         :ops = "ops"
         @refresh-start="handleRS"
@@ -22,7 +22,6 @@
             <NoticeList :noticeList="noticeList" ></NoticeList>
           </div>
         </vue-scroll>
-      </div>
       <Footer v-bind:footerIndex="3"></Footer>
    
   </div>

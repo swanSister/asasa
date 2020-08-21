@@ -1,7 +1,6 @@
 
 <template>
   <div class="post-detail-scroll">
-    <div class="scroll-containner">
      <vue-scroll ref="vs" :ops = "ops"
         @refresh-start="handleRS"
         @load-before-deactivate="handleLBD"
@@ -97,7 +96,6 @@
             </div>
         </div>
       </vue-scroll>
-    </div>
       <div class="footer flex column align-items-center">
         <div ref="commentImg" class="flex justify-content-start comment-img" :style="{
           borderBottom: imgInputList.length ? '1px solid #ddd' : '0'

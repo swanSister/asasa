@@ -9,7 +9,7 @@
         <div @click="setIsMyChat(true)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':isMyChat}">MY</div>
         <div @click="setIsMyChat(false)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':!isMyChat}">퍼블릭</div>
     </div>
-    <div class="scroll-containner">
+    
       <vue-scroll class="chat-content"
         :ops = "ops"
         @refresh-start="handleRS"
@@ -35,7 +35,6 @@
               </div>
           </div>
         </vue-scroll>
-      </div>
       <Footer v-bind:footerIndex="2"></Footer>
    
   </div>

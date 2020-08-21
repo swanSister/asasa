@@ -8,7 +8,7 @@
           <div class="section">
             <div class="flex none justify-content-center align-items-center main-text">
               <div class="left">닉네임</div>
-              <input class="right" v-model="userId" @keydown="onKeyPress"/>
+              <input class="right" v-model="userId" @keydown="onKeyPress" lang="ko-KR"/>
             </div>
             <div class="sub-text">{{idSubTxt}}</div>
           </div>

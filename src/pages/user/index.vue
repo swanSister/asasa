@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="scroll-containner">
+    
       <vue-scroll class="user-content">
         <div class="header flex align-items-center">
           <div class="backButton" style="font-size:5vw; margin-left:2vw;">
@@ -61,7 +61,6 @@
         </div>
         <Footer v-bind:footerIndex="4"></Footer>
       </vue-scroll>
-    </div>
   </div>
 </template>
 <script>

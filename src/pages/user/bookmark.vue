@@ -9,7 +9,7 @@
       </div>
     </div>
     <!-- <PostHeader></PostHeader> -->
-    <div class="scroll-containner">
+    
       <vue-scroll class="bookmark-content" 
           :ops = "ops"
           @refresh-start="handleRS"
@@ -30,7 +30,6 @@
           </div>
       
         </vue-scroll>
-    </div>
       <Footer v-bind:footerIndex="0"></Footer>
   </div>
 </template>
