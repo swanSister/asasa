@@ -89,7 +89,17 @@ export default {
       e.target.style.cssText = 'height:9.5vw'
       e.target.blur()
       
-    }
+    },
+    windowResize(){
+        console.log("####windowResize##")
+        let vh = window.innerHeight * 0.01
+        document.documentElement.style.setProperty('--vh', `${vh}px`)
+    },
+    viewportResize(){
+        console.log("visualViewport")
+        let vh = window.visualViewport.innerHeight * 0.01
+        document.documentElement.style.setProperty('--vh', `${vh}px`)
+    },
   },
   mounted:function(){
     this.$eventBus.$on("showLoading", this.onShowLoading)
@@ -106,11 +116,14 @@ export default {
       let vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`)
 
-      window.addEventListener('resize', () => {
-        console.log("resize")
-        let vh = window.innerHeight * 0.01
-        document.documentElement.style.setProperty('--vh', `${vh}px`)
-      })
+
+      //window.addEventListener('resize', this.windowResize)
+      if(window.visualViewport){
+        window.visualViewport.addEventListener('resize', this.viewportResize);
+      }else{
+        window.addEventListener('resize', this.windowResize)
+      }
+      
     })
   }
 }
