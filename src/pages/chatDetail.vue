@@ -391,11 +391,11 @@ export default {
 }
 .chat-detail-content{
   width:100%;
-  height:calc(100vh - 28vw) !important;
   overflow-y:auto;
+  height:calc(calc(var(--vh, 1vh) * 100) - 28vw) !important;
 }
 .chat-detail-content .child{
-  height:calc(100vh - 28vw) !important;
+  height:calc(calc(var(--vh, 1vh) * 100) - 14vw) !important;
 }
 
 .header{
@@ -498,7 +498,9 @@ export default {
   background:white;
   padding:0 2vw;
   height:14vw;
-
+  position:absolute;
+  bottom:0;
+  left:0;
 }
 .text-input-content .icon{
   font-size:6.5vw;
