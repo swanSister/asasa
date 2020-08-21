@@ -159,10 +159,9 @@ export default {
 }
 </script>
 <style scoped>
-.scroll-containner{
-  height:calc(100% - 28vw) !important;
-}
+
 .main-content{
   width:100%;
+  height:calc(100% - 28vw) !important;
 }
 </style>
