@@ -5,7 +5,7 @@
             <span @click="$router.push('chat')" class="icon-left-open"></span>
         </div>
         <div class="flex auto justify-content-center">
-          {{youData.userId}},{{keyboardHeight}}
+          {{youData.userId}}
         </div>
         <div @click="isSliderMenuShow= !isSliderMenuShow" class="backButton" style="font-size:5vw; margin-right:2vw;">
             <span class="icon-menu"></span>
@@ -132,7 +132,6 @@ export default {
   },
   data () {
     return {
-      keyboardHeight:'',
       isSliderMenuShow:false,
       ops : {
         vuescroll: {
