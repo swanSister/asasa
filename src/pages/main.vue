@@ -3,7 +3,7 @@
     <Header @onclick="onClickHeader" :headerData="headerData" :currentTopicId="currentTopicId"></Header>
     <!-- <PostHeader></PostHeader> -->
     <div class="scroll-containner">
-      <vue-scroll class="main-content" 
+      <vue-scroll ref="vs" class="main-content" 
           :ops = "ops"
           @refresh-start="handleRS"
           @load-before-deactivate="handleLBD"
@@ -129,6 +129,9 @@ export default {
       })
       console.log(messages)
       messages.data.data.map(item => this.postList.push(item))
+      setTimeout(() => {
+        this.$refs["vs"].refresh();
+      }, 100)
     },
     async updateMain(){
       this.$forceUpdate();
