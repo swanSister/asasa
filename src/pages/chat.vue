@@ -9,32 +9,33 @@
         <div @click="setIsMyChat(true)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':isMyChat}">MY</div>
         <div @click="setIsMyChat(false)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':!isMyChat}">퍼블릭</div>
     </div>
-    <vue-scroll class="chat-content"
-      :ops = "ops"
-      @refresh-start="handleRS"
-      @load-before-deactivate="handleLBD"
-      @refresh-before-deactivate="handleRBD"
-      @load-start="handleLoadStart">
-        <div class="slot-load" slot="load-beforeDeactive"></div>
-        <div class="slot-load" slot="load-deactive"></div>
-        <div class="slot-load" slot="load-start"></div>
-        <div class="slot-load" slot="load-active"></div>
-        <div class="slot-refresh" slot="refresh-deactive"></div>
-        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-        <div class="slot-refresh" slot="refresh-start"></div>
-        <div class="slot-refresh" slot="refresh-active"></div>
-        <div class="child">
-          <div v-if="isMyChat">
-             <ChatList :chatList="chatList"></ChatList>
+    <div class="scroll-containner">
+      <vue-scroll class="chat-content"
+        :ops = "ops"
+        @refresh-start="handleRS"
+        @load-before-deactivate="handleLBD"
+        @refresh-before-deactivate="handleRBD"
+        @load-start="handleLoadStart">
+          <div class="slot-load" slot="load-beforeDeactive"></div>
+          <div class="slot-load" slot="load-deactive"></div>
+          <div class="slot-load" slot="load-start"></div>
+          <div class="slot-load" slot="load-active"></div>
+          <div class="slot-refresh" slot="refresh-deactive"></div>
+          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+          <div class="slot-refresh" slot="refresh-start"></div>
+          <div class="slot-refresh" slot="refresh-active"></div>
+          <div class="child">
+            <div v-if="isMyChat">
+              <ChatList :chatList="chatList"></ChatList>
+            </div>
+            <div v-else>
+              <div style="color:#555; font-size:4.5vw; margin-top:10vw;">
+                준비중입니다.
+              </div>
+              </div>
           </div>
-          <div v-else>
-            <div style="color:#555; font-size:4.5vw; margin-top:10vw;">
-              준비중입니다.
-            </div>
-            </div>
-        </div>
-      </vue-scroll>
-
+        </vue-scroll>
+      </div>
       <Footer v-bind:footerIndex="2"></Footer>
    
   </div>

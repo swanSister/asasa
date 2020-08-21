@@ -11,47 +11,51 @@
             <span class="icon-menu"></span>
         </div>
       </div>
-      <vue-scroll ref="vs" class="chat-detail-content"
-        :ops = "ops"
-        @refresh-start="handleRS"
-        @refresh-before-deactivate="handleRBD">
-          <div class="slot-refresh" slot="refresh-deactive"></div>
-          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-          <div class="slot-refresh" slot="refresh-start"></div>
-          <div class="slot-refresh" slot="refresh-active"></div>
-          <div ref="scrollChild" class="child flex column justify-content-end">
-            <div class="chat-content flex auto column-reverse justify-content-start align-items-end" >
-              <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
+      <div class="scroll-containner">
+        <div class="scroll-containner">
+          <vue-scroll ref="vs" class="chat-detail-content"
+            :ops = "ops"
+            @refresh-start="handleRS"
+            @refresh-before-deactivate="handleRBD">
+              <div class="slot-refresh" slot="refresh-deactive"></div>
+              <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+              <div class="slot-refresh" slot="refresh-start"></div>
+              <div class="slot-refresh" slot="refresh-active"></div>
+              <div ref="scrollChild" class="child flex justify-content-start">
+                <div class="chat-content flex auto column-reverse ">
+                  <div v-for="(item, index) in chatMessages" :key="'chatMessages'+index">
 
-                <div class="me flex column auto justify-content-end align-items-end" v-if="item.writerId == $store.state.me.userId">
-          
-                  <div class="flex auto justify-content-end align-items-end">
-                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                    
-                    <div class="flex column">
-                      <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
-                      <div class="chat-text" v-if="item.text">{{item.text}}</div>
+                    <div class="me flex column auto justify-content-end align-items-end" v-if="item.writerId == $store.state.me.userId">
+              
+                      <div class="flex auto justify-content-end align-items-end">
+                        <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                        
+                        <div class="flex column">
+                          <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
+                          <div class="chat-text" v-if="item.text">{{item.text}}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="you flex column auto justify-content-start align-items-start" v-if="item.writerId != $store.state.me.userId">
+                      <div class="flex auto justify-content-end align-items-end">
+                        <div class="flex column">
+                          <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
+                          <div class="chat-text" v-if="item.text">{{item.text}}</div>
+                        </div>
+                        <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
+                      </div>
+                    </div>
+
+                    <div v-if="item.isDateChanged" class="date-line">
+                      <span>{{getDate(item.createdAt)}}</span>
                     </div>
                   </div>
-                </div>
-
-                <div class="you flex column auto justify-content-start align-items-start" v-if="item.writerId != $store.state.me.userId">
-                  <div class="flex auto justify-content-end align-items-end">
-                    <div class="flex column">
-                      <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
-                      <div class="chat-text" v-if="item.text">{{item.text}}</div>
-                    </div>
-                    <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
-                  </div>
-                </div>
-
-                <div v-if="item.isDateChanged" class="date-line">
-                  <span>{{getDate(item.createdAt)}}</span>
                 </div>
               </div>
-            </div>
+            </vue-scroll>
           </div>
-        </vue-scroll>
+        </div>
 
         <div ref="textInputContent" class="text-input-content flex auto column align-items-center">
           <div ref="chatImg" class="flex justify-content-start chat-img" :style="{
@@ -158,7 +162,7 @@ export default {
         }
     },
     offset:0,
-    limit:20,
+    limit:10,
     size:0,
     sort:1,
     chatRoom:{},
@@ -332,6 +336,7 @@ export default {
       this.chatMessages.unshift(data)
       this.goToScrollBottom()
       this.checkDate()
+      
     },
     goToScrollBottom(){
       let that = this
@@ -366,6 +371,7 @@ export default {
     this.chatMessages = []
     this.getChatRoom()
     this.goToScrollBottom()
+
     this.$socket.emit('join',this.$route.query.chatRoomId)
     
     let that = this
@@ -389,13 +395,14 @@ export default {
   height:100%;
   width:100%;
 }
-.chat-detail-content{
-  width:100%;
-  overflow-y:auto;
+.scroll-containner{
   height:calc(calc(var(--vh, 1vh) * 100) - 28vw) !important;
 }
+.chat-detail-content{
+
+}
 .chat-detail-content .child{
-  height:calc(calc(var(--vh, 1vh) * 100) - 14vw) !important;
+  min-height:calc(calc(var(--vh, 1vh) * 100) - 28vw);
 }
 
 .header{

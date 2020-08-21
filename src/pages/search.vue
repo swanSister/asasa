@@ -7,31 +7,33 @@
       </div>
       <div class="btn flex none" @click="cancelSearch">취소</div>
     </div>
-    <vue-scroll class="search-content"
-      :ops = "ops"
-      @refresh-start="handleRS"
-      @load-before-deactivate="handleLBD"
-      @refresh-before-deactivate="handleRBD"
-      @load-start="handleLoadStart">
-        <div class="slot-load" slot="load-beforeDeactive"></div>
-        <div class="slot-load" slot="load-deactive"></div>
-        <div class="slot-load" slot="load-start"></div>
-        <div class="slot-load" slot="load-active"></div>
-        <div class="slot-refresh" slot="refresh-deactive"></div>
-        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-        <div class="slot-refresh" slot="refresh-start"></div>
-        <div class="slot-refresh" slot="refresh-active"></div>
-        <div class="child">
-            <PostList v-if="postList.length" @sort="onSort" :postList="postList"></PostList>
-            <div class="empty-text" v-else>
-              <div v-if="isSearchStart">
-                검색결과가 없습니다.
+    <div class="scroll-containner">
+      <vue-scroll class="search-content"
+        :ops = "ops"
+        @refresh-start="handleRS"
+        @load-before-deactivate="handleLBD"
+        @refresh-before-deactivate="handleRBD"
+        @load-start="handleLoadStart">
+          <div class="slot-load" slot="load-beforeDeactive"></div>
+          <div class="slot-load" slot="load-deactive"></div>
+          <div class="slot-load" slot="load-start"></div>
+          <div class="slot-load" slot="load-active"></div>
+          <div class="slot-refresh" slot="refresh-deactive"></div>
+          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+          <div class="slot-refresh" slot="refresh-start"></div>
+          <div class="slot-refresh" slot="refresh-active"></div>
+          <div class="child">
+              <PostList v-if="postList.length" @sort="onSort" :postList="postList"></PostList>
+              <div class="empty-text" v-else>
+                <div v-if="isSearchStart">
+                  검색결과가 없습니다.
+                </div>
+                <div v-else>
+                </div>
               </div>
-              <div v-else>
-              </div>
-            </div>
-        </div>
-      </vue-scroll>
+          </div>
+        </vue-scroll>
+      </div>
       <Footer v-bind:footerIndex="1"></Footer>
    
   </div>

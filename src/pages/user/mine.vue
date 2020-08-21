@@ -9,48 +9,50 @@
         내가 작성한 글
       </div>
     </div>
-    <vue-scroll class="user-post-list"
-        ref="vs" :ops = "ops"
-        @refresh-start="handleRS"
-        @load-before-deactivate="handleLBD"
-        @refresh-before-deactivate="handleRBD"
-        @load-start="handleLoadStart">
+    <div class="scroll-containner">
+      <vue-scroll class="user-post-list"
+          ref="vs" :ops = "ops"
+          @refresh-start="handleRS"
+          @load-before-deactivate="handleLBD"
+          @refresh-before-deactivate="handleRBD"
+          @load-start="handleLoadStart">
 
-        <div class="slot-load" slot="load-beforeDeactive"></div>
-        <div class="slot-load" slot="load-deactive"></div>
-        <div class="slot-load" slot="load-start"></div>
-        <div class="slot-load" slot="load-active"></div>
-        <div class="slot-refresh" slot="refresh-deactive"></div>
-        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-        <div class="slot-refresh" slot="refresh-start"></div>
-        <div class="slot-refresh" slot="refresh-active"></div>
+          <div class="slot-load" slot="load-beforeDeactive"></div>
+          <div class="slot-load" slot="load-deactive"></div>
+          <div class="slot-load" slot="load-start"></div>
+          <div class="slot-load" slot="load-active"></div>
+          <div class="slot-refresh" slot="refresh-deactive"></div>
+          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+          <div class="slot-refresh" slot="refresh-start"></div>
+          <div class="slot-refresh" slot="refresh-active"></div>
 
-        <div class="child">
-          <div class="post-list">
-           
-            <div class="li flex align-items-start" v-for="(item, index) in postList" :key="index+'postlist'"
-            @click="$router.push({name: 'postDetail', query: { postId: item.postId }})"> 
-              <div v-if="item.type==1" class="icon flex justify-content-center align-items-center">
-                <span class="icon-doc-text"></span>
-              </div>
-              <div v-if="item.type==2" class="icon gray flex justify-content-center align-items-center">
-                <span class="icon-chat-empty"></span>
-              </div>
-              
-              <div class="content flex column align-items-start jusitfy-content-start">
-                <div class="title">
-                  {{item.title}}
+          <div class="child">
+            <div class="post-list">
+            
+              <div class="li flex align-items-start" v-for="(item, index) in postList" :key="index+'postlist'"
+              @click="$router.push({name: 'postDetail', query: { postId: item.postId }})"> 
+                <div v-if="item.type==1" class="icon flex justify-content-center align-items-center">
+                  <span class="icon-doc-text"></span>
                 </div>
-                <div class="sub">{{item.type == 1  ? 
-                  `${item.topicName} 채널에 게시글을 등록하였습니다.` : 
-                  `${item.topicName} 채널의 게시글에 댓글을 등록하였습니다.`}}</div>
-                <div class="time">{{$getTime(item.createdAt)}}</div>
+                <div v-if="item.type==2" class="icon gray flex justify-content-center align-items-center">
+                  <span class="icon-chat-empty"></span>
+                </div>
+                
+                <div class="content flex column align-items-start jusitfy-content-start">
+                  <div class="title">
+                    {{item.title}}
+                  </div>
+                  <div class="sub">{{item.type == 1  ? 
+                    `${item.topicName} 채널에 게시글을 등록하였습니다.` : 
+                    `${item.topicName} 채널의 게시글에 댓글을 등록하였습니다.`}}</div>
+                  <div class="time">{{$getTime(item.createdAt)}}</div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-     </vue-scroll>
-      <Footer v-bind:footerIndex="4"></Footer>
+      </vue-scroll>
+    </div>
+    <Footer v-bind:footerIndex="4"></Footer>
   </div>
 </template>
 

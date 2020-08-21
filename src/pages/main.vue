@@ -2,26 +2,28 @@
   <div>
     <Header @onclick="onClickHeader" :headerData="headerData" :currentTopicId="currentTopicId"></Header>
     <!-- <PostHeader></PostHeader> -->
-    <vue-scroll class="main-content" 
-        :ops = "ops"
-        @refresh-start="handleRS"
-        @load-before-deactivate="handleLBD"
-        @refresh-before-deactivate="handleRBD"
-        @load-start="handleLoadStart"
-      >
-      <div class="slot-load" slot="load-beforeDeactive"></div>
-      <div class="slot-load" slot="load-deactive"></div>
-      <div class="slot-load" slot="load-start"></div>
-      <div class="slot-load" slot="load-active"></div>
-      <div class="slot-refresh" slot="refresh-deactive"></div>
-      <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-      <div class="slot-refresh" slot="refresh-start"></div>
-      <div class="slot-refresh" slot="refresh-active"></div>
-        <div class="child">
-           <PostList @sort="onSort" :postList="postList"></PostList>
-        </div>
-     
-      </vue-scroll>
+    <div class="scroll-containner">
+      <vue-scroll class="main-content" 
+          :ops = "ops"
+          @refresh-start="handleRS"
+          @load-before-deactivate="handleLBD"
+          @refresh-before-deactivate="handleRBD"
+          @load-start="handleLoadStart"
+        >
+        <div class="slot-load" slot="load-beforeDeactive"></div>
+        <div class="slot-load" slot="load-deactive"></div>
+        <div class="slot-load" slot="load-start"></div>
+        <div class="slot-load" slot="load-active"></div>
+        <div class="slot-refresh" slot="refresh-deactive"></div>
+        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+        <div class="slot-refresh" slot="refresh-start"></div>
+        <div class="slot-refresh" slot="refresh-active"></div>
+          <div class="child">
+            <PostList @sort="onSort" :postList="postList"></PostList>
+          </div>
+      
+        </vue-scroll>
+      </div>
       <Footer v-bind:footerIndex="0"></Footer>
   </div>
 </template>
@@ -155,9 +157,10 @@ export default {
 }
 </script>
 <style scoped>
+.scroll-containner{
+  height:calc(100% - 28vw) !important;
+}
 .main-content{
   width:100%;
-  height:calc(100% - 28vw) !important;
-  overflow-y:auto;
 }
 </style>

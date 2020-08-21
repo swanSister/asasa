@@ -1,65 +1,67 @@
 <template>
   <div>
-    <vue-scroll class="user-content">
-      <div class="header flex align-items-center">
-        <div class="backButton" style="font-size:5vw; margin-left:2vw;">
-            <span @click="$router.go(-1)" class="icon-left-open"></span>
+    <div class="scroll-containner">
+      <vue-scroll class="user-content">
+        <div class="header flex align-items-center">
+          <div class="backButton" style="font-size:5vw; margin-left:2vw;">
+              <span @click="$router.go(-1)" class="icon-left-open"></span>
+          </div>
+          <div class="flex auto justify-content-center">
+            마이페이지
+          </div>
+          <div class="backButton" style="font-size:5vw; margin-right:2vw;">
+              <span @click="onLogout" class="icon-logout"></span>
+          </div>
         </div>
-        <div class="flex auto justify-content-center">
-          마이페이지
-        </div>
-        <div class="backButton" style="font-size:5vw; margin-right:2vw;">
-            <span @click="onLogout" class="icon-logout"></span>
-        </div>
-      </div>
-      <div class="body">
-        <div class="user-info">
-          <div class="id">{{$store.state.me.userId}}</div>
-          <div class="flex align-items-end">
-            <div class="address">
-              {{$store.state.me.addressData.sido}} {{$store.state.me.addressData.sigungu}} {{$store.state.me.addressData.bname}}
-              <div class="building-info flex align-items-center">
-                <div class="name" v-if="$store.state.me.addressData.buildingName"> {{$store.state.me.addressData.buildingName}}</div>
-                <div class="type"> {{$store.state.me.houseType.name}}</div>
-              </div>
-            </div>
-            <div v-if="!$store.state.me.isAuthSuccess && !$store.state.me.isAuthWait">
-              <div class="flex deny justify-content-center" @click="denyPopup(`거절사유: ${$store.state.me.authReason}`)">인증 거절</div>
-            </div>
-            <div class="flex column btn-content auto" v-else>
-              <div class="flex btn first">
-                <div v-if="$store.state.me.isAuthSuccess" class="select">
-                  <span class="icon-ok" style="margin-right:2vw;"></span>
-                  인증
-                </div>
-                <div v-else>
-                   <span class="icon-cancel" style="margin-right:2vw;"></span>
-                   미인증
+        <div class="body">
+          <div class="user-info">
+            <div class="id">{{$store.state.me.userId}}</div>
+            <div class="flex align-items-end">
+              <div class="address">
+                {{$store.state.me.addressData.sido}} {{$store.state.me.addressData.sigungu}} {{$store.state.me.addressData.bname}}
+                <div class="building-info flex align-items-center">
+                  <div class="name" v-if="$store.state.me.addressData.buildingName"> {{$store.state.me.addressData.buildingName}}</div>
+                  <div class="type"> {{$store.state.me.houseType.name}}</div>
                 </div>
               </div>
-              <div class="flex btn" v-if="$store.state.me.isAuthSuccess">
-                <div :class="{'select':$store.state.me.isPublic}" @click="setPublic(true)">공개</div>
-                <div :class="{'select':!$store.state.me.isPublic}" @click="setPublic(false)"> 비공개</div>
+              <div v-if="!$store.state.me.isAuthSuccess && !$store.state.me.isAuthWait">
+                <div class="flex deny justify-content-center" @click="denyPopup(`거절사유: ${$store.state.me.authReason}`)">인증 거절</div>
+              </div>
+              <div class="flex column btn-content auto" v-else>
+                <div class="flex btn first">
+                  <div v-if="$store.state.me.isAuthSuccess" class="select">
+                    <span class="icon-ok" style="margin-right:2vw;"></span>
+                    인증
+                  </div>
+                  <div v-else>
+                    <span class="icon-cancel" style="margin-right:2vw;"></span>
+                    미인증
+                  </div>
+                </div>
+                <div class="flex btn" v-if="$store.state.me.isAuthSuccess">
+                  <div :class="{'select':$store.state.me.isPublic}" @click="setPublic(true)">공개</div>
+                  <div :class="{'select':!$store.state.me.isPublic}" @click="setPublic(false)"> 비공개</div>
+                </div>
               </div>
             </div>
+            <div @click="$router.push('reAuth')" class="re-auth" v-if="!$store.state.me.isAuthWait">
+              재인증
+            </div>
           </div>
-          <div @click="$router.push('reAuth')" class="re-auth" v-if="!$store.state.me.isAuthWait">
-            재인증
+          <div class="user-post-list">
+            <div class="flex li" @click="$router.push({name: 'user/mine'})">
+              <div class="flex auto list-title">내가 작성한 글</div>
+              <span class="icon icon-right-open"> </span>
+            </div>
+            <div class="flex li" >
+              <div class="flex auto list-title" @click="$router.push({name: 'user/bookmark',params:{reload:true}})">북마크</div>
+              <span class="icon icon-right-open"> </span>
+            </div>
           </div>
         </div>
-        <div class="user-post-list">
-          <div class="flex li" @click="$router.push({name: 'user/mine'})">
-            <div class="flex auto list-title">내가 작성한 글</div>
-            <span class="icon icon-right-open"> </span>
-          </div>
-          <div class="flex li" >
-            <div class="flex auto list-title" @click="$router.push({name: 'user/bookmark',params:{reload:true}})">북마크</div>
-            <span class="icon icon-right-open"> </span>
-          </div>
-        </div>
-      </div>
-      <Footer v-bind:footerIndex="4"></Footer>
-    </vue-scroll>
+        <Footer v-bind:footerIndex="4"></Footer>
+      </vue-scroll>
+    </div>
   </div>
 </template>
 <script>

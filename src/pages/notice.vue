@@ -3,24 +3,26 @@
     <div class="notice-header flex justify-content-center align-items-center"> 
       알림
     </div>
-    <vue-scroll class="notice-content"
-      :ops = "ops"
-      @refresh-start="handleRS"
-      @load-before-deactivate="handleLBD"
-      @refresh-before-deactivate="handleRBD"
-      @load-start="handleLoadStart">
-        <div class="slot-load" slot="load-beforeDeactive"></div>
-        <div class="slot-load" slot="load-deactive"></div>
-        <div class="slot-load" slot="load-start"></div>
-        <div class="slot-load" slot="load-active"></div>
-        <div class="slot-refresh" slot="refresh-deactive"></div>
-        <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
-        <div class="slot-refresh" slot="refresh-start"></div>
-        <div class="slot-refresh" slot="refresh-active"></div>
-        <div class="child">
-           <NoticeList :noticeList="noticeList" ></NoticeList>
-        </div>
-      </vue-scroll>
+    <div class="scroll-containner">
+      <vue-scroll class="notice-content"
+        :ops = "ops"
+        @refresh-start="handleRS"
+        @load-before-deactivate="handleLBD"
+        @refresh-before-deactivate="handleRBD"
+        @load-start="handleLoadStart">
+          <div class="slot-load" slot="load-beforeDeactive"></div>
+          <div class="slot-load" slot="load-deactive"></div>
+          <div class="slot-load" slot="load-start"></div>
+          <div class="slot-load" slot="load-active"></div>
+          <div class="slot-refresh" slot="refresh-deactive"></div>
+          <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
+          <div class="slot-refresh" slot="refresh-start"></div>
+          <div class="slot-refresh" slot="refresh-active"></div>
+          <div class="child">
+            <NoticeList :noticeList="noticeList" ></NoticeList>
+          </div>
+        </vue-scroll>
+      </div>
       <Footer v-bind:footerIndex="3"></Footer>
    
   </div>
