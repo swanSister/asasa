@@ -60,7 +60,7 @@ export default {
   .sorting{
     width:100%;
     background:white;
-    padding:1.5vw 4vw;
+    padding:2vw 4vw;
     color:#aaa;
   }
   .sorting .icon{

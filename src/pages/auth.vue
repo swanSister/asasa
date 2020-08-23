@@ -8,7 +8,7 @@
           <div class="section">
             <div class="flex none justify-content-center align-items-center main-text">
               <div class="left">닉네임</div>
-              <input class="right" v-model="userId" @keydown="onKeyPress" lang="ko-KR"/>
+              <input class="right flex auto" v-model="userId" @keydown="onKeyPress" lang="ko-KR"/>
             </div>
             <div class="sub-text">{{idSubTxt}}</div>
           </div>
@@ -255,15 +255,15 @@ export default {
   .auth .header{
     font-size:6.5vw;
     font-weight:bold;
-    margin:4vw 0;
+    margin:4vw 0 6vw 0;
   }
   .auth .body{
-    width:80%;
-    margin-left:10%;
+    width:70%;
+    margin-left:15%;
   }
   .auth-title{
     font-size:4.5vw;
-    margin:4vw 0 2vw 0;
+    margin:10vw 0 2vw 0;
     text-align: left;
   }
   .auth .user-info .section{
@@ -273,26 +273,27 @@ export default {
     padding:1vw 2vw;
   }
   .auth .user-info .section .sub-text{
-    width:70%;
-    margin-left:22%;
+    width:48vw;
+    margin-left:20.5vw;
     text-align: left;
     font-size: 3vw;
     color:#aaa;
   }
   
   .auth .user-info .left{
-    min-width:20%;
-    max-width:20%;
+    min-width:15vw;
+    max-width:15vw;
     font-weight: bold;
     text-align: left;
+    margin-right:3.5vw;
   }
   .auth .user-info .right{
     text-align: left;
     background:rgb(240, 240, 240);
-    min-width:80%;
-    max-width:80%;
     padding:2vw;
     font-size:4.5vw;
+    max-width:48vw;
+    min-width:48vw;
   }
   .auth .building{
     color:rgb(21, 134, 204) ;
@@ -303,7 +304,7 @@ export default {
     height:40vw;
     margin:0 auto;
     background:rgb(240, 240, 240);
-    margin-bottom:2vw;
+    margin-bottom:4vw;
     position: relative;
   }
   .auth .image-box img{
@@ -325,12 +326,12 @@ export default {
     color:black;
   }
    .auth-content .sub-text.red {
-     color:rgb(21, 134, 204) ; 
+     color:red;  
      margin-top:2vw;
    }
   #authBtn{
     margin:0 auto;
-    margin-top:4vw;
+    margin:12vw 0;
     background-color:rgb(21, 134, 204) ;
     color:white;
     font-size: 4vw;

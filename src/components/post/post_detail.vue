@@ -38,7 +38,7 @@
               <div class="title">{{postData.title}}</div>
               <div class="info">
                 <div class="name" @click="WriterPopupOpen(postData.writer)">
-                  {{postData.writerId}} <span>· {{$getBuildingName(postData.writer)}}</span>
+                  {{postData.writerId}} <span>- {{$getBuildingName(postData.writer)}}</span>
                   </div>
                 <div class="time">{{$getTime(postData.createdAt)}}</div>
               </div>
@@ -72,7 +72,7 @@
           <div class="comment-list" v-if="commentList.length">
               <div class="comment" v-for="(item, index) in commentList" :key="'commentList'+index" >
                 <div @click="WriterPopupOpen(item.writer)" class="name flex align-items-center">
-                  {{item.writer.userId}} <span>· {{$getBuildingName(item.writer)}}</span>
+                  {{item.writer.userId}} <span>- {{$getBuildingName(item.writer)}}</span>
                 </div>
                 <div class="comment-img-list flex">
                   <div v-for="(imgItem,index) in item.imgList" :key="'comment-img-list'+index">
@@ -488,7 +488,7 @@ export default {
   .body .title{
    font-size:6.5vw;
    font-weight: bold;
-   margin:4vw 0;
+   margin:6vw 0 4vw 0;
   }
   .body .info{
     font-size:3.5vw;
@@ -505,6 +505,9 @@ export default {
     padding:4vw 0 2vw 0;
     border-top:1px solid #ddd;
 
+  }
+  .body .content pre{
+    white-space: pre-wrap;
   }
   .body .content img{
     max-width: 100%;
@@ -598,9 +601,10 @@ export default {
     color:rgb(21, 134, 204) ;
   }
   .img-desc{
-    border-bottom:1px solid #ddd;
-    margin-bottom:4vw;
-    color:#aaa;
+    border-bottom:1px solid rgb(221,221,221);
+    margin-bottom:8vw;
+    line-height: 8vw;
+    color:#000;
   }
   .comment-list{
     width:100vw;
@@ -626,7 +630,7 @@ export default {
     color:#aaa;
   }
   .comment .name{
-   
+   margin-bottom:2vw;
   }
   .comment .name span{
     margin-left:2vw;
@@ -636,8 +640,8 @@ export default {
     flex-wrap: wrap;
   }
   .comment-img-list img{
-    width:18vw;
-    height:18vw;
+    width:22vw;
+    height:22vw;
     object-fit: cover;
     margin-right: 1vw;
   }

@@ -107,11 +107,13 @@ export default {
       done();
     },
     async getMessages(){
+        this.$eventBus.$emit("showLoading")
         let messages = await this.$api.getChatRoomList({
           userId:this.$store.state.me.userId
         })
         this.chatList = messages.data.data
         console.log(messages)
+        this.$eventBus.$emit("hideLoading")
     },
     socketJoinListener(data){
       let found = this.chatList.find(item=>item.chatRoomId==data.chatRoomId)

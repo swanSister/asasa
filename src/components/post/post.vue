@@ -4,11 +4,15 @@
       <div class="flex auto left">
         <!-- <div class="tag flex none align-items-center"><span>{{postData.tag}}</span></div> -->
         <div class="topic-name" v-if="postData.isSearchResult">[{{postData.topicName}}]</div>
-        <div class="title">{{postData.title}}</div>
-        <div class="content">
-          {{postData.text.length > 90 ?postData.text.slice(0,90)+"..." :postData.text}}
+        <div class="title">
+          <div>{{postData.title}}</div>
         </div>
-        <div class="name">{{postData.writerId}} <span>· {{$getBuildingName(postData.writer)}}</span></div>
+        <div class="content">
+          
+          <div>{{postData.text}}
+          </div>
+        </div>
+        <div class="name">{{postData.writerId}} <span>- {{$getBuildingName(postData.writer)}}</span></div>
       </div>
       <div class="right" v-if="postData.thumbnailUrl">
         <img class="thumbnail" :src="postData.thumbnailUrl">
@@ -101,7 +105,6 @@ export default {
     goDetail: function(){
       this.$router.push({name: 'postDetail', query: { postId: this.postData.postId }})
     },
-
   },
   mounted () {
     //  console.log("###postData", this.postData)
@@ -124,7 +127,7 @@ export default {
     text-align:left;
   }
   .post-body{
-    padding:2vh 4vw;
+    padding:2vw 5vw;
     align-items:center;
   }
   .post-body > .left{
@@ -132,6 +135,7 @@ export default {
     justify-content:flex-start;
     flex-direction:column;
     margin-right:4vw;
+    width:100%;
   }
   .post-body > .right{
     justify-content:flex-end;
@@ -139,6 +143,9 @@ export default {
   .post-body > .right img{
     width:20vw;
     height:20vw;
+  }
+  .post-body > .right .icon-bookmark{
+    font-size:4vw;
   }
   .post-body .tag span{
     background:#aaa;
@@ -149,9 +156,17 @@ export default {
     padding:.5vh 4vw;
   }
   .post-body .title{
+    display:block;
+    white-space: nowrap;
     margin-bottom:2vw;
+    margin-top:4vw;
     font-size:5vw;
     color:#000;
+  }
+  .post-body .title div{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
   }
   .post-body .topic-name{
     color:rgb(21, 134, 204) ;
@@ -163,16 +178,24 @@ export default {
   }
   .post-body .content{
     margin-bottom:2vw;
+    white-space: nowrap;
+    display:block;
+  }
+  .post-body .content div{
+    text-overflow: ellipsis;
+    display:block;
+    overflow:hidden;
   }
   .post-body .name{
     font-size:4.5vw;
+    margin-top:4vw;
   }
   .post-body .name span{
     margin-left:2vw;
     color:rgb(21, 134, 204) ;
   }
   .post-footer{
-    padding:1.5vw 4vw;
+    padding:2vw 4vw;
     border-top:1px solid #ddd;
     border-bottom:1px solid #ddd;
   }
@@ -181,10 +204,10 @@ export default {
     justify-content:flex-start;
   }
   .post-footer > .left .icon{
-    margin-right:1vw;
+    margin-right:2vw;
   }
   .post-footer > .left > div{
-    margin-right:6vw;
+    margin-right:8vw;
     font-size:3.5vw;
   }
   .post-footer > .right{

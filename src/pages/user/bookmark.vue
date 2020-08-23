@@ -30,7 +30,7 @@
           </div>
       
         </vue-scroll>
-      <Footer v-bind:footerIndex="0"></Footer>
+      <Footer v-bind:footerIndex="4"></Footer>
   </div>
 </template>
 
