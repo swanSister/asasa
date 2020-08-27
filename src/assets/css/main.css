@@ -20,6 +20,9 @@ body {
   font-size:4.5vw;
   overflow:hidden;
 }
+div{
+  word-break: keep-all;
+}
 .flex{
   display: flex;
   flex:initial;
