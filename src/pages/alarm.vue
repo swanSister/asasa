@@ -1,12 +1,7 @@
 <template>
   <div class="notice">
     <div class="notice-header flex justify-content-center align-items-center"> 
-      <div class="backButton" style="font-size:5vw; margin-left:2vw;">
-          <span @click="$router.go(-1)" class="icon-left-open"></span>
-      </div>
-      <div class="flex auto justify-content-center" style="margin-right:5vw">
-        공지사항
-      </div>
+      알림
     </div>
       <vue-scroll class="notice-content"
         :ops = "ops"
@@ -96,11 +91,12 @@ export default {
       done();
     },
     async getMessages( offset, limit){
-      let messages = await this.$api.getNotice({
-        offset:offset,
-        limit:limit
-      })
-      messages.data.data.map(item => this.noticeList.push(item))
+      console.log(offset, limit)
+      // let messages = await this.$api.getNotice({
+      //   offset:offset,
+      //   limit:limit
+      // })
+      // messages.data.data.map(item => this.noticeList.push(item))
     },
   },
   async mounted(){

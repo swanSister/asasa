@@ -66,20 +66,20 @@ export default {
       this.isLoadingShow = false
     },
     onFocus: function(){
-      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
-        setTimeout(function(){
-          let vh = window.innerHeight * 0.01 * 0.6;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-         },100);
-      }
+      // if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
+      //   setTimeout(function(){
+      //     let vh = window.innerHeight * 0.01 * 0.6;
+      //     document.documentElement.style.setProperty('--vh', `${vh}px`);
+      //    },100);
+      // }
     },
     onBlur: function(){
-      if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
-        setTimeout(function(){
-          let vh = window.innerHeight * 0.01;
-          document.documentElement.style.setProperty('--vh', `${vh}px`);
-         },100);
-      }
+      // if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
+      //   setTimeout(function(){
+      //     let vh = window.innerHeight * 0.01;
+      //     document.documentElement.style.setProperty('--vh', `${vh}px`);
+      //    },100);
+      // }
     },
     autosize: function(e){
       e.target.style.cssText = 'height:' + (e.target.scrollHeight) + 'px'

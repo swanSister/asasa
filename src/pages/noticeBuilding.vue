@@ -5,7 +5,7 @@
           <span @click="$router.go(-1)" class="icon-left-open"></span>
       </div>
       <div class="flex auto justify-content-center" style="margin-right:5vw">
-        공지사항
+        아파트 공지사항
       </div>
     </div>
       <vue-scroll class="notice-content"
@@ -23,6 +23,7 @@
           <div class="slot-refresh" slot="refresh-start"></div>
           <div class="slot-refresh" slot="refresh-active"></div>
           <div class="child">
+            <div style="margin-top:4vw; color:#999;">준비중입니다.</div>
             <NoticeList :noticeList="noticeList" ></NoticeList>
           </div>
         </vue-scroll>
@@ -96,11 +97,12 @@ export default {
       done();
     },
     async getMessages( offset, limit){
-      let messages = await this.$api.getNotice({
-        offset:offset,
-        limit:limit
-      })
-      messages.data.data.map(item => this.noticeList.push(item))
+      console.log(offset, limit)
+      // let messages = await this.$api.getNotice({
+      //   offset:offset,
+      //   limit:limit
+      // })
+      // messages.data.data.map(item => this.noticeList.push(item))
     },
   },
   async mounted(){

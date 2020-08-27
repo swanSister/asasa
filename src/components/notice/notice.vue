@@ -1,14 +1,14 @@
 <template>
-  <div class="notice">
+  <div class="notice" @click="$router.push({name:'noticeDetail', query:{noticeId:noticeData.noticeId}})">
     <div class="notice-body flex auto" @click="goDetail">
       <div class="icon">
         <span class="icon-bell-alt"></span>
       </div>
-      <div class="flex column auto">
+      <div class="flex column auto" style="max-width:93%;">
         <div class="text-content">
           <div class="title">{{noticeData.title}}</div>
-          <div class="sub">
-            <pre>{{noticeData.text}}</pre>
+          <div class="sub" style="max-width:100%;">
+            <div>{{noticeData.text}}</div>
           </div>
         </div>
         <div class="flex auto writer-content">
@@ -16,7 +16,6 @@
          <div class="time">{{$moment(noticeData.createdAt).format('YYYY-MM-DD')}}</div>
         </div>
       </div>
-     
     </div>
   </div>
 </template>
@@ -74,6 +73,12 @@ export default {
   .notice-body .sub{
     color:#555;
     margin-bottom:2vw;
+    width:100%;
+  }
+  .notice-body .sub > div{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
   }
   .notice-body .writer-content{
     font-size: 3vw;

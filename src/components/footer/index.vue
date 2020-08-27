@@ -1,6 +1,5 @@
 <template>
   <div class="flex auto footer justify-content-center align-items-center">
-    
     <div  @click="onClickFooter(item,index)" class="flex auto justify-content-center" v-for="(item, index) in footerIcon" :key="'footerIcon'+index"> 
       <div class="icon" :class="item.class" :style="{
         'color' : item.isSelect ? 'rgb(15, 76, 129)' : 'rgb(21, 134, 204)'
@@ -65,7 +64,7 @@ export default {
           this.$router.push({name:'chat', params:{reload:true}})
         }
         if(idx == 3){
-          this.$router.push('/notice')
+          this.$router.push('/alarm')
         }
         if(idx == 4){
           this.$router.push('/user')

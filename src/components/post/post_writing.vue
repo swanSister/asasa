@@ -229,7 +229,7 @@ export default {
   }
   .location-list .list{
     width:100vw;
-    max-height:70vw;
+    max-height:100vw;
     background:white;
     position: fixed;
     left:0;

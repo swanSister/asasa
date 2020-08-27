@@ -152,7 +152,18 @@ export default {
           alert("인증사진을 등록해 주세요.")
           return
         }
-        
+
+        let houseType = this.houseType.find(item=>item.isSelect==true)
+        if(!this.buildingName && (houseType.type ==1 || houseType.type == 2)){
+          alert("주거형태을 확인해 주세요.")
+          return
+        }
+
+        if(this.buildingName && houseType.type ==3){ //주택인데 건물명 있는 경우
+          alert("주거형태을 확인해 주세요.")
+          return
+        }
+
         this.$eventBus.$emit("showLoading")
         let bcode = this.address.bcode
         let sido_code = parseInt(bcode.substring(0,2),10)
@@ -164,7 +175,6 @@ export default {
         addressData.sigungu_code = sigungu_code
         addressData.b_code = b_code
 
-        let houseType = this.houseType.find(item=>item.isSelect==true)
         let me = {
           userId: this.userId,
           isPublic: houseType.type == 1 ? true : false,

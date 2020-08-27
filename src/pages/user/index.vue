@@ -64,6 +64,14 @@
               <div class="flex auto list-title" @click="$router.push({name: 'user/bookmark',params:{reload:true}})">북마크</div>
               <span class="icon icon-right-open"> </span>
             </div>
+            <div class="flex li" >
+              <div class="flex auto list-title" @click="$router.push({name: 'notice'})">아사사 공지사항</div>
+              <span class="icon icon-right-open"> </span>
+            </div>
+            <div class="flex li" >
+              <div v-if="$store.state.me.houseType==1" class="flex auto list-title" @click="$router.push({name: 'noticeBuilding'})">아파트 공지사항 (관리사무소)</div>
+              <span class="icon icon-right-open"> </span>
+            </div>
           </div>
         </div>
         <Footer v-bind:footerIndex="4"></Footer>
@@ -162,13 +170,13 @@ export default {
   color:rgb(0, 218, 255) ;
   font-weight: bold;
   margin-right:2vw;
-  max-width:36vw;
+  max-width:40vw;
   font-size:6vw;
   line-break:anywhere;
 }
 .body .user-info .address .building-info .type{
   color:white;
-  font-size:3.5vw;
+  font-size:4.5vw;
 }
 .body .user-info .deny{
   font-size: 3.5vw;

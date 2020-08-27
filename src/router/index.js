@@ -10,6 +10,9 @@ import Search from '@/pages/search'
 import Chat from '@/pages/chat'
 import ChatDetail from '@/pages/chatDetail'
 import Notice from '@/pages/notice'
+import Alarm from '@/pages/alarm'
+import NoticeBuilding from '@/pages/noticeBuilding'
+import NoticeDetail from '@/pages/noticeDetail'
 import User from '@/pages/user/index'
 import UserMine from '@/pages/user/mine'
 import UserBookmark from '@/pages/user/bookmark'
@@ -83,6 +86,21 @@ export default new Router({
       path: '/notice',
       name: 'notice',
       component: Notice
+    },
+    {
+      path: '/alarm',
+      name: 'alarm',
+      component: Alarm
+    },
+    {
+      path: '/noticeBuilding',
+      name: 'noticeBuilding',
+      component: NoticeBuilding
+    },
+    {
+      path: '/noticeDetail',
+      name: 'noticeDetail',
+      component: NoticeDetail
     },
     {
       path: '/user',

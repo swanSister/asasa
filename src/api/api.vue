@@ -279,6 +279,16 @@ export default {
       }
     })
   },
+
+
+  /* ######## NOTICE#########  */
+  getNoticeDetail:function(param){
+    return axios.post(`${API_URL}/notice/getDetail`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
   getNotice:function(param){
     return axios.post(`${API_URL}/notice/get`,param,{
       headers: {
