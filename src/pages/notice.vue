@@ -26,7 +26,7 @@
             <NoticeList :noticeList="noticeList" ></NoticeList>
           </div>
         </vue-scroll>
-      <Footer v-bind:footerIndex="3"></Footer>
+      <Footer v-bind:footerIndex="4"></Footer>
    
   </div>
 </template>

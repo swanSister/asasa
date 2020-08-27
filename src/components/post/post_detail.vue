@@ -76,7 +76,7 @@
                 </div>
                 <div class="comment-img-list flex">
                   <div v-for="(imgItem,index) in item.imgList" :key="'comment-img-list'+index">
-                    <img v-if="imgItem" :src="imgItem"/>
+                    <img v-if="imgItem" :src="imgItem" @click="imgPopupSrc=imgItem"/>
                   </div>
                 </div>
                 <div class="text">{{item.text}}</div>
@@ -104,7 +104,7 @@
               <div class="flex align-items-center justify-content-center close-btn" @click="removeCommentImg(index)">
                 <span class="icon-cancel"></span>
               </div>
-              <img :src="item">
+              <img :src="item" @click="imgPopupSrc=item">
           </div>
         </div>
         <div class="flex comment-input align-items:center;">

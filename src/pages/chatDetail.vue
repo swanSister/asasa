@@ -30,7 +30,7 @@
                         <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
                         
                         <div class="flex column align-items-end">
-                          <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
+                          <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src" @click="imgPopupSrc=src"/>
                           <div class="chat-text" v-if="item.text">{{item.text}}</div>
                         </div>
                       </div>
@@ -39,7 +39,7 @@
                     <div class="you flex column auto justify-content-start align-items-start" v-if="item.writerId != $store.state.me.userId">
                       <div class="flex auto justify-content-end align-items-end">
                         <div class="flex column">
-                          <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"/>
+                          <img class="chat-content-img" v-for="(src, index) in item.imgList" :key="'chatImg'+index" :src="src"  @click="imgPopupSrc=src"/>
                           <div class="chat-text" v-if="item.text">{{item.text}}</div>
                         </div>
                         <div>{{$moment(item.createdAt).format('a h:mm')}}</div>
@@ -63,7 +63,7 @@
                 <div class="flex align-items-center justify-content-center close-btn" @click="removeChatImg(index)">
                   <span class="icon-cancel"></span>
                 </div>
-                <img :src="item">
+                <img :src="item"  @click="imgPopupSrc=item">
             </div>
           </div>
           <div class="flex chat-input align-items:center;">
@@ -115,6 +115,7 @@
               </div> 
           </div>
       </transition>
+      <img-popup v-if="imgPopupSrc" :src="imgPopupSrc" @close="imgPopupSrc=''"></img-popup>
   </div>
 </template>
 
@@ -124,14 +125,17 @@ var $ = global.jQuery;
 window.$ = $;
 
 
+import imgPopup from '@/components/popup/imgPopup'
 export default {
   components:{
+    imgPopup
   },
   props:{
     
   },
   data () {
     return {
+      imgPopupSrc:'',
       isSliderMenuShow:false,
       ops : {
         vuescroll: {
@@ -350,7 +354,7 @@ export default {
     },
   },
   async mounted(){
-    this.updateChatReadTime()
+    
 
     this.chatMessages = []
     this.getChatRoom()
@@ -363,7 +367,7 @@ export default {
       that.socketJoinListener(data)
     })
     
-
+    this.updateChatReadTime()
   },
   async beforeDestroy(){
     console.log("######chat room beforeDestroy")
