@@ -153,6 +153,12 @@ export default {
           return
         }
         
+        let houseType = this.houseType.find(item=>item.isSelect==true)
+        if(!this.buildingName && (houseType.type ==1 || houseType.type == 2)){
+          alert("주거형태을 확인해 주세요.")
+          return
+        }
+
         this.$eventBus.$emit("showLoading")
         let bcode = this.address.bcode
         let sido_code = parseInt(bcode.substring(0,2),10)
@@ -164,7 +170,7 @@ export default {
         addressData.sigungu_code = sigungu_code
         addressData.b_code = b_code
 
-        let houseType = this.houseType.find(item=>item.isSelect==true)
+       
         let me = {
           userId: this.userId,
           isPublic: houseType.type == 1 ? true : false,
@@ -273,7 +279,7 @@ export default {
     padding:1vw 2vw;
   }
   .auth .user-info .section .sub-text{
-    width:48vw;
+    width:51.5vw;
     margin-left:20.5vw;
     text-align: left;
     font-size: 3vw;
@@ -285,7 +291,6 @@ export default {
     max-width:15vw;
     font-weight: bold;
     text-align: left;
-    margin-right:3.5vw;
   }
   .auth .user-info .right{
     text-align: left;

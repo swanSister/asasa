@@ -47,7 +47,7 @@
                   <div class="img-containner" v-for="(item, index) in postData.imgList" :key="'imageList'+index">
                     <div v-if="item">
                       <div class="img-popup-btn flex justify-content-center align-items-center icon-resize-full-1"></div>
-                      <img :src="item.url">
+                      <img :src="item.url" @click="imgPopupSrc=item.url">
                       <div class="img-desc" v-if="item.text">
                         {{item.text}}
                       </div>
@@ -131,6 +131,7 @@
           </div>
         </div>
       </transition>
+      <img-popup v-if="imgPopupSrc" :src="imgPopupSrc" @close="imgPopupSrc=''"></img-popup>
       </div>
 </template>
 
@@ -141,12 +142,12 @@ global.jQuery = require('jquery');
 var $ = global.jQuery;
 window.$ = $;
 
-
+import imgPopup from '@/components/popup/imgPopup'
 export default {
   name: 'postHeader',
 
   components:{
-    
+    imgPopup
   },
   
   data: function () {
@@ -184,6 +185,7 @@ export default {
     offset:0,
     limit:100,
     size:0,
+    imgPopupSrc:null,
     }
   },
 

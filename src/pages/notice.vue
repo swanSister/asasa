@@ -3,7 +3,6 @@
     <div class="notice-header flex justify-content-center align-items-center"> 
       알림
     </div>
-   
       <vue-scroll class="notice-content"
         :ops = "ops"
         @refresh-start="handleRS"
