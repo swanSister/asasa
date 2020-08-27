@@ -507,9 +507,6 @@ export default {
     border-top:1px solid #ddd;
 
   }
-  .body .content pre{
-    white-space: pre-wrap;
-  }
   .body .content img{
     max-width: 100%;
     width:100%;

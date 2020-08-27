@@ -20,8 +20,8 @@ body {
   font-size:4.5vw;
   overflow:hidden;
 }
-div{
-  word-break: keep-all;
+pre{
+  white-space: pre-wrap;
 }
 .flex{
   display: flex;

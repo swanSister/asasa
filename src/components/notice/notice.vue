@@ -7,7 +7,9 @@
       <div class="flex column auto">
         <div class="text-content">
           <div class="title">{{noticeData.title}}</div>
-          <div class="sub">{{noticeData.text}}</div>
+          <div class="sub">
+            <pre>{{noticeData.text}}</pre>
+          </div>
         </div>
         <div class="flex auto writer-content">
          <div class="writer">{{noticeData.writerId}}</div> 
