@@ -71,7 +71,10 @@ export default {
     }
   },
   async mounted(){
-
+    if(this.$store.state.me.userId){
+        this.$router.push('main')
+        return
+      }
   }
 }
 </script>
