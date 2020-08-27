@@ -110,12 +110,12 @@ export default {
 }
 .notice-content{
   width:100%;
-  height:calc(100% - 28vw) !important;
+  height:calc(100% - 36vw) !important;
   overflow-y:auto;
 }
 .notice-header{
   background:white;
-  height:14vw;
+  height:18vw;
   padding:0 4vw;
   border-bottom: 1px solid #eee;
   font-size: 6vw;

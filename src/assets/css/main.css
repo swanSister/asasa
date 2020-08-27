@@ -1,89 +1,92 @@
-
 *{
-    box-sizing:border-box;
+  box-sizing:border-box;
 }
 *:not(input, textarea) {    
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 html, 
 body {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width:100%;
-    padding:0;
-    margin:0;
-    font-size:4.5vw;
-    overflow:hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width:100%;
+  padding:0;
+  margin:0;
+  font-size:4.5vw;
+  overflow:hidden;
 }
 .flex{
-    display: flex;
-    flex:initial;
-    flex-direction: row;
+  display: flex;
+  flex:initial;
+  flex-direction: row;
 }
 .none{
-    flex:none;
+  flex:none;
 }
 .auto{
-    flex:auto;
+  flex:auto;
 }
 .column{
-    flex-direction: column;
+  flex-direction: column;
 }
 .column-reverse{
-    flex-direction: column-reverse;
+  flex-direction: column-reverse;
 }
 .justify-content-end{
-    justify-content:flex-end;
+  justify-content:flex-end;
 }
 .justify-content-center{
-    justify-content: center;
+  justify-content: center;
 }
 .justify-content-start{
-    justify-content: flex-start;
+  justify-content: flex-start;
 }
 .align-items-end{
-    align-items: flex-end;
+  align-items: flex-end;
 }
 .align-items-center{
-    align-items: center;
+  align-items: center;
 }
 .align-items-start{
-    align-items: flex-start;
+  align-items: flex-start;
 }
 textarea:focus, input:focus, [contenteditable]:focus{
-    outline: none;
+  outline: none;
 }
 
 input,
 textarea,
 div[contenteditable] {
-    -webkit-user-select: text;
-    user-select: text;
-    border:0;
-    font-size:4.5vw;
+  -webkit-user-select: text;
+  user-select: text;
+  border:0;
+  font-size:4.5vw;
 }
 
 .slot-load, .slot-refresh {
- margin:2vw 0;
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  border: 3px solid white;
-  border-radius: 50%;
-  border-top-color: rgb(21, 134, 204) ;
-  animation: spin 1s ease-in-out infinite;
-  -webkit-animation: spin 1s ease-in-out infinite;
+margin:2vw 0;
+display: inline-block;
+width: 30px;
+height: 30px;
+border: 3px solid white;
+border-radius: 50%;
+border-top-color: rgb(21, 134, 204) ;
+animation: spin 1s ease-in-out infinite;
+-webkit-animation: spin 1s ease-in-out infinite;
 }
 
 @keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+to { -webkit-transform: rotate(360deg); }
 }
 @-webkit-keyframes spin {
-  to { -webkit-transform: rotate(360deg); }
+to { -webkit-transform: rotate(360deg); }
+}
+.icon-left-open{
+  color: rgb(21, 134, 204) ;
+  font-size:6vw;
 }

@@ -3,13 +3,13 @@
     
       <vue-scroll class="user-content">
         <div class="header flex align-items-center">
-          <div class="backButton" style="font-size:5vw; margin-left:2vw;">
+          <div style="margin-left:4vw;">
               <span @click="$router.go(-1)" class="icon-left-open"></span>
           </div>
           <div class="flex auto justify-content-center">
             마이페이지
           </div>
-          <div class="backButton" style="font-size:5vw; margin-right:2vw;">
+          <div class="logoutBtn" style="font-size:7vw; margin-right:3vw; color:rgb(21, 134, 204);">
               <span @click="onLogout" class="icon-logout"></span>
           </div>
         </div>
@@ -18,10 +18,15 @@
             <div class="id">{{$store.state.me.userId}}</div>
             <div class="flex align-items-end">
               <div class="address">
-                {{$store.state.me.addressData.sido}} {{$store.state.me.addressData.sigungu}} {{$store.state.me.addressData.bname}}
-                <div class="building-info flex align-items-center">
-                  <div class="name" v-if="$store.state.me.addressData.buildingName"> {{$store.state.me.addressData.buildingName}}</div>
-                  <div class="type"> {{$store.state.me.houseType.name}}</div>
+                <div class="ad">
+                  {{$store.state.me.addressData.sido}} {{$store.state.me.addressData.sigungu}} {{$store.state.me.addressData.bname}}
+                </div>
+                <div class="building-info flex align-items-end" v-if="$store.state.me.addressData.buildingName">
+                  <div class="name flex none align-items-start"> {{$store.state.me.addressData.buildingName}}</div>
+                  <div class="type"> {{$getHousetypeName($store.state.me.houseType)}}</div>
+                </div>
+                <div class="building-info flex align-items-end" v-else>
+                  <div class="name flex none align-items-start"> {{$getHousetypeName($store.state.me.houseType)}}</div>
                 </div>
               </div>
               <div v-if="!$store.state.me.isAuthSuccess && !$store.state.me.isAuthWait">
@@ -30,22 +35,24 @@
               <div class="flex column btn-content auto" v-else>
                 <div class="flex btn first">
                   <div v-if="$store.state.me.isAuthSuccess" class="select">
-                    <span class="icon-ok" style="margin-right:2vw;"></span>
+                    <span class="icon-ok"></span>
                     인증
                   </div>
                   <div v-else>
-                    <span class="icon-cancel" style="margin-right:2vw;"></span>
+                    <span class="icon-cancel"></span>
                     미인증
                   </div>
                 </div>
-                <div class="flex btn" v-if="$store.state.me.isAuthSuccess">
+                <div class="flex btn public" v-if="$store.state.me.isAuthSuccess">
                   <div :class="{'select':$store.state.me.isPublic}" @click="setPublic(true)">공개</div>
                   <div :class="{'select':!$store.state.me.isPublic}" @click="setPublic(false)"> 비공개</div>
                 </div>
               </div>
             </div>
-            <div @click="$router.push('reAuth')" class="re-auth" v-if="!$store.state.me.isAuthWait">
-              재인증
+            <div class="flex justify-content-end">
+              <div @click="$router.push('reAuth')" class="re-auth" v-if="!$store.state.me.isAuthWait">
+                재인증
+              </div>
             </div>
           </div>
           <div class="user-post-list">
@@ -121,8 +128,8 @@ export default {
   background:rgb(240, 240, 240);
 }
 .header{
-  min-height: 14vw;
-  max-height: 14vw;
+  min-height: 18vw;
+  max-height: 18vw;
   font-size:6.5vw;
   font-weight: bold;
   padding:4vw 0;
@@ -137,9 +144,9 @@ export default {
 }
 .body .user-info .id{
   justify-content: flex-start;
-  font-size:4.5vw;
+  font-size:5vw;
   text-align: left;
-  margin-bottom:4vw;
+  margin-bottom:8vw;
 }
 .body .user-info .address{
   width:100%;
@@ -148,18 +155,20 @@ export default {
   margin-top:4vw;
 }
 .body .user-info .address .building-info{
-  margin-top:1vw;
+  margin-top:4vw;
   font-size:4.5vw;
 }
 .body .user-info .address .building-info .name{
-  color:rgb(21, 134, 204) ;
+  color:rgb(0, 218, 255) ;
   font-weight: bold;
-  margin-right:4vw;
+  margin-right:2vw;
+  max-width:36vw;
+  font-size:6vw;
+  line-break:anywhere;
 }
 .body .user-info .address .building-info .type{
-  color:#ddd;
-  min-width:20vw;
-  max-width:20vw;
+  color:white;
+  font-size:3.5vw;
 }
 .body .user-info .deny{
   font-size: 3.5vw;
@@ -173,21 +182,24 @@ export default {
 .body .user-info .btn-content .btn{
   text-align:center;
 }
-.body .user-info .btn-content .btn.first{
-  margin-bottom:2vw;
+.body .user-info .btn-content .btn.first span{
+  
 }
 .body .user-info .btn-content .btn div{
   font-size: 3.5vw;
-  width:14vw;
+  width:13vw;
   padding:2vw 0;
-  background:#707070;
-  font-weight: bold;
+  background:rgb(128, 174, 255);
+  font-size:4vw;
+}
+.body .user-info .btn-content .btn.public div{
+  margin-top:2vw;
+  background:rgb(153,153,153);
+  
 }
 .body .user-info .btn-content .btn.first div{
-  width:28vw;
+  width:26vw;
   font-weight: bold;
-  padding:1vw 0;
-  font-size:4.5vw;
 }
 .body .user-info .btn-content .btn div.select{
   background:rgb(255, 117, 117);

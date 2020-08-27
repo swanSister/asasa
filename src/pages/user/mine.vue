@@ -138,7 +138,7 @@ export default {
 .user-post-list{
   width:100%;
   overflow-y:auto;
-  height:calc(100% - 28vw) !important;
+  height:calc(100% - 36vw) !important;
 }
 .header{
   font-size:4.5vw;

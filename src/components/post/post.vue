@@ -1,15 +1,17 @@
 <template>
   <div class="post">
     <div class="post-body" @click="goDetail">
-      <div class="flex auto left">
+      <div class="flex auto left" :style="{
+        width:postData.thumbnailUrl ? '50%' : '100%'
+      }">
         <!-- <div class="tag flex none align-items-center"><span>{{postData.tag}}</span></div> -->
         <div class="topic-name" v-if="postData.isSearchResult">[{{postData.topicName}}]</div>
         <div class="title">
           <div>{{postData.title}}</div>
         </div>
         <div class="content">
-          
-          <div>{{postData.text}}
+          <div>
+            {{postData.text}}
           </div>
         </div>
         <div class="name">{{postData.writerId}} <span>- {{$getBuildingName(postData.writer)}}</span></div>
@@ -192,7 +194,7 @@ export default {
   }
   .post-body .name span{
     margin-left:2vw;
-    color:rgb(21, 134, 204) ;
+    color:rgb(21, 134, 204);
   }
   .post-footer{
     padding:2vw 4vw;
@@ -205,6 +207,7 @@ export default {
   }
   .post-footer > .left .icon{
     margin-right:2vw;
+
   }
   .post-footer > .left > div{
     margin-right:8vw;

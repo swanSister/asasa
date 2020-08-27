@@ -100,6 +100,12 @@ const global = {
         return '비공개'
       }
     }
+    Vue.prototype.$getHousetypeName = function(houseType){
+      if(houseType==1) return '아파트'
+      else if(houseType==2) return '오피스텔'
+      else return '주택'
+
+    }
   }
 }
 

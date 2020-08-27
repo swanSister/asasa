@@ -26,7 +26,7 @@
                 <!-- <span class="icon-bell-alt"></span> -->
                 <span :class="{'red':isBookmarking()}" class="icon-bookmark" @click="isBookmarking() ? unBookmark() : setBookmark()"></span>
                 <div class="more-btn-content" v-if="postData.writerId == $store.state.me.userId">
-                  <span class="icon-dot-3 more-btn"></span>
+                  <span class="icon-ellipsis more-btn"></span>
                   <select @change="onChangeSelect">
                     <option value="0" hidden selected></option>
                     <option value="1">삭제</option>
@@ -85,7 +85,7 @@
                     {{$getTime(item.createdAt)}}
                   </div>
                   <div class="more-btn-content flex" v-if="item.writerId == $store.state.me.userId">
-                    <span class="icon-dot-3 more-btn"></span>
+                    <span class="icon-ellipsis more-btn"></span>
                     <select @change="onChangeCommentSelect($event, item)">
                       <option value="0" hidden selected></option>
                       <option value="1">삭제</option>
@@ -447,6 +447,7 @@ export default {
   },
   async mounted () {
    try{
+      await this.$updateUserInfo()
       this.checkView()
       this.getMessageDetail()
    }catch(e){
@@ -461,7 +462,7 @@ export default {
 <style scoped>
  
   .post-detail-scroll{
-    height:calc(100% - 14vw) !important;
+    height:calc(100% - 18vw) !important;
   }
   .post-detail{
     width:100vw;
@@ -532,6 +533,7 @@ export default {
   .button-content > div{
     font-size: 3.5vw;
     width:33%;
+    color:#aaa;
   }
   .button-content > div span{
     margin-right:2vw;

@@ -348,19 +348,6 @@ export default {
       )
       },300)
     },
-    // onFocusInput(){
-    //   console.log(this.$refs.textInputContent)
-    //   this.$refs.textInputContent.setAttribute("style","height:50vh;")
-    //   this.$refs.scrollChild.setAttribute("style","padding-bottom:60vh")
-    //   this.goToScrollBottom()
-    //   setTimeout(function(){
-    //     window.scrollTo(0,0)
-    //   },200)
-    // },
-    // onBlurInput(){
-    //   this.$refs.textInputContent.setAttribute("style","height:14vw;")
-    //   this.$refs.scrollChild.setAttribute("style","padding-bottom:4vw;")
-    // }
   },
   async mounted(){
     this.updateChatReadTime()
@@ -393,19 +380,16 @@ export default {
   width:100%;
 }
 .scroll-containner{
-  height:calc(calc(var(--vh, 1vh) * 100) - 28vw) !important;
-}
-.chat-detail-content{
-
+  height:calc(calc(var(--vh, 1vh) * 100) - 32vw) !important;
 }
 .chat-detail-content .child{
-  min-height:calc(calc(var(--vh, 1vh) * 100) - 28vw);
+  min-height:calc(calc(var(--vh, 1vh) * 100) - 32vw);
 }
 
 .header{
   font-size:6.5vw;
   font-weight: bold;
-  height:14vw;
+  height:18vw;
   background:white;
   color:#333;
 }
@@ -441,7 +425,7 @@ export default {
 }
 
 .slide-menu-header{
-  height:14vw;
+  height:18vw;
   border-bottom: 1px solid #ddd;
   font-size:4vw;
   color:#aaa;
@@ -489,15 +473,14 @@ export default {
 }
 .slide-menu-footer{
   margin-top:1vw;
-  height:14vw;
-  max-height: 14vw;
+  height:18vw;
+  max-height: 18vw;
   font-size: 5vw;
   padding:0 4vw;
   background:white;
 }
 .text-input-content{
   border-top:1px solid #eee;
-  min-height:10vw;
   width:100%;
   background:white;
   padding:0 2vw;

@@ -162,6 +162,6 @@ export default {
 
 .main-content{
   width:100%;
-  height:calc(100% - 28vw) !important;
+  height:calc(100% - 36vw) !important;
 }
 </style>

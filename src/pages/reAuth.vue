@@ -41,7 +41,7 @@
           </div>
           <div class="image-box flex align-items-center justify-content-center">
             <input ref="fileInput" id="file" type="file" accept="image/*" @change="previewFiles" style="display:none; z-index:-1">
-            <label id="authImageLabel" for="file"  class="camera-icon icon-camera-1"></label>
+            <label id="authImageLabel" for="file"  class="camera-icon  icon-camera"></label>
             <img v-if="authImageSrc" :src="authImageSrc" @click="imageClick"/>
           </div>
           <div>

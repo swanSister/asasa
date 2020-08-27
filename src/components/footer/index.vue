@@ -3,7 +3,7 @@
     
     <div  @click="onClickFooter(item,index)" class="flex auto justify-content-center" v-for="(item, index) in footerIcon" :key="'footerIcon'+index"> 
       <div class="icon" :class="item.class" :style="{
-        'color' : item.isSelect ? 'rgb(21, 134, 204) ' : '#999'
+        'color' : item.isSelect ? 'rgb(15, 76, 129)' : 'rgb(21, 134, 204)'
       }"></div>
     </div>
     <div @click="goPostWriting" class="flex auto justify-content-center align-items-center pencil">
@@ -41,7 +41,7 @@ export default {
           idx:3,//notice
         },
         { 
-          class:"icon-dot-3",
+          class:"icon-ellipsis",
           isSelect:false,
           idx:4,//user page
         },
@@ -87,8 +87,8 @@ export default {
 </script>
 <style scoped>
 .footer{
-  min-height:14vw;
-  max-height:14vw;
+  min-height:18vw;
+  max-height:18vw;
   position: fixed;
   bottom:0;
   left:0;
@@ -98,16 +98,16 @@ export default {
   padding-right:4vw;
 }
 .footer .icon{
-  font-size:6.5vw;
+  font-size:7.8vw;
 }
 .footer .pencil .icon{
   font-size:5vw;
 }
 .footer .pencil{
-  max-width:9vw;
-  min-width:9vw;
-  max-height:9vw;
-  min-height:9vw;
+  max-width:12vw;
+  min-width:12vw;
+  max-height:12vw;
+  min-height:12vw;
   border-radius: 50%;
   background:rgb(21, 134, 204) ;
   color:white;

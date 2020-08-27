@@ -151,7 +151,7 @@ export default {
     background:white;
   }
   .header{
-    height:14vw;
+    height:18vw;
     border-bottom:1px solid #ddd;
     padding:0 4vw;
     font-size: 4.5vw;
@@ -172,7 +172,7 @@ export default {
   .body{
     padding:2vw;
     padding-bottom:10vw;
-    height:calc(calc(var(--vh, 1vh) * 100) - 28vw);
+    height:calc(calc(var(--vh, 1vh) * 100) - 36vw);
     overflow:scroll;
   }
   .body textarea{
@@ -183,7 +183,7 @@ export default {
     overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
   }
   .body textarea:first-child{
-    max-height:14vw;
+    max-height:18vw;
     border-bottom:1px solid #ddd;
   }
   .body textarea:nth-child(2){
@@ -208,7 +208,7 @@ export default {
   .footer{
     width:100%;
     position:relative;
-    height:14vw;
+    height:18vw;
     border-top:1px solid #ddd;
     padding:0 4vw;
     background:white;

@@ -154,12 +154,12 @@ export default {
 }
 .chat-content{
   width:100%;
-  height:calc(100% - 38vw) !important;
+  height:calc(100% - 46vw) !important;
   overflow-y:auto;
 }
 .chat-header{
   background:white;
-  height:14vw;
+  height:18vw;
   border-bottom: 1px solid #eee;
   padding:0 4vw;
 }
@@ -184,6 +184,6 @@ export default {
   height:100%;
 }
 .chat-tab .btn.selected{
-  border-bottom:3px solid #000;
+  border-bottom:4px solid rgb(21, 134, 204);
 }
 </style>

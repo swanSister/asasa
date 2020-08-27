@@ -47,15 +47,15 @@ export default {
 </script>
 <style scoped>
 .header{
-  min-height:14vw;
-  max-height:14vw;
+  min-height:18vw;
+  max-height:18vw;
   background:rgb(21, 134, 204) ;
   color:white;
 }
 .header-content{
   width:100vw;
   margin:0 4vw;
-  height:14vw;
+  height:18vw;
 }
 .x-scroller{
   max-width: 90%;
@@ -66,7 +66,7 @@ export default {
 .category{
   padding:0 4vw;
   flex-wrap: nowrap;
-  font-size:5vw;
+  font-size:5.5vw;
   position:relative;
   height:100%;
   overflow: visible;
