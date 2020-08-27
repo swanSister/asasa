@@ -72,10 +72,7 @@ export default new Router({
     {
       path: '/chat',
       name: 'chat',
-      component: Chat,
-      meta:{
-        keepAlive:true,
-      }
+      component: Chat
     },
     {
       path: '/chatDetail',

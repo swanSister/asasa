@@ -354,10 +354,8 @@ export default {
     },
   },
   async mounted(){
-    
-
     this.chatMessages = []
-    this.getChatRoom()
+    await this.getChatRoom()
     this.goToScrollBottom()
 
     this.$socket.emit('join',this.$route.query.chatRoomId)
