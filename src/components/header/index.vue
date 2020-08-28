@@ -32,6 +32,7 @@ export default {
       if(!this.$refs["vs"] || !offset || !offset.left) return
       let elCenter = offset.left + width/2
       let targetScrollLeft = elCenter - this.$refs["vs"].scroller.__clientWidth/2+ this.$refs["vs"].scroller.__clientWidth*0.04
+      console.log(targetScrollLeft)
       if(targetScrollLeft<0) targetScrollLeft = 0
       this.$refs["vs"].scrollTo(
         {x:targetScrollLeft}, 300, "easeInQuad"
