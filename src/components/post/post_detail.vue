@@ -226,7 +226,6 @@ export default {
       if(messages.status == 200){
           this.$router.go(-1)
           this.$eventBus.$emit("mainPostUpdate", this.postData.topicId)
-          
       }else{
         alert("게시글 삭제에 실패했습니다.")
       }
@@ -365,7 +364,7 @@ export default {
         
         let writingRes = await this.$api.uploadComment({
             postId: this.$route.query.postId,
-            postWriterId:this.postData.writerId,
+            postData:this.postData,
             text:this.commentText,
             writerId:this.$store.state.me.userId,
             writer:this.$store.state.me,

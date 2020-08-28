@@ -240,11 +240,13 @@ export default {
       }
 
       let writingRes = await this.$api.sendChatMessage({
-        chatRoomId:this.$route.query.chatRoomId,
-        writerId:this.$store.state.me.userId,
-        text:this.inputText,
-        userList:this.chatRoom.userList,
-        imgList:[],
+        chatRoomId: this.$route.query.chatRoomId,
+        writerId: this.$store.state.me.userId,
+        writer: this.$store.state.me,
+        text: this.inputText,
+        userList: this.chatRoom.userList,
+        youData: this.youData,
+        imgList: [],
       })
       this.$eventBus.$emit("hideLoading")
       if(writingRes.status == 200){

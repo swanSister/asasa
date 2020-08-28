@@ -1,19 +1,18 @@
 <template>
-  <div class="notice" @click="$router.push({name:'noticeDetail', query:{noticeId:noticeData.noticeId}})">
+  <div class="notice">
     <div class="notice-body flex auto" @click="goDetail">
       <div class="icon">
         <span class="icon-bell-alt"></span>
       </div>
       <div class="flex column auto" style="max-width:93%;">
         <div class="text-content">
-          <div class="title">{{noticeData.title}}</div>
+          <div class="title">{{title}}</div>
           <div class="sub" style="max-width:100%;">
-            <div>{{noticeData.text}}</div>
+            <div>{{text}}</div>
           </div>
         </div>
         <div class="flex auto writer-content justify-content-end">
-         <div class="writer">{{noticeData.writerId}}</div> 
-         <div class="time">{{$moment(noticeData.createdAt).format('YYYY-MM-DD')}}</div>
+         <div class="time">{{$moment(alarmData.createdAt).format('YYYY-MM-DD')}}</div>
         </div>
       </div>
     </div>
@@ -24,20 +23,37 @@
 export default {
   name: 'notice',
   props: {
-    noticeData:{},
+    alarmData:{},
   },
   data: function () {
     return {
-      
+      title:"",
+      text:"",
+      targetData:{},
     }
   },
   methods:{
    goDetail(){
-     
+     if(this.alarmData.alarmType==1){
+       this.$router.push({name:'chatDetail',query:{
+        chatRoomId:this.alarmData.targetId,
+        youId:this.targetData.userId
+      }})
+     }else if(this.alarmData.alarmType==2){
+       this.$router.push({name: 'postDetail', query: { postId: this.alarmData.targetId }})
+     }
    }
   },
   mounted () {
-   console.log(this.noticeData)
+   console.log(this.alarmData)
+   this.targetData = JSON.parse(this.alarmData.targetData)
+   if(this.alarmData.alarmType==1){
+     this.title = "채팅방에 초대되었습니다."
+     this.text = `${this.targetData.userId} ${this.targetData.buildingName}`
+   }else if(this.alarmData.alarmType==2){
+     this.title =  `내가 작성한 글에 ${this.alarmData.alarmCount} 개 댓글이 달렸습니다.`
+     this.text = `[${this.targetData.topicName}] ${this.targetData.title}`
+   }
   }
 }
 

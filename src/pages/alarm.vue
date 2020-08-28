@@ -18,7 +18,7 @@
           <div class="slot-refresh" slot="refresh-start"></div>
           <div class="slot-refresh" slot="refresh-active"></div>
           <div class="child">
-            <NoticeList :noticeList="noticeList" ></NoticeList>
+            <AlarmList :alarmList="alarmList" ></AlarmList>
           </div>
         </vue-scroll>
       <Footer v-bind:footerIndex="3"></Footer>
@@ -29,10 +29,10 @@
 <script>
 
 import Footer from '@/components/footer'
-import NoticeList from '@/components/notice/notice_list.vue'
+import AlarmList from '@/components/alarm/alarm_list.vue'
 export default {
   components:{
-    NoticeList,
+    AlarmList,
     Footer,
   },
   props:{
@@ -40,7 +40,7 @@ export default {
   },
   data () {
     return {
-      noticeList:[],
+      alarmList:[],
       ops : {
         vuescroll: {
           mode: 'slide',
@@ -75,7 +75,7 @@ export default {
   methods:{
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
       this.offset = 0
-      this.noticeList = []
+      this.alarmList = []
       this.getMessages(this.offset, this.limit)
       done();
     },
@@ -92,11 +92,14 @@ export default {
     },
     async getMessages( offset, limit){
       console.log(offset, limit)
-      // let messages = await this.$api.getNotice({
-      //   offset:offset,
-      //   limit:limit
-      // })
-      // messages.data.data.map(item => this.noticeList.push(item))
+      let messages = await this.$api.getAlarm({
+        offset: offset,
+        limit: limit,
+        userId: this.$store.state.me.userId
+      })
+
+      messages.data.data.map(item => this.alarmList.push(item))
+      
     },
   },
   async mounted(){

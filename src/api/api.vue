@@ -296,8 +296,15 @@ export default {
       }
     })
   },
+  /* #########ALARM######## */
 
-  
+  getAlarm:function(param){
+    return axios.post(`${API_URL}/alarm/getAlarm`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
  
 }
 </script>
