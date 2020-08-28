@@ -264,7 +264,7 @@ export default {
         chatData.createdAt = new Date()
         this.$socket.emit('message',{ message: chatData })
         this.$refs.inputContent.click()
-        console.log("input click@@@@@@@")
+        this.updateChatReadTime()
         }else{
           console.error(writingRes)
           alert("채팅 실패")
