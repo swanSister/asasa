@@ -1,7 +1,7 @@
 <template>
 
   <div class="flex auto align-items-center header justify-content-center">
-    <vue-scroll ref="vs" :ops = "ops" style="width:80vw !important;">
+    <vue-scroll ref="vs" :ops = "ops" class="header-scroll">
       <div class="header-content flex align-items-center">
         <span @click="onClickHeader(item, index)" class="category flex none align-items-center" 
         v-for="(item, index) in headerData" :key="'headerDatas'+index" :id="item.topicId">
@@ -58,19 +58,6 @@ export default {
     }
   },
   methods:{
-    goToScrollCenter(){
-      let that = this
-      setTimeout(function(){
-        if(!that.$refs["vs"]) return
-        that.$refs["vs"].scrollTo(
-        {
-            x: that.$refs["vs"].scroller.__maxScrollLeft
-          },
-          300,
-          "easeInQuad"
-      )
-      },300)
-    },
     backHandler(){
       console.log("history length : " + window.history.length)
       if(window.history.length>2){
@@ -96,6 +83,9 @@ export default {
   max-height:18vw;
   background:rgb(21, 134, 204) ;
   color:white;
+}
+.header-scroll{
+  width:80vw !important;
 }
 .header-content{
   width:80vw;
