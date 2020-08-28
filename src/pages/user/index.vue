@@ -68,8 +68,8 @@
               <div class="flex auto list-title" @click="$router.push({name: 'notice'})">아사사 공지사항</div>
               <span class="icon icon-right-open"> </span>
             </div>
-            <div class="flex li" >
-              <div v-if="$store.state.me.houseType==1" class="flex auto list-title" @click="$router.push({name: 'noticeBuilding'})">아파트 공지사항 (관리사무소)</div>
+            <div class="flex li" v-if="$store.state.me.houseType==1" >
+              <div class="flex auto list-title" @click="$router.push({name: 'noticeBuilding'})">아파트 공지사항 (관리사무소)</div>
               <span class="icon icon-right-open"> </span>
             </div>
           </div>

@@ -77,9 +77,6 @@
           </div>
         </div>
 
-
-
-
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
         </div>
       <transition name="slide">
