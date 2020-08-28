@@ -365,6 +365,7 @@ export default {
         
         let writingRes = await this.$api.uploadComment({
             postId: this.$route.query.postId,
+            postWriterId:this.postData.writerId,
             text:this.commentText,
             writerId:this.$store.state.me.userId,
             writer:this.$store.state.me,
