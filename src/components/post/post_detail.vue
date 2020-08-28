@@ -224,9 +224,9 @@ export default {
     async deletePost(){
       let messages = await this.$api.deletePostById(this.postData)
       if(messages.status == 200){
-          this.$router.push({name:'main', params:{reload:true}, query:{
-            topicId:this.postData.topicId
-          }})
+          this.$router.go(-1)
+          this.$eventBus.$emit("mainPostUpdate", this.postData.topicId)
+          
       }else{
         alert("게시글 삭제에 실패했습니다.")
       }

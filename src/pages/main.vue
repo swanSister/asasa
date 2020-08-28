@@ -114,6 +114,7 @@ export default {
     },
     async getPosts(){
       this.headerData = this.$store.state.me.topics
+   
       this.currentTopicId = this.$route.query.topicId ? this.$route.query.topicId : this.headerData[0].topicId
      
       this.getMessages(this.offset, this.limit, this.sort)
@@ -147,7 +148,12 @@ export default {
         this.$router.push('login')
         return
       }
-      
+      let that = this
+      this.$eventBus.$on("mainPostUpdate", function(topicId){
+        that.currentTopicId = topicId
+        that.postList = [], that.offset = 0, that.sort = 1
+        that.getMessages(that.offset, that.limit, that.sort)
+      })
       this.getPosts()
     }
   },

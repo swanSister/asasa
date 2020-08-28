@@ -9,13 +9,14 @@ import moment from 'moment'
 import "moment/locale/ko";
 
 import io from 'socket.io-client'; 
+
+
 const socket = io("https://chat.asasakorea.com"); 
 
 moment.locale('ko')
 
 Vue.use(global)
 Vue.use(moment)
-
 Vue.config.productionTip = false
 Vue.prototype.$eventBus = eventBus
 Vue.prototype.$api = api
