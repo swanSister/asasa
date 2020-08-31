@@ -19,6 +19,7 @@
                 <div v-if="!address">주소를 검색해 주세요.</div>
                 <div>{{address.address}}
                   <div class="building" v-if="buildingName">'{{buildingName}}'</div>
+                  <div class="building" v-if="buildingName">'{{address.address}}'</div>
                 </div>
               </div>
             </div>
