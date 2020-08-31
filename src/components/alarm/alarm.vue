@@ -12,7 +12,7 @@
           </div>
         </div>
         <div class="flex auto writer-content justify-content-end">
-         <div class="time">{{$moment(alarmData.createdAt).format('YYYY-MM-DD')}}</div>
+         <div class="time">{{$getTime(alarmData.createdAt)}}</div>
         </div>
       </div>
     </div>
@@ -51,7 +51,7 @@ export default {
      this.title = "채팅방에 초대되었습니다."
      this.text = `${this.targetData.userId} ${this.targetData.buildingName}`
    }else if(this.alarmData.alarmType==2){
-     this.title =  `내가 작성한 글에 ${this.alarmData.alarmCount} 개 댓글이 달렸습니다.`
+     this.title =  `내가 글에 새 댓글이 달렸습니다.`
      this.text = `[${this.targetData.topicName}] ${this.targetData.title}`
    }
   }
@@ -68,7 +68,7 @@ export default {
   }
   .notice-body{
     margin:4vw 4vw 0 4vw;
-    padding-bottom: 4vw;
+    padding-bottom: 2vw;
     border-bottom:1px solid #eee;
   }
   .notice-body .icon span{
@@ -83,12 +83,12 @@ export default {
   }
   .notice-body .title{
     color:#555;
-    margin-bottom:2vw;
+    margin-bottom:1vw;
     font-weight: bold;
   }
   .notice-body .sub{
     color:#555;
-    margin-bottom:2vw;
+    margin-bottom:1vw;
     width:100%;
   }
   .notice-body .sub > div{

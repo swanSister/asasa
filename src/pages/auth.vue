@@ -8,7 +8,7 @@
           <div class="section">
             <div class="flex none justify-content-center align-items-center main-text">
               <div class="left">닉네임</div>
-              <input class="right flex auto" v-model="userId" @keydown="onKeyPress" lang="ko-KR"/>
+              <input class="right flex auto" v-model="userId" @keypress="onKeyPress" lang="ko-KR"/>
             </div>
             <div class="sub-text">{{idSubTxt}}</div>
           </div>
@@ -100,12 +100,18 @@ export default {
     }
   },
   methods:{
-    async onKeyPress(){
+    async onKeyPress(e){
       let that = this
-
+      
       if(this.isUserExistTimeout) clearTimeout(this.isUserExistTimeout)
-
       this.isUserExistTimeout = setTimeout(async function(){
+        var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+      
+        if(regExp.test(that.userId)){
+            alert("특수문자는 입력 할 수 없습니다.")
+            that.userId = that.userId.replace(regExp, "");
+        }
+
         if(that.userId.length < 4){
         that.idSubTxt = "4자 이상 입력해 주세요."
         }else{

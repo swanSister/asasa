@@ -79,7 +79,7 @@
 
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
         </div>
-      <transition name="slide">
+      <transition name="slide">ㄱ
           <div v-if="isSliderMenuShow" class="slide-menu">
               <div class="slide-menu-header flex justify-content-start align-items-center">
                 <div>방 생성일</div>
