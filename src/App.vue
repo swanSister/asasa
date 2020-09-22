@@ -129,7 +129,8 @@ export default {
         }
         console.log(browser, window.visualViewport)
       if(browser=='safari'){
-        window.visualViewport.addEventListener('resize', that.viewportResize);
+        alert("safari")
+        window.visualViewport.addEventListener('resize', this.viewportResize);
       }else{
         window.addEventListener('resize', that.windowResize)
       }
