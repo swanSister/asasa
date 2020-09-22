@@ -79,7 +79,7 @@
 
         <div v-if="isSliderMenuShow" class="slide-menu-bg" @click.self="isSliderMenuShow=false">
         </div>
-      <transition name="slide">ㄱ
+      <transition name="slide">
           <div v-if="isSliderMenuShow" class="slide-menu">
               <div class="slide-menu-header flex justify-content-start align-items-center">
                 <div>방 생성일</div>
@@ -235,7 +235,7 @@ export default {
       if(!this.inputText.length && !this.imgInputList.length){
         return
       }
-
+      console.log(this.chatRoom)
       let writingRes = await this.$api.sendChatMessage({
         chatRoomId: this.$route.query.chatRoomId,
         writerId: this.$store.state.me.userId,
@@ -300,6 +300,7 @@ export default {
       done();
     },
     async getChatRoom(){
+      console.log("###",this.$route.query.youId)
       let messages = await this.$api.getChatRoom({
         chatRoomId:this.$route.query.chatRoomId,
         youId:this.$route.query.youId})
@@ -307,6 +308,7 @@ export default {
       this.chatRoom = messages.data.data
       this.youData = this.chatRoom.youData
       console.log("youData:",this.youData)
+      console.log("chatroom",this.chatRoom)
       this.getChatList()
     },
     async getChatList(){
@@ -353,6 +355,7 @@ export default {
     },
   },
   async mounted(){
+    console.log("mounted")
     this.chatMessages = []
     await this.getChatRoom()
     this.goToScrollBottom()

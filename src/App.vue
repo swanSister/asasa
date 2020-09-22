@@ -117,13 +117,23 @@ export default {
       document.documentElement.style.setProperty('--vh', `${vh}px`)
 
 
-      //window.addEventListener('resize', this.windowResize)
-      if(window.visualViewport){
+        var agent = navigator.userAgent.toLowerCase(),
+        name = navigator.appName,
+        browser = '';
+        
+        
+        if(agent.indexOf('safari') > -1) { // Chrome or Safari
+            if(agent.indexOf('chrome') > -1) { // Chrome
+                browser = 'chrome';
+            } else { // Safari
+                browser = 'safari';
+            }
+        }
+      if(browser=='safari'){
         window.visualViewport.addEventListener('resize', this.viewportResize);
       }else{
         window.addEventListener('resize', this.windowResize)
       }
-      
     })
   }
 }
