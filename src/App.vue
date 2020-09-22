@@ -48,6 +48,7 @@ export default {
   name: 'App',
    data: function () {
     return {
+      varUA:null,
        isLoadingShow:false,
        inputHeightRestTimeout:null
     }
@@ -63,6 +64,22 @@ export default {
     onHideLoading(){
       console.log("####onHideLoading")
       this.isLoadingShow = false
+    },
+    onFocus: function(){
+      // if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
+      //   setTimeout(function(){
+      //     let vh = window.innerHeight * 0.01 * 0.6;
+      //     document.documentElement.style.setProperty('--vh', `${vh}px`);
+      //    },100);
+      // }
+    },
+    onBlur: function(){
+      // if (this.varUA.indexOf("iphone")>-1||this.varUA.indexOf("ipad")>-1||this.varUA.indexOf("ipod")>-1) { 
+      //   setTimeout(function(){
+      //     let vh = window.innerHeight * 0.01;
+      //     document.documentElement.style.setProperty('--vh', `${vh}px`);
+      //    },100);
+      // }
     },
     autosize: function(e){
       e.target.style.cssText = 'height:' + (e.target.scrollHeight) + 'px'
@@ -88,35 +105,35 @@ export default {
     this.$eventBus.$on("showLoading", this.onShowLoading)
     this.$eventBus.$on("hideLoading", this.onHideLoading)
     this.$eventBus.$on("inputBlur", this.onInputBlur)
-    
     let that = this
+    $( document ).ready(function() {
+      that.varUA = navigator.userAgent.toLowerCase(); //userAgent 값 얻기
 
-    $("input[type=text], textarea").on("focus",that.onFocus)
-    $("input[type=text], textarea").on("blur",that.onBlur)
-    $(document).on("keypress", "textarea", that.autosize)
+      $("input[type=text], textarea").on("focus",that.onFocus)
+      $("input[type=text], textarea").on("blur",that.onBlur)
+      $(document).on("keypress", "textarea", that.autosize)
 
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`)
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`)
 
-    var agent = navigator.userAgent.toLowerCase(),
-    name = navigator.appName,
-    browser = '';
-    
-    
-    if(agent.indexOf('safari') > -1) { // Chrome or Safari
-        if(agent.indexOf('chrome') > -1) { // Chrome
-            browser = 'chrome';
-        } else { // Safari
-            browser = 'safari';
+        var agent = navigator.userAgent.toLowerCase(),
+        name = navigator.appName,
+        browser = '';
+        
+        if(agent.indexOf('safari') > -1) { // Chrome or Safari
+            if(agent.indexOf('chrome') > -1) { // Chrome
+                browser = 'chrome';
+            } else { // Safari
+                browser = 'safari';
+            }
         }
-    }
-    console.log(browser)
-    if(browser=='safari'){
-      window.visualViewport.addEventListener('resize', this.viewportResize);
-    }else{
-      console.log("######add resize")
-      window.addEventListener('resize', this.windowResize)
-    }
+        console.log(browser, window.visualViewport)
+      if(browser=='safari'){
+        window.visualViewport.addEventListener('resize', that.viewportResize);
+      }else{
+        window.addEventListener('resize', that.windowResize)
+      }
+    })
   }
 }
 
