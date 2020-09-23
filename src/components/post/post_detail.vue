@@ -353,12 +353,12 @@ export default {
     },
     async uploadComment(){
       try{
-        if(!this.$store.state.me. isAuthSuccess){
-          this.commentText = ''
-          this.imgInputList = []
-          alert('글쓰기는 인증 후 가능합니다.')
-          return
-        }
+        // if(!this.$store.state.me.isAuthSuccess){
+        //   this.commentText = ''
+        //   this.imgInputList = []
+        //   alert('글쓰기는 인증 후 가능합니다.')
+        //   return
+        // }
 
         this.$eventBus.$emit("showLoading")
         
