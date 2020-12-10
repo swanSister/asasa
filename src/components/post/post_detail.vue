@@ -223,7 +223,7 @@ export default {
         let writingRes = await this.$api.uploadReport({
             userId: this.$store.state.me,
             targetId:this.$route.query.postId,
-            type:1,//게시글 2: 댓글
+            reportType:1,//게시글 2: 댓글
             reason:this.reason,
             etc:this.reasonEtc,
           })
