@@ -25,11 +25,12 @@
               <div class="flex auto justify-content-end right-icons">
                 <!-- <span class="icon-bell-alt"></span> -->
                 <span :class="{'red':isBookmarking()}" class="icon-bookmark" @click="isBookmarking() ? unBookmark() : setBookmark()"></span>
-                <div class="more-btn-content" v-if="postData.writerId == $store.state.me.userId">
+                <div class="more-btn-content">
                   <span class="icon-ellipsis more-btn"></span>
                   <select @change="onChangeSelect">
                     <option value="0" hidden selected></option>
-                    <option value="1">삭제</option>
+                    <option value="1"  v-if="postData.writerId == $store.state.me.userId">삭제</option>
+                    <option value="2"  v-else>신고</option>
                   </select>
                 </div>
               </div>
@@ -131,6 +132,29 @@
           </div>
         </div>
       </transition>
+      <transition name="fade">
+        <div v-if="isReportPopupShow" class="report-popup">
+          <div class="header flex justify-content-end">
+            <span class="icon icon-cancel" @click="isReportPopupShow=false"></span>
+          </div>
+          <div class="title">신고하기</div>
+          <div class="content">
+            <div><input type="radio" v-model="reportReason" value="욕설, 비방, 차별, 혐오" id="reason1"><label for="reason1">욕설, 비방, 차별, 혐오</label></div>
+            <div><input type="radio" v-model="reportReason" value="불쾌감 조장 및 무분별한 홍보, 영리활동 " id="reason2"><label for="reason2">불쾌감 조장 및 무분별한 홍보, 영리활동 </label></div>
+            <div><input type="radio" v-model="reportReason" value="불법 정보" id="reason3"><label for="reason3">불법 정보 </label></div>
+            <div><input type="radio" v-model="reportReason" value="음란, 청소년 유해" id="reason4"><label for="reason4">음란, 청소년 유해 </label></div>
+            <div><input type="radio" v-model="reportReason" value="개인정보 노출 유포, 거래" id="reason5"><label for="reason5">개인정보 노출 유포, 거래 </label></div>
+            <div><input type="radio" v-model="reportReason" value="도배, 스팸" id="reason6"><label for="reason6">도배, 스팸 </label></div>
+            <div><input type="radio" v-model="reportReason" value="기타" id="reason7"><label for="reason7">기타 </label></div>
+            <div :style="{visibility: reportReason=='기타' ? 'visible' : 'hidden'}" style="height:20vw;">
+              <textarea type="text" v-model="reasonEtc"></textarea>
+            </div>
+          </div>
+          <div class="submit-button" @click="onReport">
+            제출
+          </div>
+        </div>
+      </transition>
       <img-popup v-if="imgPopupSrc" :src="imgPopupSrc" @close="imgPopupSrc=''"></img-popup>
       </div>
 </template>
@@ -153,6 +177,9 @@ export default {
   data: function () {
     return {
       isWriterPopupShow:false,
+      isReportPopupShow:false,
+      reportReason:0,
+      reasonEtc:false,
       writerPopupData:{},
       postData:{},
       inputRange:null,
@@ -190,6 +217,33 @@ export default {
   },
 
   methods: {
+    async onReport(e){
+       try{
+        this.$eventBus.$emit("showLoading")
+        let writingRes = await this.$api.uploadReport({
+            userId: this.$store.state.me,
+            targetId:this.$route.query.postId,
+            type:1,//게시글 2: 댓글
+            reason:this.reason,
+            etc:this.reasonEtc,
+          })
+        
+        console.log(writingRes)
+        if(writingRes.status==200){
+          this.reasonEtc = ""
+          this.isReportPopupShow = false
+        }else{
+          console.error(writingRes)
+          this.isReportPopupShow = false
+        }
+        this.$eventBus.$emit("hideLoading")
+      }catch(e){
+        console.error(e.message)
+        this.$eventBus.$emit("hideLoading")
+        this.isReportPopupShow = false
+      }
+    },
+
     async onChangeSelect(e){
       let res = e.target.value
       e.target.selectedIndex = 0
@@ -198,6 +252,9 @@ export default {
         if(confirm("게시글을 삭제 하시겠습니까?")){
           this.deletePost()
         }
+      }
+      else if(res==2){
+        this.isReportPopupShow = true 
       }
     },
     async onChangeCommentSelect(e, item){
@@ -649,8 +706,7 @@ export default {
   .comment-img-list div:last-child img{
     margin-right:0;
   }
-
-  .writer-popup{
+  .writer-popup, .report-popup{
     position:fixed;
     left:0;
     top:0;
@@ -661,15 +717,38 @@ export default {
     padding:0 6vw;
     text-align: left;
   }
-  .writer-popup .header{
+  .writer-popup .header, .report-popup .header{
     font-size:5vw;
     padding:4vw 0;
   }
-  .writer-popup .user-id{
+  .writer-popup .user-id, .report-popup .title{
     font-size:6.5vw;
     color:#000;
     font-weight: bold;
     margin-bottom: 2vw;
+  }
+  .report-popup .content{
+    margin-top:6vw;
+    font-size: 4vw;
+  }
+  .report-popup .content div{
+    margin-bottom:2vw;
+  }
+  .report-popup .content div textarea{
+    border:1px solid #ddd;
+    width:100%;
+    font-size: 4vw;
+    min-height:20vw;
+    max-height:20vw;
+  }
+  .report-popup .submit-button{
+    margin-top:20vw;
+    background-color: rgb(21, 134, 204);
+    color: white;
+    font-size: 4vw;
+    height: 12vw;
+    line-height: 12vw;
+    text-align: center;
   }
   .writer-popup .building-name{
     margin-bottom:4vw;

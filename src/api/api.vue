@@ -305,6 +305,14 @@ export default {
       }
     })
   },
+  /* ######## REPORT#########  */
+  uploadReport:function(param){//신고 기능
+    return axios.post(`${API_URL}/report/upload`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
  
 }
 </script>
