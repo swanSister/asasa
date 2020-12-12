@@ -85,11 +85,12 @@
                   <div class="time flex auto">
                     {{$getTime(item.createdAt)}}
                   </div>
-                  <div class="more-btn-content flex" v-if="item.writerId == $store.state.me.userId">
+                  <div class="more-btn-content flex">
                     <span class="icon-ellipsis more-btn"></span>
                     <select @change="onChangeCommentSelect($event, item)">
                       <option value="0" hidden selected></option>
-                      <option value="1">삭제</option>
+                      <option value="1" v-if="item.writerId == $store.state.me.userId">삭제</option>
+                      <option value="2" v-else>신고</option>
                     </select>
                   </div>
                 </div>
@@ -179,7 +180,9 @@ export default {
       isWriterPopupShow:false,
       isReportPopupShow:false,
       reportReason:0,
-      reasonEtc:false,
+      reportType:1,
+      reportTargetId:'',
+      reasonEtc:"",
       writerPopupData:{},
       postData:{},
       inputRange:null,
@@ -189,6 +192,7 @@ export default {
       ops : {
       vuescroll: {
         mode: 'slide',
+        zooming: false,
         pullRefresh: {
           enable: true,
           tips:{
@@ -221,17 +225,19 @@ export default {
        try{
         this.$eventBus.$emit("showLoading")
         let writingRes = await this.$api.uploadReport({
-            userId: this.$store.state.me,
-            targetId:this.$route.query.postId,
-            reportType:1,//게시글 2: 댓글
-            reason:this.reason,
+            userId: this.$store.state.me.userId,
+            targetId:this.reportTargetId,
+            reportType:this.reportType,//게시글 2: 댓글
+            reason:this.reportReason,
             etc:this.reasonEtc,
           })
         
         console.log(writingRes)
         if(writingRes.status==200){
           this.reasonEtc = ""
+          
           this.isReportPopupShow = false
+          alert("신고 접수되었습니다.")
         }else{
           console.error(writingRes)
           this.isReportPopupShow = false
@@ -254,6 +260,8 @@ export default {
         }
       }
       else if(res==2){
+        this.reportType = 1
+        this.reportTargetId = this.$route.query.postId,
         this.isReportPopupShow = true 
       }
     },
@@ -264,6 +272,10 @@ export default {
         if(confirm("댓글을 삭제 하시겠습니까?")){
           this.deleteComment(item)
         }
+      }else if(res==2){
+          this.reportType = 2//댓글 
+          this.reportTargetId = item.commentId,
+          this.isReportPopupShow = true 
       }
     },
     

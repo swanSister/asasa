@@ -79,7 +79,7 @@ const global = {
       }else if(diff < month){
         res = parseInt(diff/week) + '주 전'
       }else{
-        res = this.$moment().utc(timestamp).format('YYYY.MM.DD')
+        res = this.$moment(timestamp).format('YYYY.MM.DD')
       }
       
       return res
