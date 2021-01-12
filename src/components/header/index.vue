@@ -89,6 +89,7 @@ export default {
   width:80vw !important;
 }
 .header-content{
+  width:80vw;
   min-height:18vw;
   max-height:18vw;
   text-align:center;
