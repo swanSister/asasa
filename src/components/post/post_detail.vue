@@ -157,6 +157,7 @@
         </div>
       </transition>
       <img-popup v-if="imgPopupSrc" :src="imgPopupSrc" @close="imgPopupSrc=''"></img-popup>
+     
       </div>
 </template>
 
@@ -237,7 +238,8 @@ export default {
           this.reasonEtc = ""
           
           this.isReportPopupShow = false
-          alert("신고 접수되었습니다.")
+
+          this.$eventBus.$emit("openAlertPopup","신고 접수되었습니다")
         }else{
           console.error(writingRes)
           this.isReportPopupShow = false
@@ -287,7 +289,7 @@ export default {
         this.postData.commentCount --
         this.getCommentList()
       }else{
-        alert("댓글 삭제에 실패했습니다.")
+        this.$eventBus.$emit("openAlertPopup","댓글 삭제에 실패했습니다.")
       }
     },
     async deletePost(){
@@ -296,7 +298,8 @@ export default {
           this.$router.go(-1)
           this.$eventBus.$emit("mainPostUpdate", this.postData.topicId)
       }else{
-        alert("게시글 삭제에 실패했습니다.")
+        this.$eventBus.$emit("openAlertPopup","게시글 삭제에 실패했습니다.")
+        
       }
     },
     async updateChatReadTime(chatRoomId, userId){
@@ -425,7 +428,7 @@ export default {
         // if(!this.$store.state.me.isAuthSuccess){
         //   this.commentText = ''
         //   this.imgInputList = []
-        //   alert('글쓰기는 인증 후 가능합니다.')
+        //   this.$eventBus.$emit("openAlertPopup","글쓰기는 인증 후 가능합니다.")
         //   return
         // }
 
@@ -455,7 +458,8 @@ export default {
           this.getCommentList()
         }else{
           console.error(writingRes)
-          alert("댓글을 등록에 실패했습니다.")
+          this.isAlertPopupShow = true
+          this.$eventBus.$emit("openAlertPopup","댓글 등록에 실패했습니다.")
         }
         this.$eventBus.$emit("hideLoading")
       }catch(e){
@@ -523,7 +527,6 @@ export default {
       this.getMessageDetail()
    }catch(e){
      console.error(e.messages)
-     alert("error")
      this.$router.push('login')
    }
   }

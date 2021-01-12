@@ -104,7 +104,7 @@ export default {
       
     },
     denyPopup:function(txt){
-      alert(txt)
+      this.$eventBus.$emit("openAlertPopup",txt)
     },
     async setPublic(isPublic){
       let messages = await this.$api.setUserPublic({

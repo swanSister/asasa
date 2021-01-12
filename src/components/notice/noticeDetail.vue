@@ -69,7 +69,7 @@ export default {
       this.getNoticeDetail()
    }catch(e){
      console.error(e.messages)
-     alert("error")
+     this.$eventBus.$emit("openAlertPopup","error")
    }
   }
 }

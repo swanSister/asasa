@@ -49,7 +49,7 @@ export default {
   },
   methods:{
     goPostWriting(){
-      //this.$store.state.me.isAuthSuccess ? this.$router.push('/postWriting') : alert('글쓰기는 인증 후 가능합니다.')
+      //this.$store.state.me.isAuthSuccess ? this.$router.push('/postWriting') :  this.$eventBus.$emit("openAlertPopup","글쓰기는 인증 후 가능합니다.")
       this.$router.push('/postWriting')
     },
     onClickFooter(item, idx){

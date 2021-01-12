@@ -7,6 +7,7 @@
     <div id="body" class="body">
       <div id="loginBtn" @click="goAuth">시작하기</div>
     </div>
+    <privacy-popup @close="isPrivacyPopupShow=false" v-if="isPrivacyPopupShow"></privacy-popup>
   </div>
 </template>
 
@@ -16,14 +17,17 @@ global.jQuery = require('jquery');
 var $ = global.jQuery;
 window.$ = $;
 
+import privacyPopup from '@/components/popup/privacyPopup.vue';
 export default {
   components:{
+    privacyPopup
   },
   props:{
   
   },
   data () {
     return {
+      isPrivacyPopupShow:false,
       address:'',
       buildingName:'',
       bcode:'',
@@ -57,7 +61,7 @@ export default {
             oncomplete: function(data) {
               console.log(data)
               if(data.apartment == "N"){
-                alert("아파트가 아닙니다.")
+                this.$eventBus.$emit("openAlertPopup","아파트가 아닙니다.")
               }else{
                 that.buildingName = data.buildingName
                 that.bcode = data.bcode
@@ -74,6 +78,8 @@ export default {
     if(this.$store.state.me.userId){
         this.$router.push('main')
         return
+      }else{
+        this.isPrivacyPopupShow = true
       }
   }
 }

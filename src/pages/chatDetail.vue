@@ -267,7 +267,8 @@ export default {
         this.updateChatReadTime()
         }else{
           console.error(writingRes)
-          alert("채팅 실패")
+          this.$eventBus.$emit("openAlertPopup","메세지 전송에 실패 했습니다.")
+          
         }
     },
     removeChatImg: function(index){

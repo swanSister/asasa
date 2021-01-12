@@ -130,7 +130,7 @@ export default {
         }
         this.$eventBus.$emit("hideLoading")
       }else{
-        alert("게시글 등록위치를 선택해 주세요.")
+        this.$eventBus.$emit("openAlertPopup","게시글 등록위치를 선택해 주세요.")
       }
     }
   },

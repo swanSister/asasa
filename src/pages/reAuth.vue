@@ -137,30 +137,31 @@ export default {
     async patchUser(){
       try{
         if(this.userId.length < 4){
-          alert("ID를 4자 이상 입력해 주세요.")
+          this.$eventBus.$emit("openAlertPopup","ID를 4자 이상 입력해 주세요.")
           return
         }
         if(this.isUserExist){
-          alert("ID가 이미 존재합니다.")
+          this.$eventBus.$emit("openAlertPopup","ID가 이미 존재합니다.")
           return
         }
         if(!this.address.address){
-          alert("주소를 입력해 주세요.")
+          this.$eventBus.$emit("openAlertPopup","주소를 입력해 주세요.")
+          
           return
         }
         if(!this.authImageSrc){
-          alert("인증사진을 등록해 주세요.")
+          this.$eventBus.$emit("openAlertPopup","인증사진을 등록해 주세요.")
           return
         }
 
         let houseType = this.houseType.find(item=>item.isSelect==true)
         if(!this.buildingName && (houseType.type ==1 || houseType.type == 2)){
-          alert("주거형태을 확인해 주세요.")
+          this.$eventBus.$emit("openAlertPopup","주거형태을 확인해 주세요.")
           return
         }
 
         if(this.buildingName && houseType.type ==3){ //주택인데 건물명 있는 경우
-          alert("주거형태을 확인해 주세요.")
+           this.$eventBus.$emit("openAlertPopup","주거형태을 확인해 주세요.")
           return
         }
 

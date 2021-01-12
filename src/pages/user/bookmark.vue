@@ -54,6 +54,7 @@ export default {
       ops : {
       vuescroll: {
         mode: 'slide',
+        zooming: false,
         pullRefresh: {
           enable: true,
           tips:{

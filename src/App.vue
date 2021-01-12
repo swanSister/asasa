@@ -5,6 +5,8 @@
     </keep-alive>
     <router-view style="height:100%; width:100%;" v-if="!$route.meta.keepAlive || $route.params.reload"></router-view>
     <loading v-if="isLoadingShow"/>
+    <alert-popup v-if="isAlertPopupShow" :message="alertMessage" @close="isAlertPopupShow=false"></alert-popup>
+      
   </div>
 </template>
 
@@ -44,19 +46,33 @@ polyfill()
 import "@/assets/css/main.css"
 import "@/assets/css/fontello.css"
 import Loading from "@/components/loading"
+import alertPopup from '@/components/popup/alertPopup'
+
 export default {
   name: 'App',
    data: function () {
     return {
       varUA:null,
        isLoadingShow:false,
-       inputHeightRestTimeout:null
+       inputHeightRestTimeout:null,
+
+      isAlertPopupShow:false,
+      alertMessage:'',
     }
   },
   components:{
     Loading,
+    alertPopup
   },
   methods:{
+    openAlertPopup(msg){
+      this.isAlertPopupShow= true
+      this.alertMessage = msg
+    },
+    closeAlertPopup(){
+      this.isAlertPopupShow = false
+      this.alertMessage = ''
+    },
     onShowLoading(){
       console.log("####onShowLoading")
       this.isLoadingShow = true
@@ -104,6 +120,10 @@ export default {
   mounted:function(){
     this.$eventBus.$on("showLoading", this.onShowLoading)
     this.$eventBus.$on("hideLoading", this.onHideLoading)
+
+    this.$eventBus.$on("openAlertPopup", this.openAlertPopup)
+    this.$eventBus.$on("closeAlertPopup", this.closeAlertPopup)
+
     this.$eventBus.$on("inputBlur", this.onInputBlur)
     let that = this
     $( document ).ready(function() {
