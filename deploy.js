@@ -13,6 +13,10 @@ server.get('/privacy', function(request, response){
   response.sendFile(__dirname + '/privacy.html')
 })
 
+server.get('/information', function(request, response){
+  response.sendFile(__dirname + '/information.html')
+})
+
 server.listen(3001,function(){
   console.log("3001 cors ")
 })

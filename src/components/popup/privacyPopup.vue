@@ -6,7 +6,7 @@
     </div>
     <div class="flex auto">
       
-      <iframe src="https://asasakorea.com/privacy"></iframe>
+      <iframe src="https://asasakorea.com/information"></iframe>
     </div>
 
   </div>
