@@ -316,7 +316,6 @@ export default {
             targetId:this.writerPopupData.userId})
 
             if(message.status == 200){
-              
                 this.$router.go(-1)
             }
       }else{
@@ -326,10 +325,30 @@ export default {
     async createChatRoom(){//대화방 존재 유무 체크
       let chatRoomId = ''
       if(confirm('대화방을 만드시겠습니까?')){
+
+        //차단목록 조회
+        let blockUserList = await this.$api.getBlockUser({
+          userId: this.$store.state.me.userId,
+          offset: 0,
+          limit: 1000
+        })
+        
+        console.log(blockUserList)
+        for(let i in blockUserList.data.data){
+          let blockUser = blockUserList.data.data[i]
+          if(this.writerPopupData.userId == blockUser.targetId){
+            alert("차단목록에서 사용자 차단 해제 후 이용하세요.")
+            return
+          }
+        }
+        
+        
         let isExist = await this.$api.checkChatRoomExist({
           openerId:this.$store.state.me.userId,
           userId:this.writerPopupData.userId})
         console.log(isExist)
+
+
         if(!isExist.data.data){
           let res = await this.$api.createChatRoom({
             openerId:this.$store.state.me.userId,
@@ -342,11 +361,16 @@ export default {
           chatRoomId = isExist.data.data.chatRoomId
           console.log("chat room exist:", isExist.data.data)
         }
+
+
+          this.$router.push({name:'chatDetail',query:{
+          chatRoomId:chatRoomId,
+          youId:this.writerPopupData.userId
+        }})
+      }else{
+
       }
-      this.$router.push({name:'chatDetail',query:{
-        chatRoomId:chatRoomId,
-        youId:this.writerPopupData.userId
-      }})
+    
     },
     WriterPopupOpen(writer){
       console.log(writer)
