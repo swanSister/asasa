@@ -16,7 +16,7 @@ import NoticeDetail from '@/pages/noticeDetail'
 import User from '@/pages/user/index'
 import UserMine from '@/pages/user/mine'
 import UserBookmark from '@/pages/user/bookmark'
-
+import UserBlock from '@/pages/user/block'
 
 Vue.use(Router)
 
@@ -116,6 +116,12 @@ export default new Router({
       meta:{
         keepAlive:true,
       }
+    },
+    {
+      path: '/user/block',
+      name: 'user/block',
+      component: UserBlock
     }
+    
   ]
 })

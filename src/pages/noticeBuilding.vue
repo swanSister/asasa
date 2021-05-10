@@ -27,7 +27,6 @@
             <NoticeList :noticeList="noticeList" ></NoticeList>
           </div>
         </vue-scroll>
-      <Footer v-bind:footerIndex="4"></Footer>
    
   </div>
 </template>
@@ -117,7 +116,7 @@ export default {
 }
 .notice-content{
   width:100%;
-  height:calc(100% - 36vw) !important;
+  height:calc(100% - 18vw) !important;
   overflow-y:auto;
 }
 .notice-header{

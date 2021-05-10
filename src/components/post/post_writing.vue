@@ -211,6 +211,7 @@ export default {
     border-top:1px solid #ddd;
     padding:0 4vw;
     background:white;
+    z-index: 1;
   }
   .footer .icon{
     font-size:7vw;

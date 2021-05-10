@@ -9,7 +9,6 @@
         <div @click="setIsMyChat(true)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':isMyChat}">MY</div>
         <div @click="setIsMyChat(false)" class="flex auto btn justify-content-center align-items-center" :class="{'selected':!isMyChat}">퍼블릭</div>
     </div>
-    
       <vue-scroll class="chat-content"
         :ops = "ops"
         @refresh-start="handleRS"
@@ -35,7 +34,6 @@
               </div>
           </div>
         </vue-scroll>
-      <Footer v-bind:footerIndex="2"></Footer>
    
   </div>
 </template>
@@ -114,6 +112,7 @@ export default {
         this.chatList = messages.data.data
         console.log(messages)
     },
+
     socketJoinListener(data){
       let found = this.chatList.find(item=>item.chatRoomId==data.chatRoomId)
       if(found){
@@ -130,15 +129,15 @@ export default {
       }
     },
   },
-  async mounted(){  
-    console.log("####joinList")
+  async mounted(){
+    
     this.$socket.emit('joinList',this.$store.state.me.userId)
-
     let that = this
     this.$socket.on('listMessage', (data)=> { 
       that.socketJoinListener(data)
     })
     this.getMessages()
+    
   },
   async beforeDestroy(){
     console.log("######chat list beforeDestroy")

@@ -32,7 +32,7 @@
             <div class="li flex align-items-start" v-for="(item, index) in postList" :key="index+'postlist'"
             @click="$router.push({name: 'postDetail', query: { postId: item.postId }})"> 
               <div v-if="item.type==1" class="icon flex justify-content-center align-items-center">
-                <span class="icon-doc-text"></span>
+                <span class="icon-pencil"></span>
               </div>
               <div v-if="item.type==2" class="icon gray flex justify-content-center align-items-center">
                 <span class="icon-chat-empty"></span>
@@ -51,7 +51,6 @@
           </div>
         </div>
     </vue-scroll>
-    <Footer v-bind:footerIndex="4"></Footer>
   </div>
 </template>
 
@@ -139,7 +138,7 @@ export default {
 .user-post-list{
   width:100%;
   overflow-y:auto;
-  height:calc(100% - 36vw) !important;
+  height:calc(100% - 18vw) !important;
 }
 .header{
   font-size:4.5vw;
@@ -147,6 +146,7 @@ export default {
   padding:4vw 0;
   background:white;
   color:#333;
+  height:18vw;
 }
 .post-list .li{
   background:white;

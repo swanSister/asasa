@@ -158,13 +158,14 @@ export default {
     border-right:1px solid #ddd;
   }
   .footer{
-    min-height:10vw;
+    min-height:18vw;
     position:fixed;
     bottom:0;
     left:0;
     width:100%;
     background:white;
     padding:0 2vw;
+    z-index: 1;
   }
   .footer .icon{
     font-size:6.5vw;

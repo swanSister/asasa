@@ -1,9 +1,10 @@
 <template>
   <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:rgb(240,240,240);">
     <keep-alive>
-        <router-view style="height:100%; width:100%;" v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
+        <router-view class="router-view" v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
     </keep-alive>
-    <router-view style="height:100%; width:100%;" v-if="!$route.meta.keepAlive || $route.params.reload"></router-view>
+    <router-view class="router-view" v-if="!$route.meta.keepAlive || $route.params.reload"></router-view>
+    <Footer></Footer>
     <loading v-if="isLoadingShow"/>
     <alert-popup v-if="isAlertPopupShow" :message="alertMessage" @close="isAlertPopupShow=false"></alert-popup>
       
@@ -21,7 +22,6 @@ import { polyfill } from 'es6-promise'
 
 import Vue from 'vue'
 import vuescroll from 'vuescroll'
-
 Vue.use(vuescroll,{
   mode: 'native',
   pullRefresh: {
@@ -47,7 +47,7 @@ import "@/assets/css/main.css"
 import "@/assets/css/fontello.css"
 import Loading from "@/components/loading"
 import alertPopup from '@/components/popup/alertPopup'
-
+import Footer from '@/components/footer'
 export default {
   name: 'App',
    data: function () {
@@ -62,7 +62,8 @@ export default {
   },
   components:{
     Loading,
-    alertPopup
+    alertPopup,
+    Footer
   },
   methods:{
     openAlertPopup(msg){
@@ -167,5 +168,9 @@ export default {
   text-align: center;
   margin-top: 60px;
  
+}
+.router-view{
+  width:100%;
+  height:calc(100% - 18vw);
 }
 </style>

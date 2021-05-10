@@ -72,9 +72,12 @@
               <div class="flex auto list-title" @click="$router.push({name: 'noticeBuilding'})">아파트 공지사항 (관리사무소)</div>
               <span class="icon icon-right-open"> </span>
             </div>
+            <div class="flex li">
+              <div class="flex auto list-title" @click="$router.push({name: 'user/block'})">차단</div>
+              <span class="icon icon-right-open"> </span>
+            </div>
           </div>
         </div>
-        <Footer v-bind:footerIndex="4"></Footer>
       </vue-scroll>
   </div>
 </template>

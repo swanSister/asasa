@@ -130,6 +130,7 @@
           <div class="building-name">{{$getBuildingName(writerPopupData)}}</div>
           <div class="menu">
             <div class="item" @click="createChatRoom"><span class="icon-chat-empty"></span> 1:1 대화하기</div>
+            <div class="item" @click="blockUser"><span class="icon-user-times"></span> 차단하기</div>
           </div>
         </div>
       </transition>
@@ -307,6 +308,20 @@ export default {
           chatRoomId:chatRoomId,
           userId:userId
         })
+    },
+    async blockUser(){
+      if(confirm('사용자와 채팅을 할 수 없습니다. \n 차단하시겠습니까?')){
+          let message = await this.$api.uploadBlock({
+            userId:this.$store.state.me.userId,
+            targetId:this.writerPopupData.userId})
+
+            if(message.status == 200){
+              
+                this.$router.go(-1)
+            }
+      }else{
+
+      }
     },
     async createChatRoom(){//대화방 존재 유무 체크
       let chatRoomId = ''
@@ -536,7 +551,7 @@ export default {
 <style scoped>
  
   .post-detail-scroll{
-    height:calc(100% - 18vw) !important;
+    height:100% !important;
   }
   .post-detail{
     width:100vw;
@@ -616,13 +631,14 @@ export default {
     border-right:1px solid #ddd;
   }
   .footer{
-    min-height:10vw;
+    min-height:18vw;
     position:fixed;
     bottom:0;
     left:0;
     width:100%;
     background:white;
     padding:0 2vw;
+    z-index: 1;
   }
   .footer .icon{
     font-size:6.5vw;

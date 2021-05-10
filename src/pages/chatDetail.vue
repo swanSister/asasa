@@ -96,7 +96,10 @@
                       <div>{{youData.userId}}</div>
                       <div class="building-name">{{$getBuildingName(youData)}}</div>
                     </div>
-                    
+                    <div class="flex auto justify-content-end">
+                      <span class="block-btn" @click="blockUser(youData)">차단</span> 
+                    </div>
+                      
                   </div>
                   
                 </div>
@@ -183,6 +186,19 @@ export default {
     },
     getDate(time){
       return this.$moment(time).format('YYYY.MM.DD')
+    },
+    async blockUser(item){
+      if(confirm('사용자와 채팅을 할 수 없습니다. \n 차단하시겠습니까?')){
+          let messages = await this.$api.uploadBlock({
+            userId:this.$store.state.me.userId,
+            targetId:item.userId})
+
+        if(messages.status == 200){
+          this.$router.go(-1)
+        }
+      }else{
+
+      }
     },
     checkDate(){
       console.log("####checkDate")
@@ -302,11 +318,11 @@ export default {
       done();
     },
     async getChatRoom(){
-      console.log("###",this.$route.query.youId)
+      console.log("###",this.$route.query.youId, this.$route.query.chatRoomId)
       let messages = await this.$api.getChatRoom({
         chatRoomId:this.$route.query.chatRoomId,
         youId:this.$route.query.youId})
-
+      
       this.chatRoom = messages.data.data
       this.youData = this.chatRoom.youData
       console.log("youData:",this.youData)
@@ -384,6 +400,7 @@ export default {
   position:fixed;
   height:100%;
   width:100%;
+  z-index: 9;
 }
 .scroll-containner{
   height:calc(calc(var(--vh, 1vh) * 100) - 32vw) !important;
@@ -445,7 +462,7 @@ export default {
 }
 .slide-menu-body{
   margin-top:1vw;
-  height:calc(100% - 30vw) !important;
+  height:calc(100% - 36vw) !important;
   border-bottom: 1px solid #ddd;
   background:white;
 }
@@ -456,6 +473,7 @@ export default {
 }
 .slide-menu-body .user-data .user-id{
   color:#000;
+  width:100%;
 }
 .slide-menu-body .user-data .user-id > .thumbnail-content{
   width:10vw;
@@ -476,6 +494,13 @@ export default {
   font-size: 3.5vw;
   text-align: left;
   color:rgb(21, 134, 204) ;
+}
+.slide-menu-body .user-data .block-btn{
+  background:rgb(255, 117, 117);
+  color:white;
+  padding:1vw 2vw;
+  font-size:3.5vw;
+  font-weight:bold;
 }
 .slide-menu-footer{
   margin-top:1vw;

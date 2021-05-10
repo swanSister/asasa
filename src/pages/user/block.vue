@@ -5,12 +5,12 @@
           <span @click="$router.go(-1)" class="icon-left-open"></span>
       </div>
         <div class="flex auto justify-content-center" style="margin-right:5vw">
-        북마크
+        차단 관리
       </div>
     </div>
     <!-- <PostHeader></PostHeader> -->
-    
-      <vue-scroll class="bookmark-content" 
+
+      <vue-scroll class="block-content" 
           :ops = "ops"
           @refresh-start="handleRS"
           @load-before-deactivate="handleLBD"
@@ -25,9 +25,25 @@
         <div class="slot-refresh" slot="refresh-beforeDeactive"></div>
         <div class="slot-refresh" slot="refresh-start"></div>
         <div class="slot-refresh" slot="refresh-active"></div>
-          <div class="child">
-            <PostList @sort="onSort" :postList="postList"></PostList>
-          </div>
+        <div class="child">
+          
+            <div v-for="(item, index) in  blockList" :key="'blockList'+index" class="block-list-li">
+              <div class="user-id flex align-items-center">
+                  <div class="thumbnail-content">
+                    <span class="flex justify-content-center align-items-end icon-user thumbnail"></span>
+                  </div>
+                  <div>
+                    <div>{{item.targetId}}</div>
+                    <div class="building-name">{{$getBuildingName(item.targetInfo)}}</div>
+                  </div>
+                  <div class="flex auto justify-content-end">
+                    <span class="delete-block-btn" @click="deleteBlock(item)">해제</span> 
+                  </div>
+                  
+                </div>
+              
+            </div>
+        </div>
       
         </vue-scroll>
   </div>
@@ -35,12 +51,11 @@
 
 <script>
 //import PostHeader from '@/components/post/post_header.vue'
-import PostList from '@/components/post/post_list.vue'
+
 import Footer from '@/components/footer'
 export default {
   components:{
-    //PostHeader,
-    PostList,
+   
     Footer,
   },
   props:{
@@ -49,7 +64,7 @@ export default {
   data () {
     return {
       headerData:[],
-      postList:[],
+      blockList:[],
       ops : {
       vuescroll: {
         mode: 'slide',
@@ -86,14 +101,14 @@ export default {
   methods:{
     onSort(sort){
       //sort 1: 최신순, 2: 추천순, 3:조회순, 4:댓글순
-      this.postList = []
+      this.blockList = []
       this.offset = 0
       this.sort = sort
       console.log(this.offset, this.sort)
       this.getMessages(this.offset, this.limit, this.sort)
     },
     async handleRS(vsInstance, refreshDom, done) {//위로 당겨서 새로고침
-      this.postList = []
+      this.blockList = []
       this.offset = 0
       this.getMessages(this.offset, this.limit, this.sort)
       done();
@@ -111,16 +126,29 @@ export default {
       console.log("handleRS3")
       done();
     },
+    async deleteBlock(item){
+      if(confirm('차단 해제 하시겠습니까?')){
+        let messages = await this.$api.deleteBlockUser({
+          userId: this.$store.state.me.userId,
+          targetId: item.targetId
+        })
+        console.log("delete block list",messages)
+       
+        this.blockList = []
+        this.offset = 0
+        this.getMessages(this.offset, this.limit, this.sort)
+      }
+    },
     async getMessages(offset, limit, sort){
       console.log(offset, limit, sort)
-      let messages = await this.$api.getPostBookmarkList({
+      let messages = await this.$api.getBlockUser({
         userId: this.$store.state.me.userId,
         offset: offset,
         limit: limit,
         sort: sort
       })
-      console.log(messages)
-      messages.data.data.map(item => this.postList.push(item))
+      console.log("get block list",messages)
+      messages.data.data.map(item => this.blockList.push(item))
     },
     async updateMain(){
       this.$forceUpdate();
@@ -131,6 +159,7 @@ export default {
     if(!this.$store.state.me.userId){
       this.$router.replace('login')
     }else{
+      console.log("###mounted block")
       this.getMessages(this.offset, this.limit, this.sort)
     }
   },
@@ -140,7 +169,7 @@ export default {
 }
 </script>
 <style scoped>
-.bookmark-content{
+.block-content{
   width:100%;
   height:calc(100% - 18vw) !important;
   overflow-y:auto;
@@ -152,5 +181,41 @@ export default {
   background:white;
   color:#333;
   height:18vw;
+}
+.block-list-li {
+  padding:2vw 4vw;
+  border-top:1px solid #eee;
+  font-size: 5vw;
+  background:white;
+}
+.block-list-li .user-id{
+  color:#000;
+}
+.block-list-li .user-id > .thumbnail-content{
+  width:10vw;
+  height:10vw;
+  border-radius: 50%;
+  background:#eee;
+  overflow: hidden;
+  margin-right:4vw;
+}
+.block-list-li .user-id > .thumbnail-content > .thumbnail{
+  width:10vw;
+  height:10vw;
+  font-size:8vw;
+  color:#aaa;
+}
+.block-list-li .building-name{
+  color:#aaa;
+  font-size: 3.5vw;
+  text-align: left;
+  color:rgb(21, 134, 204) ;
+}
+.block-list-li .delete-block-btn{
+  background:rgb(255, 117, 117);
+  color:white;
+  padding:1vw 2vw;
+  font-size:3.5vw;
+  font-weight:bold;
 }
 </style>

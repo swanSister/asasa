@@ -280,6 +280,13 @@ export default {
     })
   },
 
+  getChatNoticount:function(param){//채팅 알람 조회
+    return axios.post(`${API_URL}/chat/getNoticount`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
 
   /* ######## NOTICE#########  */
   getNoticeDetail:function(param){
@@ -308,6 +315,29 @@ export default {
   /* ######## REPORT#########  */
   uploadReport:function(param){//신고 기능
     return axios.post(`${API_URL}/report/upload`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+
+    /* ######## BLOCK#########  */
+  uploadBlock:function(param){//차단 기능
+    return axios.post(`${API_URL}/block/upload`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  getBlockUser:function(param){//차단 유저 조회
+    return axios.post(`${API_URL}/block/get`,param,{
+      headers: {
+        accept: 'application/json',
+      }
+    })
+  },
+  deleteBlockUser:function(param){//차단 해제
+    return axios.post(`${API_URL}/block/delete`,param,{
       headers: {
         accept: 'application/json',
       }

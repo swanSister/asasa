@@ -33,7 +33,6 @@
               </div>
           </div>
         </vue-scroll>
-      <Footer v-bind:footerIndex="1"></Footer>
    
   </div>
 </template>
@@ -152,7 +151,7 @@ export default {
 <style scoped>
 .search-content{
   width:100%;
-  height:calc(100% - 36vw) !important;
+  height:calc(100% - 18vw) !important;
   overflow-y:auto;
 }
 .search-input{
