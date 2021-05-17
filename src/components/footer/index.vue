@@ -1,5 +1,5 @@
 <template>
-  <div class="flex auto footer justify-content-center align-items-center">
+  <div v-if="isFooterShow" class="flex auto footer justify-content-center align-items-center">
     <div  @click="onClickFooter(item,index)" class="flex auto justify-content-center" v-for="(item, index) in footerIcon" :key="'footerIcon'+index"> 
        <div v-if="index==2" class="icon" :class="item.class" :style="{
         'color' : item.idx==footerIndex ? 'rgb(15, 76, 129)' : 'rgb(21, 134, 204)'
@@ -21,6 +21,7 @@ export default {
   },
   data () {
     return {
+      isFooterShow:true,
       footerIndex:1,
       notiCount: 0,
       footerIcon:[
@@ -56,6 +57,12 @@ export default {
     '$route' (to, from) {
       console.log("######route",to)
       let path = to.name
+
+      if(path.indexOf("auth")==0 || path.indexOf("reAuth")==0 || path.indexOf("login")==0 ){
+        this.isFooterShow = false
+      }else{
+        this.isFooterShow = true
+      }
       if(path.indexOf("main")==0){
         this.footerIndex = 0
       }else if(path.indexOf("search")==0){

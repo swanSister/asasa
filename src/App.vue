@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:rgb(240,240,240);">
+  <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:white;">
     <keep-alive>
         <router-view class="router-view" v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
     </keep-alive>
@@ -167,10 +167,11 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 60px;
- 
+  
 }
 .router-view{
   width:100%;
   height:calc(100% - 18vw);
+  background-color:rgb(240,240,240);
 }
 </style>
