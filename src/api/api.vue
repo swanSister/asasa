@@ -2,7 +2,8 @@
 <script>
 import axios from 'axios'
 let ctx = {}
-const API_URL = "https://api.asasakorea.com"
+//const API_URL = "https://api.asasakorea.com"
+const API_URL = "http://3.34.211.151:3011"
 export default {
   install(Vue, options){
     ctx.store = options.store

@@ -11,7 +11,8 @@ import "moment/locale/ko";
 import io from 'socket.io-client'; 
 
 
-const socket = io("https://chat.asasakorea.com"); 
+//const socket = io("https://chat.asasakorea.com"); 
+const socket = io("http://3.34.211.151:3012"); 
 
 moment.locale('ko')
 
