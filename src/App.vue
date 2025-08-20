@@ -1,4 +1,5 @@
 <template>
+  <div class="pc-wrapper">
   <div id="app" style="height:100%; width:100%; margin:0; padding:0; background-color:white;">
     <keep-alive>
         <router-view class="router-view" v-if="$route.meta.keepAlive && !$route.params.reload"></router-view>
@@ -8,6 +9,9 @@
     <loading v-if="isLoadingShow"/>
     <alert-popup v-if="isAlertPopupShow" :message="alertMessage" @close="isAlertPopupShow=false"></alert-popup>
       
+    
+
+</div>
   </div>
 </template>
 
@@ -173,5 +177,19 @@ export default {
   width:100%;
   height:calc(100% - 18vw);
   background-color:rgb(240,240,240);
+}
+@media (min-width: 768px) {
+  .pc-wrapper {
+    width: 375px;
+    height: 667px; /* 원하는 모바일 높이 */
+    margin: 0 auto;
+    border: 1px solid #ccc; /* PC에서 테스트할 때 프레임처럼 보이게 */
+    overflow: hidden;
+  }
+
+  #app {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>
