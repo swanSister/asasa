@@ -17,6 +17,6 @@ server.get('/information', function(request, response){
   response.sendFile(__dirname + '/information.html')
 })
 
-server.listen(3001,function(){
-  console.log("3001 cors ")
+server.listen(3010,function(){
+  console.log("3010 cors ")
 })
