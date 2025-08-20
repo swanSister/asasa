@@ -9,6 +9,6 @@ server.use('/', express.static(__dirname + '/dist'))
 server.get('/privacy', function(request, response){
   response.sendFile(__dirname + '/privacy.html')
 })
-server.listen(8080,function(){
-  console.log("8080 cors ")
+server.listen(3010,function(){
+  console.log("3010 cors ")
 })
