@@ -5,7 +5,8 @@
       <img src="@/assets/login_footer_dark.png">
     </div>
     <div id="body" class="body">
-      <div id="loginBtn" @click="goAuth">시작하기</div>
+      <div id="loginBtn" @click="goAuth(true)" style="margin-bottom:2vw;">Test mode 시작하기</div>
+      <div id="loginBtn" @click="goAuth(false)">시작하기</div>
     </div>
     <privacy-popup @close="isPrivacyPopupShow=false" v-if="isPrivacyPopupShow"></privacy-popup>
   </div>
@@ -33,12 +34,77 @@ export default {
       bcode:'',
       isAddressPopup:false,
       userId:'',
+      testUser:{
+    "userId": "tq3v74",
+    "isPublic": 1,
+    "authId": "45b181gstmejzvxwp",
+    "authImgUrl": "http://3.34.211.151:3011/uploads/auth/tq3v74_auth.jpeg",
+    "addressData": {
+        "sido": "경기",
+        "bcode": "4146125930",
+        "bname": "아곡리",
+        "hname": "",
+        "query": "한숲시티 ",
+        "b_code": 41461259,
+        "bname1": "남사읍",
+        "bname2": "아곡리",
+        "address": "경기 용인시 처인구 남사읍 한숲로 83",
+        "sigungu": "용인시 처인구",
+        "postcode": "",
+        "roadname": "한숲로",
+        "zonecode": "17117",
+        "apartment": "Y",
+        "postcode1": "",
+        "postcode2": "",
+        "sido_code": 41,
+        "noSelected": "N",
+        "addressType": "R",
+        "postcodeSeq": "",
+        "roadAddress": "경기 용인시 처인구 남사읍 한숲로 83",
+        "sidoEnglish": "Gyeonggi-do",
+        "sigunguCode": "41461",
+        "bnameEnglish": "Agok-ri",
+        "buildingCode": "4146132031106520001211662",
+        "buildingName": "e편한세상 용인 한숲시티",
+        "jibunAddress": "경기 용인시 처인구 남사읍 아곡리 681",
+        "roadnameCode": "3351702",
+        "sigungu_code": 41461,
+        "bname1English": "Namsa-eup",
+        "bname2English": "Agok-ri",
+        "addressEnglish": "83 Hansup-ro, Namsa-eup, Cheoin-gu, Yongin-si, Gyeonggi-do, Republic of Korea",
+        "sigunguEnglish": "Cheoin-gu Yongin-si",
+        "autoRoadAddress": "",
+        "roadnameEnglish": "Hansup-ro",
+        "autoJibunAddress": "",
+        "userLanguageType": "K",
+        "userSelectedType": "R",
+        "roadAddressEnglish": "83 Hansup-ro, Namsa-eup, Cheoin-gu, Yongin-si, Gyeonggi-do, Republic of Korea",
+        "jibunAddressEnglish": "681 Agok-ri, Namsa-eup, Cheoin-gu, Yongin-si, Gyeonggi-do, Republic of Korea",
+        "autoRoadAddressEnglish": "",
+        "autoJibunAddressEnglish": ""
+    },
+    "buildingName": "e편한세상 용인 한숲시티",
+    "houseType": 1,
+    "createdAt": "2025-08-20T13:14:57.000Z",
+    "updatedAt": "2025-08-20T13:14:57.000Z",
+    "isAuthWait": 0,
+    "isAuthSuccess": 1,
+    "authReason": "",
+    "topics": [
+     
+    ]
+}
     }
   },
   methods:{
-    async goAuth(){
+    async goAuth(isTestmode){
       let me = this.$store.state.me
-      if(me.userId){
+      if(isTestmode){
+        me = this.testUser
+        this.$store.state.me = this.testUser
+        this.$router.push('main')
+      }
+      else if(me.userId){
         this.$router.push('main')
       }else{
         this.$router.push('auth')
@@ -76,10 +142,11 @@ export default {
   },
   async mounted(){
     if(this.$store.state.me.userId){
+      console.log(this.$store.state.me.userId)
         this.$router.push('main')
         return
       }else{
-        this.isPrivacyPopupShow = true
+        //this.isPrivacyPopupShow = true
       }
   }
 }
